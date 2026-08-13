@@ -1,11 +1,8 @@
 import React from 'react';
+import SplashPage from "./pages/SplashPage";
 
 function App() {
-  return (
-    <div>
-      <h1>example</h1>
-    </div>
-  );
+  return <SplashPage />;
 }
 
 export default App;

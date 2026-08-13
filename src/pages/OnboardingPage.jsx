@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import OnboardingSlide from "../components/OnboardingSlide";
 
@@ -26,11 +26,19 @@ import {
 
 const OnboardingPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isEntered, setIsEntered] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsEntered(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const onboardingData = [
     {
       image: firstOnboarding,
-
       title: (
         <>
           당신의 피부에는
@@ -38,7 +46,6 @@ const OnboardingPage = () => {
           <Highlight>고유한 기후</Highlight>가 있습니다
         </>
       ),
-
       description: (
         <>
           매일의 환경이 피부에 남기는 흔적을
@@ -50,7 +57,6 @@ const OnboardingPage = () => {
 
     {
       image: secondOnboarding,
-
       title: (
         <>
           매일의 피부 상태를
@@ -58,7 +64,6 @@ const OnboardingPage = () => {
           <Highlight>행성 온도 점수</Highlight>로 확인하세요
         </>
       ),
-
       description: (
         <>
           여행자의 행성 온도 점수가
@@ -70,7 +75,6 @@ const OnboardingPage = () => {
 
     {
       image: thirdOnboarding,
-
       title: (
         <>
           당신의 탐사 파트너,
@@ -78,7 +82,6 @@ const OnboardingPage = () => {
           <Highlight>PP</Highlight>와 함께하세요
         </>
       ),
-
       description: (
         <>
           PP가 여행자의 피부 상태를 기반으로
@@ -113,9 +116,7 @@ const OnboardingPage = () => {
           </Orbit>
         </LogoArea>
 
-        <BrandName>
-          SKINEARTH
-        </BrandName>
+        <BrandName>SKINEARTH</BrandName>
       </HeaderLogoGroup>
 
       <Slider onScroll={handleScroll}>
@@ -125,6 +126,7 @@ const OnboardingPage = () => {
             image={item.image}
             title={item.title}
             description={item.description}
+            active={isEntered && index === currentIndex}
           />
         ))}
       </Slider>

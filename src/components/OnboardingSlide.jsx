@@ -9,16 +9,21 @@ const OnboardingSlide = ({
   image,
   title,
   description,
+  active,
 }) => {
   return (
     <Slide>
-      <Visual src={image} alt="" />
+      <Visual
+        src={image}
+        alt=""
+        $active={active}
+      />
 
-      <MainTitle>
+      <MainTitle $active={active}>
         {title}
       </MainTitle>
 
-      <Description>
+      <Description $active={active}>
         {description}
       </Description>
     </Slide>

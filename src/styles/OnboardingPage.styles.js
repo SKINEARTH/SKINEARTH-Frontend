@@ -124,20 +124,29 @@ export const Slide = styled.section`
 export const Visual = styled.img`
   position: absolute;
 
-  top: 34%;
+  top: 35%;
   left: 50%;
 
   width: 8.75rem;
   height: auto;
 
-  transform: translateX(-50%);
-
   display: block;
+
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
+
+  transform: ${({ $active }) =>
+    $active
+      ? "translate(-50%, 0)"
+      : "translate(-50%, 1.25rem)"};
+
+  transition:
+    opacity 0.8s ease 0.15s,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
 `;
 
 export const MainTitle = styled.h2`
   position: absolute;
-  bottom: 12.5rem;
+  bottom: 16.5rem;
 
   width: 100%;
 
@@ -145,11 +154,22 @@ export const MainTitle = styled.h2`
   text-align: center;
 
   font-family: "Paperlogy", sans-serif;
-  font-size: 2rem;
+  font-size: 1.625rem;
   font-style: normal;
   font-weight: 800;
   line-height: 1.35;
   letter-spacing: -0.04rem;
+
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
+
+  transform: ${({ $active }) =>
+    $active
+      ? "translateY(0)"
+      : "translateY(1rem)"};
+
+  transition:
+    opacity 0.8s ease 0.3s,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
 `;
 
 export const Highlight = styled.span`
@@ -158,7 +178,7 @@ export const Highlight = styled.span`
 
 export const Description = styled.p`
   position: absolute;
-  bottom: 8.5rem;
+  bottom: 12.5rem;
 
   width: 100%;
 
@@ -170,6 +190,17 @@ export const Description = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: 1.4875rem;
+
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
+
+  transform: ${({ $active }) =>
+    $active
+      ? "translateY(0)"
+      : "translateY(0.75rem)"};
+
+  transition:
+    opacity 0.8s ease 0.45s,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.45s;
 `;
 
 export const Indicator = styled.div`

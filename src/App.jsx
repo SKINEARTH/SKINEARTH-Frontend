@@ -1,8 +1,22 @@
-import React from 'react';
+import { useState } from "react";
+
 import SplashPage from "./pages/SplashPage";
+import OnboardingPage from "./pages/OnboardingPage";
 
 function App() {
-  return <SplashPage />;
+  const [showSplash, setShowSplash] = useState(true);
+
+  return (
+    <>
+      {showSplash ? (
+        <SplashPage
+          onFinish={() => setShowSplash(false)}
+        />
+      ) : (
+        <OnboardingPage />
+      )}
+    </>
+  );
 }
 
 export default App;

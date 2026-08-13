@@ -75,10 +75,11 @@ export const OrangeCircle = styled.img`
 export const BrandName = styled.h1`
   margin-top: 32px;
 
+  color: var(--white);
   font-family: "EstablishRetrosans", sans-serif;
   font-size: 32px;
-  font-weight: normal;
-  line-height: 1;
-
-  color: var(--white);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+  letter-spacing: 2.4px;
 `;

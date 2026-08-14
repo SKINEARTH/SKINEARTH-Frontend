@@ -1,8 +1,12 @@
+import NavBar from "../components/NavBar";
+
 const MissionPage = () => {
   return (
-    <div>
-      Mission
-    </div>
+    <>
+      <div>Mission Page</div>
+
+      <NavBar />
+    </>
   );
 };
 

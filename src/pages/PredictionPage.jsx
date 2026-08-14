@@ -1,8 +1,12 @@
+import NavBar from "../components/NavBar";
+
 const PredictionPage = () => {
   return (
-    <div>
-      Prediction
-    </div>
+    <>
+      <div>Prediction Page</div>
+
+      <NavBar />
+    </>
   );
 };
 

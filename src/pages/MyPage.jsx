@@ -1,8 +1,12 @@
+import NavBar from "../components/NavBar";
+
 const MyPage = () => {
   return (
-    <div>
-      My Page
-    </div>
+    <>
+      <div>My Page</div>
+
+      <NavBar />
+    </>
   );
 };
 

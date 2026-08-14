@@ -1,8 +1,12 @@
+import NavBar from "../components/NavBar";
+
 const LogPage = () => {
   return (
-    <div>
-      Log
-    </div>
+    <>
+      <div>Log Page</div>
+
+      <NavBar />
+    </>
   );
 };
 

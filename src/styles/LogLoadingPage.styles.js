@@ -88,12 +88,12 @@ export const LoadingLogo = styled.img`
 `;
 
 export const Title = styled.h1`
-  margin-top: 2.75rem;
+  margin-top: 2rem;
 
   color: var(--white);
 
   font-family: "Paperlogy", sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 800;
   line-height: 1.4;

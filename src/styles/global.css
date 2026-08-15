@@ -18,12 +18,15 @@
 }
 
 :root {
-  --white: #EDF1F8;
+  --dark-navy: #0b162b;
+  --navy: #1c3768;
+
+  --white: #edf1f8;
+  --gray: #a9b4c6;
+  --dark-gray: #68758c;
+
   --light-blue: #8fadea;
-  --dark-navy: #0A1428;
-  --navy: #24478E;
-  --gray: #A9B4C6;
-  --dark-gray: #26314A;
+  --mint: #5dd9ba;
 }
 
 * {

@@ -22,7 +22,7 @@ export const Title = styled.h1`
   color: var(--white);
 
   font-family: "Paperlogy", sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.375rem;
   font-weight: 800;
   line-height: 1.3;
 `;
@@ -54,7 +54,6 @@ export const Card = styled.section`
 `;
 
 export const SectionTitle = styled.h2`
-  margin-bottom: 1.5rem;
 
   color: ${({ $green }) =>
     $green ? "#5dd9ba" : "var(--gray)"};
@@ -352,6 +351,68 @@ export const SaveButton = styled.button`
   color: var(--white);
 
   font-family: "Paperlogy", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 0.5rem 1.5rem rgba(65, 107, 199, 0.2);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+export const CardHeader = styled.div`
+  align-items: flex-start;
+  margin-bottom: 1.75rem;
+`;
+
+export const PredictionIcon = styled.span`
+  flex-shrink: 0;
+
+  color: var(--light-blue);
+
+  font-size: 1.5rem;
+  line-height: 1;
+`;
+
+export const CardTitleGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+`;
+
+export const SectionDescription = styled.p`
+  color: var(--light-blue);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.5;
+`;
+
+export const PredictionButton = styled.button`
+  width: 100%;
+  height: 3.5rem;
+
+  margin: 0.5rem 0 1.5rem;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #416bc7;
+  color: var(--white);
+
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
 

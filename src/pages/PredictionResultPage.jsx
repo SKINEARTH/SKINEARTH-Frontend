@@ -24,9 +24,9 @@ import {
   AiBadge,
   AiText,
   MissionButton,
-} from "../styles/LogCompletePage.styles";
+} from "../styles/PredictionResultPage.styles";
 
-const LogCompletePage = () => {
+const PredictionResultPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -62,6 +62,7 @@ const LogCompletePage = () => {
           <FactorRow>
             <FactorLeft>
               <FactorEmoji>❄️</FactorEmoji>
+
               <FactorName>
                 에어컨 노출
               </FactorName>
@@ -77,6 +78,7 @@ const LogCompletePage = () => {
           <FactorRow>
             <FactorLeft>
               <FactorEmoji>💻</FactorEmoji>
+
               <FactorName>
                 화면 노출
               </FactorName>
@@ -113,4 +115,4 @@ const LogCompletePage = () => {
   );
 };
 
-export default LogCompletePage;
+export default PredictionResultPage;

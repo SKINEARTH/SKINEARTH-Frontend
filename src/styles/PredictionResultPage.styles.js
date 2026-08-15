@@ -31,7 +31,7 @@ export const Title = styled.h1`
   color: var(--white);
 
   font-family: "Paperlogy", sans-serif;
-  font-size: 2rem;
+  font-size: 1.375rem;
   font-weight: 800;
   line-height: 1.2;
 `;
@@ -296,7 +296,7 @@ export const MissionButton = styled.button`
 
   color: var(--white);
 
-  font-family: "Paperlogy", sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
 

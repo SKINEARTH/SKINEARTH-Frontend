@@ -29,7 +29,7 @@ const navItems = [
     label: "홈",
     onIcon: homeOn,
     offIcon: homeOff,
-    onSize: "2.8rem",
+    onSize: "3.4rem",
     offSize: "1.8rem",
   },
   {
@@ -37,7 +37,7 @@ const navItems = [
     label: "기록",
     onIcon: logOn,
     offIcon: logOff,
-    onSize: "1.8rem",
+    onSize: "3.4rem",
     offSize: "1.8rem",
   },
   {
@@ -45,7 +45,7 @@ const navItems = [
     label: "예측",
     onIcon: predictionOn,
     offIcon: predictionOff,
-    onSize: "1.8rem",
+    onSize: "3.4rem",
     offSize: "1.8rem",
   },
   {
@@ -53,7 +53,7 @@ const navItems = [
     label: "미션",
     onIcon: missionOn,
     offIcon: missionOff,
-    onSize: "1.8rem",
+    onSize: "3.4rem",
     offSize: "1.8rem",
   },
   {
@@ -61,7 +61,7 @@ const navItems = [
     label: "마이",
     onIcon: myOn,
     offIcon: myOff,
-    onSize: "1.8rem",
+    onSize: "3.4rem",
     offSize: "1.8rem",
   },
 ];

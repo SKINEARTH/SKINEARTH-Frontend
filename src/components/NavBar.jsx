@@ -18,44 +18,55 @@ import myOff from "../assets/nav/my_off.svg";
 import {
   NavContainer,
   NavItem,
+  IconBox,
   NavIcon,
   NavLabel,
 } from "../styles/NavBar.styles";
 
-const NavBar = () => {
-  const navItems = [
-    {
-      path: "/home",
-      label: "홈",
-      onIcon: homeOn,
-      offIcon: homeOff,
-    },
-    {
-      path: "/log",
-      label: "기록",
-      onIcon: logOn,
-      offIcon: logOff,
-    },
-    {
-      path: "/prediction",
-      label: "예측",
-      onIcon: predictionOn,
-      offIcon: predictionOff,
-    },
-    {
-      path: "/mission",
-      label: "미션",
-      onIcon: missionOn,
-      offIcon: missionOff,
-    },
-    {
-      path: "/my",
-      label: "마이",
-      onIcon: myOn,
-      offIcon: myOff,
-    },
-  ];
+const navItems = [
+  {
+    path: "/home",
+    label: "홈",
+    onIcon: homeOn,
+    offIcon: homeOff,
+    onSize: "2.8rem",
+    offSize: "1.8rem",
+  },
+  {
+    path: "/log",
+    label: "기록",
+    onIcon: logOn,
+    offIcon: logOff,
+    onSize: "1.8rem",
+    offSize: "1.8rem",
+  },
+  {
+    path: "/prediction",
+    label: "예측",
+    onIcon: predictionOn,
+    offIcon: predictionOff,
+    onSize: "1.8rem",
+    offSize: "1.8rem",
+  },
+  {
+    path: "/mission",
+    label: "미션",
+    onIcon: missionOn,
+    offIcon: missionOff,
+    onSize: "1.8rem",
+    offSize: "1.8rem",
+  },
+  {
+    path: "/my",
+    label: "마이",
+    onIcon: myOn,
+    offIcon: myOff,
+    onSize: "1.8rem",
+    offSize: "1.8rem",
+  },
+];
 
+const NavBar = () => {
   return (
     <NavContainer>
       {navItems.map((item) => (
@@ -66,10 +77,13 @@ const NavBar = () => {
         >
           {({ isActive }) => (
             <NavItem>
-              <NavIcon
-                src={isActive ? item.onIcon : item.offIcon}
-                alt={item.label}
-              />
+              <IconBox>
+                <NavIcon
+                  src={isActive ? item.onIcon : item.offIcon}
+                  alt={item.label}
+                  $size={isActive ? item.onSize : item.offSize}
+                />
+              </IconBox>
 
               <NavLabel $active={isActive}>
                 {item.label}

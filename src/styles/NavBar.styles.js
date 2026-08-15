@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const NavContainer = styled.nav`
   position: fixed;
-
   left: 50%;
   bottom: 0;
 
@@ -10,22 +9,28 @@ export const NavContainer = styled.nav`
 
   width: 100%;
   max-width: 430px;
+  height: 5.5rem;
 
   display: grid;
   grid-template-columns: repeat(5, 1fr);
 
   background: var(--navy);
 
-  padding-top: 0.75rem;
-
-  padding-bottom: calc(
-    0.75rem + env(safe-area-inset-bottom)
-  );
-
   z-index: 100;
 `;
 
+export const IconBox = styled.div`
+  width: 2.5rem;
+  height: 2.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const NavItem = styled.div`
+  height: 100%;
+
   display: flex;
   flex-direction: column;
 
@@ -38,11 +43,10 @@ export const NavItem = styled.div`
 `;
 
 export const NavIcon = styled.img`
-  width: 2rem;
-  height: 2rem;
+  width: ${({ $size }) => $size};
+  height: ${({ $size }) => $size};
 
   object-fit: contain;
-
   display: block;
 `;
 
@@ -53,7 +57,8 @@ export const NavLabel = styled.span`
     sans-serif;
 
   font-size: 0.75rem;
-  font-weight: 400;
+  font-weight: ${({ $active }) =>
+  $active ? 600 : 400};
 
   line-height: 1;
 

@@ -5,7 +5,9 @@ import SplashPage from "./pages/SplashPage";
 import OnboardingPage from "./pages/OnboardingPage";
 
 import HomePage from "./pages/HomePage";
+
 import LogPage from "./pages/LogPage";
+import LogCompletePage from "./pages/LogCompletePage";
 
 import PredictionPage from "./pages/PredictionPage";
 import PredictionLoadingPage from "./pages/PredictionLoadingPage";
@@ -32,6 +34,8 @@ function App() {
       <Route path="/home" element={<HomePage />} />
 
       <Route path="/log" element={<LogPage />} />
+
+      <Route path="/log/complete" element={<LogCompletePage />} />
 
       <Route
         path="/prediction"

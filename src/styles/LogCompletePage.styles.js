@@ -1,6 +1,32 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const scaleIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
 
 export const Page = styled.main`
+  position: relative;
+
   width: 100%;
   min-height: 100dvh;
 
@@ -12,37 +38,183 @@ export const Page = styled.main`
 
 export const Content = styled.div`
   width: 100%;
-  max-width: 30rem;
 
-  margin: 0 auto;
+  padding: 4rem 1.75rem 3rem;
 
-  padding: 3rem 1.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
-export const TopRow = styled.div`
+export const LogoGlow = styled.div`
+  width: 8.5rem;
+  height: 8.5rem;
+
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 
-  margin-bottom: 1.75rem;
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(93, 217, 186, 0.18) 0%,
+    rgba(93, 217, 186, 0.08) 48%,
+    rgba(93, 217, 186, 0) 72%
+  );
+
+  animation: ${scaleIn} 0.6s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+`;
+
+export const CompleteLogo = styled.img`
+  width: 5.5rem;
+  height: 5.5rem;
+
+  object-fit: contain;
+  display: block;
 `;
 
 export const Title = styled.h1`
+  margin-top: 2rem;
+
   color: var(--white);
 
   font-family: "Paperlogy", sans-serif;
+
   font-size: 2rem;
+  font-style: normal;
   font-weight: 800;
-  line-height: 1.2;
+
+  line-height: 1.3;
+
+  text-align: center;
+
+  opacity: 0;
+
+  animation: ${fadeUp}
+    0.6s ease
+    0.15s forwards;
 `;
 
-export const DataBadge = styled.div`
-  padding: 0.55rem 1rem;
+export const Description = styled.p`
+  margin-top: 0.75rem;
 
-  border: 2px solid var(--light-blue);
-  border-radius: 999px;
+  color: var(--gray);
 
-  color: var(--light-blue);
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+
+  line-height: 1.6;
+
+  text-align: center;
+
+  opacity: 0;
+
+  animation: ${fadeUp}
+    0.6s ease
+    0.25s forwards;
+`;
+
+export const StreakCard = styled.section`
+  width: 100%;
+
+  margin-top: 2rem;
+
+  padding: 1.5rem;
+
+  border: 1px solid
+    rgba(143, 173, 234, 0.2);
+
+  border-radius: 1.5rem;
+
+  background:
+    rgba(143, 173, 234, 0.05);
+
+  opacity: 0;
+
+  animation: ${fadeUp}
+    0.7s ease
+    0.35s forwards;
+`;
+
+export const StreakTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 1rem;
+`;
+
+export const FireIcon = styled.div`
+  font-size: 2.5rem;
+
+  line-height: 1;
+
+  filter: drop-shadow(
+    0 0 0.6rem
+    rgba(255, 220, 76, 0.45)
+  );
+`;
+
+export const StreakInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+`;
+
+export const StreakCount = styled.strong`
+  color: #ffed67;
+
+  font-family: "Paperlogy", sans-serif;
+
+  font-size: 2rem;
+  font-weight: 800;
+
+  line-height: 1.1;
+`;
+
+export const StreakText = styled.span`
+  margin-top: 0.2rem;
+
+  color: var(--gray);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.95rem;
+  font-weight: 400;
+`;
+
+export const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+
+  margin: 1.5rem 0;
+
+  background:
+    rgba(169, 180, 198, 0.2);
+`;
+
+export const ProgressHeader = styled.div`
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const ProgressLabel = styled.span`
+  color: var(--gray);
 
   font-family:
     "Pretendard Variable",
@@ -50,35 +222,122 @@ export const DataBadge = styled.div`
     sans-serif;
 
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 400;
 `;
 
-export const ScoreCard = styled.section`
+export const ProgressCount = styled.strong`
+  color: var(--light-blue);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 1rem;
+  font-weight: 700;
+`;
+
+export const ProgressTrack = styled.div`
   width: 100%;
+  height: 0.45rem;
 
-  padding: 2.75rem 1.5rem 2.5rem;
+  margin-top: 0.8rem;
 
-  border: 1px solid rgba(143, 173, 234, 0.18);
-  border-radius: 1.75rem;
+  border-radius: 999px;
+
+  background:
+    rgba(143, 173, 234, 0.15);
+
+  overflow: hidden;
+`;
+
+export const ProgressBar = styled.div`
+  width: 40%;
+  height: 100%;
+
+  border-radius: inherit;
 
   background: linear-gradient(
-    180deg,
-    rgba(143, 173, 234, 0.06) 0%,
-    rgba(143, 173, 234, 0.03) 100%
+    90deg,
+    var(--mint),
+    var(--light-blue)
   );
+`;
+
+export const ProgressDescription = styled.p`
+  margin-top: 0.65rem;
+
+  color: var(--dark-gray);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.8rem;
+  font-weight: 400;
+`;
+
+export const ButtonGroup = styled.div`
+  width: 100%;
+
+  margin-top: 1.75rem;
 
   display: flex;
   flex-direction: column;
-  align-items: center;
 
-  text-align: center;
+  gap: 0.75rem;
 
-  box-shadow:
-    inset 0 0 2rem rgba(143, 173, 234, 0.03),
-    0 0 1.5rem rgba(0, 0, 0, 0.08);
+  opacity: 0;
+
+  animation: ${fadeUp}
+    0.7s ease
+    0.5s forwards;
 `;
 
-export const ScoreLabel = styled.p`
+export const PredictionButton = styled.button`
+  width: 100%;
+  height: 3.75rem;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #416bc7;
+
+  color: var(--white);
+
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
+
+  font-size: 1.1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0.5rem 1.5rem
+    rgba(65, 107, 199, 0.25);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+export const HomeButton = styled.button`
+  width: 100%;
+  height: 3.75rem;
+
+  border: 1px solid
+    rgba(143, 173, 234, 0.12);
+
+  border-radius: 999px;
+
+  background:
+    rgba(143, 173, 234, 0.12);
+
   color: var(--gray);
 
   font-family:
@@ -88,228 +347,17 @@ export const ScoreLabel = styled.p`
 
   font-size: 1rem;
   font-weight: 400;
-`;
-
-export const Score = styled.div`
-  margin-top: 0.85rem;
-
-  color: #ffeb63;
-
-  font-family: "Paperlogy", sans-serif;
-  font-size: 4.5rem;
-  font-weight: 900;
-  line-height: 1;
-`;
-
-export const StatusBadge = styled.div`
-  margin-top: 1rem;
-
-  padding: 0.5rem 1.1rem;
-
-  border: 1px solid rgba(255, 235, 99, 0.65);
-  border-radius: 999px;
-
-  background: rgba(255, 235, 99, 0.07);
-
-  color: #ffeb63;
-
-  font-family:
-    "Pretendard Variable",
-    "Pretendard",
-    sans-serif;
-
-  font-size: 0.95rem;
-  font-weight: 700;
-
-  box-shadow:
-    0 0 1rem rgba(255, 235, 99, 0.12);
-`;
-
-export const FactorsCard = styled.section`
-  width: 100%;
-
-  margin-top: 1.25rem;
-  padding: 1.5rem;
-
-  border: 1px solid rgba(143, 173, 234, 0.18);
-  border-radius: 1.75rem;
-
-  background: rgba(143, 173, 234, 0.035);
-`;
-
-export const SectionTitle = styled.h2`
-  margin-bottom: 1.4rem;
-
-  color: var(--light-blue);
-
-  font-family:
-    "Pretendard Variable",
-    "Pretendard",
-    sans-serif;
-
-  font-size: 1rem;
-  font-weight: 700;
-`;
-
-export const FactorRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const FactorLeft = styled.div`
-  display: flex;
-  align-items: center;
-
-  gap: 0.8rem;
-`;
-
-export const FactorEmoji = styled.span`
-  width: 2rem;
-  height: 2rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  font-size: 1.5rem;
-  line-height: 1;
-`;
-
-export const FactorName = styled.span`
-  display: flex;
-  align-items: center;
-
-  height: 2rem;
-
-  color: var(--white);
-
-  font-family: "Pretendard Variable", "Pretendard", sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1;
-`;
-
-export const LevelBadge = styled.span`
-  min-width: 3.25rem;
-
-  padding: 0.45rem 0.75rem;
-
-  border-radius: 999px;
-
-  text-align: center;
-
-  font-family:
-    "Pretendard Variable",
-    "Pretendard",
-    sans-serif;
-
-  font-size: 0.85rem;
-  font-weight: 700;
-
-  color: ${({ $level }) =>
-    $level === "high"
-      ? "#ff6b4a"
-      : "#f2e45e"};
-
-  border: 1px solid
-    ${({ $level }) =>
-      $level === "high"
-        ? "rgba(255, 107, 74, 0.6)"
-        : "rgba(242, 228, 94, 0.6)"};
-
-  background:
-    ${({ $level }) =>
-      $level === "high"
-        ? "rgba(255, 107, 74, 0.08)"
-        : "rgba(242, 228, 94, 0.08)"};
-`;
-
-export const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-
-  margin: 1.25rem 0;
-
-  background: rgba(169, 180, 198, 0.12);
-`;
-
-export const AiCard = styled.section`
-  width: 100%;
-
-  margin-top: 1.25rem;
-  padding: 1.5rem;
-
-  border: 1px solid rgba(222, 108, 191, 0.45);
-  border-radius: 1.75rem;
-
-  background: rgba(222, 108, 191, 0.06);
-`;
-
-export const AiBadge = styled.div`
-  display: inline-flex;
-  align-items: center;
-
-  padding: 0.4rem 0.85rem;
-
-  margin-bottom: 1.25rem;
-
-  border: 1px solid rgba(222, 108, 191, 0.65);
-  border-radius: 999px;
-
-  color: #e77ac7;
-
-  font-family:
-    "Pretendard Variable",
-    "Pretendard",
-    sans-serif;
-
-  font-size: 0.8rem;
-  font-weight: 700;
-`;
-
-export const AiText = styled.p`
-  color: #e77ac7;
-
-  font-family:
-    "Pretendard Variable",
-    "Pretendard",
-    sans-serif;
-
-  font-size: 0.9rem;
-  font-weight: 400;
-  line-height: 1.95;
-`;
-
-export const MissionButton = styled.button`
-  width: 100%;
-  height: 4rem;
-
-  margin-top: 1.5rem;
-
-  border: none;
-  border-radius: 999px;
-
-  background: #416bc7;
-
-  color: var(--white);
-
-  font-family: "Paperlogy", sans-serif;
-  font-size: 1.15rem;
-  font-weight: 700;
 
   cursor: pointer;
 
-  box-shadow:
-    0 0.6rem 1.5rem rgba(65, 107, 199, 0.25);
-
   transition:
     transform 0.15s ease,
-    opacity 0.15s ease;
+    background 0.15s ease;
 
   &:active {
     transform: scale(0.98);
+
+    background:
+      rgba(143, 173, 234, 0.18);
   }
 `;

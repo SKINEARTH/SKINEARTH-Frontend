@@ -15,38 +15,61 @@ import {
   Header,
   Title,
   Subtitle,
+
   Card,
   SectionTitle,
+
   FactorList,
   FactorItem,
   FactorLabel,
   Emoji,
+
   ScoreButtons,
   ScoreButton,
+
   SleepHeader,
   SleepValue,
   Slider,
+
   SkinOptions,
   SkinButton,
   SkinIcon,
   SkinLabels,
+
   SymptomOptions,
   SymptomButton,
+
   GuideCard,
   GuideBadge,
   GuideText,
   GuideParagraph,
+
   SaveButton,
 } from "../styles/LogPage.styles";
 
 const SCORE_OPTIONS = [1, 2, 3, 4, 5];
 
 const SKIN_OPTIONS = [
-  { value: 1, icon: skin1 },
-  { value: 2, icon: skin2 },
-  { value: 3, icon: skin3 },
-  { value: 4, icon: skin4 },
-  { value: 5, icon: skin5 },
+  {
+    value: 1,
+    icon: skin1,
+  },
+  {
+    value: 2,
+    icon: skin2,
+  },
+  {
+    value: 3,
+    icon: skin3,
+  },
+  {
+    value: 4,
+    icon: skin4,
+  },
+  {
+    value: 5,
+    icon: skin5,
+  },
 ];
 
 const SYMPTOMS = [
@@ -71,11 +94,25 @@ const LogPage = () => {
   const [symptoms, setSymptoms] = useState([]);
 
   const toggleSymptom = (symptom) => {
-    setSymptoms((prev) =>
-      prev.includes(symptom)
-        ? prev.filter((item) => item !== symptom)
-        : [...prev, symptom]
-    );
+    if (symptom === "없음") {
+      setSymptoms((prev) =>
+        prev.includes("없음") ? [] : ["없음"]
+      );
+
+      return;
+    }
+
+    setSymptoms((prev) => {
+      const withoutNone = prev.filter(
+        (item) => item !== "없음"
+      );
+
+      return withoutNone.includes(symptom)
+        ? withoutNone.filter(
+            (item) => item !== symptom
+          )
+        : [...withoutNone, symptom];
+    });
   };
 
   const handleSave = () => {
@@ -91,7 +128,7 @@ const LogPage = () => {
 
     console.log("오늘의 궤도 기록:", logData);
 
-    navigate("/log/loading");
+    navigate("/log/complete");
   };
 
   return (
@@ -99,14 +136,20 @@ const LogPage = () => {
       <Content>
         <Header>
           <Title>궤도 관측 로그</Title>
-          <Subtitle>오늘의 환경을 기록해 주세요</Subtitle>
+
+          <Subtitle>
+            오늘의 환경을 기록해 주세요
+          </Subtitle>
         </Header>
 
         {/* 환경 요인 */}
         <Card>
-          <SectionTitle>환경 요인</SectionTitle>
+          <SectionTitle $blue>
+            환경 요인
+          </SectionTitle>
 
           <FactorList>
+            {/* 냉난방 노출 */}
             <FactorItem>
               <FactorLabel>
                 <Emoji>❄️</Emoji>
@@ -118,8 +161,12 @@ const LogPage = () => {
                   <ScoreButton
                     key={score}
                     type="button"
-                    $selected={heating === score}
-                    onClick={() => setHeating(score)}
+                    $selected={
+                      heating === score
+                    }
+                    onClick={() =>
+                      setHeating(score)
+                    }
                   >
                     {score}
                   </ScoreButton>
@@ -127,6 +174,7 @@ const LogPage = () => {
               </ScoreButtons>
             </FactorItem>
 
+            {/* 화면 노출 */}
             <FactorItem>
               <FactorLabel>
                 <Emoji>💻</Emoji>
@@ -138,8 +186,12 @@ const LogPage = () => {
                   <ScoreButton
                     key={score}
                     type="button"
-                    $selected={screen === score}
-                    onClick={() => setScreen(score)}
+                    $selected={
+                      screen === score
+                    }
+                    onClick={() =>
+                      setScreen(score)
+                    }
                   >
                     {score}
                   </ScoreButton>
@@ -147,6 +199,7 @@ const LogPage = () => {
               </ScoreButtons>
             </FactorItem>
 
+            {/* 수면 시간 */}
             <FactorItem>
               <SleepHeader>
                 <FactorLabel>
@@ -154,7 +207,9 @@ const LogPage = () => {
                   수면 시간
                 </FactorLabel>
 
-                <SleepValue>{sleep}h</SleepValue>
+                <SleepValue>
+                  {sleep}h
+                </SleepValue>
               </SleepHeader>
 
               <Slider
@@ -163,10 +218,15 @@ const LogPage = () => {
                 max="10"
                 step="1"
                 value={sleep}
-                onChange={(e) => setSleep(Number(e.target.value))}
+                onChange={(e) =>
+                  setSleep(
+                    Number(e.target.value)
+                  )
+                }
               />
             </FactorItem>
 
+            {/* 스트레스 */}
             <FactorItem>
               <FactorLabel>
                 <Emoji>⚡</Emoji>
@@ -178,8 +238,12 @@ const LogPage = () => {
                   <ScoreButton
                     key={score}
                     type="button"
-                    $selected={stress === score}
-                    onClick={() => setStress(score)}
+                    $selected={
+                      stress === score
+                    }
+                    onClick={() =>
+                      setStress(score)
+                    }
                   >
                     {score}
                   </ScoreButton>
@@ -187,6 +251,7 @@ const LogPage = () => {
               </ScoreButtons>
             </FactorItem>
 
+            {/* 식사 규칙성 */}
             <FactorItem>
               <FactorLabel>
                 <Emoji>🍽️</Emoji>
@@ -199,7 +264,9 @@ const LogPage = () => {
                     key={score}
                     type="button"
                     $selected={meal === score}
-                    onClick={() => setMeal(score)}
+                    onClick={() =>
+                      setMeal(score)
+                    }
                   >
                     {score}
                   </ScoreButton>
@@ -211,7 +278,7 @@ const LogPage = () => {
 
         {/* 피부 상태 */}
         <Card>
-          <SectionTitle $green>
+          <SectionTitle $mint>
             오늘의 피부 상태 *
           </SectionTitle>
 
@@ -220,8 +287,15 @@ const LogPage = () => {
               <SkinButton
                 key={item.value}
                 type="button"
-                $selected={skinCondition === item.value}
-                onClick={() => setSkinCondition(item.value)}
+                $selected={
+                  skinCondition ===
+                  item.value
+                }
+                onClick={() =>
+                  setSkinCondition(
+                    item.value
+                  )
+                }
               >
                 <SkinIcon
                   src={item.icon}
@@ -248,8 +322,12 @@ const LogPage = () => {
               <SymptomButton
                 key={symptom}
                 type="button"
-                $selected={symptoms.includes(symptom)}
-                onClick={() => toggleSymptom(symptom)}
+                $selected={symptoms.includes(
+                  symptom
+                )}
+                onClick={() =>
+                  toggleSymptom(symptom)
+                }
               >
                 {symptom}
               </SymptomButton>
@@ -259,32 +337,46 @@ const LogPage = () => {
 
         {/* 기록 도우미 */}
         <GuideCard>
-          <GuideBadge>🪐 기록 도우미</GuideBadge>
+          <GuideBadge>
+            🪐 기록 도우미
+          </GuideBadge>
 
           <GuideText>
             <GuideParagraph>
-              모든 기록은 여행자님의 체감 정도를 기준으로 해요.
+              모든 기록은 여행자님의 체감 정도를
+              기준으로 해요.
             </GuideParagraph>
 
             <GuideParagraph>
-              <strong>냉난방 노출, 화면 노출:</strong> 노출 시간이
-              길었다면 5에 가깝게,
+              <strong>
+                냉난방 노출, 화면 노출:
+              </strong>{" "}
+              노출 시간이 길었다면 5에 가깝게,
               <br />
-              노출 시간이 적절했다면 1에 가깝게 기록해 주세요.
+              노출 시간이 적절했다면 1에 가깝게
+              기록해 주세요.
             </GuideParagraph>
 
             <GuideParagraph>
-              <strong>스트레스:</strong> 스트레스를 많이 받는
-              하루였다면 5에 가깝게,
-              <br />
-              스트레스가 거의 없었다면 1에 가깝게 기록해 주세요.
-            </GuideParagraph>
-
-            <GuideParagraph>
-              <strong>식사 규칙성:</strong> 규칙적인 식사를 했다면
+              <strong>
+                스트레스:
+              </strong>{" "}
+              스트레스를 많이 받는 하루였다면
               5에 가깝게,
               <br />
-              식사를 거르거나 미뤘다면 1에 가깝게 기록해 주세요.
+              스트레스가 거의 없었다면 1에
+              가깝게 기록해 주세요.
+            </GuideParagraph>
+
+            <GuideParagraph>
+              <strong>
+                식사 규칙성:
+              </strong>{" "}
+              규칙적인 식사를 했다면 5에
+              가깝게,
+              <br />
+              식사를 거르거나 미뤘다면 1에
+              가깝게 기록해 주세요.
             </GuideParagraph>
           </GuideText>
         </GuideCard>

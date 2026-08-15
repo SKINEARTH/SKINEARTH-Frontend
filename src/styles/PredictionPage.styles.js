@@ -49,29 +49,34 @@ export const Card = styled.section`
   margin-bottom: 1rem;
   padding: 1.5rem;
 
-  border: 1px solid
-    rgba(143, 173, 234, 0.2);
-
+  border: 1px solid rgba(143, 173, 234, 0.2);
   border-radius: 1.5rem;
 
-  background:
-    rgba(143, 173, 234, 0.035);
+  background: rgba(143, 173, 234, 0.035);
+`;
+
+export const CardHeader = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
+export const PredictionIcon = styled.span`
+  color: var(--light-blue);
+
+  font-size: 1.15rem;
+  line-height: 1;
+`;
+
+export const CardTitleGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.25rem;
 `;
 
 export const SectionTitle = styled.h2`
-  margin: 0 0 1.5rem;
+  margin: 0;
 
-  color: ${({ $blue, $mint }) => {
-    if ($blue) {
-      return "var(--light-blue)";
-    }
-
-    if ($mint) {
-      return "var(--mint)";
-    }
-
-    return "var(--gray)";
-  }};
+  color: var(--light-blue);
 
   font-family:
     "Pretendard Variable",
@@ -80,6 +85,22 @@ export const SectionTitle = styled.h2`
 
   font-size: 0.95rem;
   font-weight: 700;
+  line-height: 1.4;
+`;
+
+export const SectionDescription = styled.p`
+  margin: 0;
+
+  color: var(--gray);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.5;
 `;
 
 export const FactorList = styled.div`
@@ -132,8 +153,7 @@ export const Emoji = styled.span`
 export const ScoreButtons = styled.div`
   display: grid;
 
-  grid-template-columns:
-    repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 
   gap: 0.5rem;
 `;
@@ -154,7 +174,7 @@ export const ScoreButton = styled.button`
 
   background: ${({ $selected }) =>
     $selected
-      ? "rgba(143, 173, 234, 0.20)"
+      ? "rgba(143, 173, 234, 0.2)"
       : "rgba(143, 173, 234, 0.08)"};
 
   color: ${({ $selected }) =>
@@ -168,6 +188,7 @@ export const ScoreButton = styled.button`
     sans-serif;
 
   font-size: 0.95rem;
+
   font-weight: ${({ $selected }) =>
     $selected ? 700 : 400};
 
@@ -178,8 +199,7 @@ export const ScoreButton = styled.button`
     background 0.2s ease,
     color 0.2s ease;
 
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 `;
 
 export const SleepHeader = styled.div`
@@ -214,127 +234,34 @@ export const Slider = styled.input`
   cursor: pointer;
 `;
 
-export const SkinOptions = styled.div`
-  display: grid;
-
-  grid-template-columns:
-    repeat(5, minmax(0, 1fr));
-
-  gap: 0.5rem;
-`;
-
-export const SkinButton = styled.button`
+export const PredictionButton = styled.button`
   width: 100%;
+  height: 3.5rem;
 
-  aspect-ratio: 1;
+  margin: 0.5rem 0 1.5rem;
 
-  padding: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid
-    ${({ $selected }) =>
-      $selected
-        ? "var(--light-blue)"
-        : "rgba(143, 173, 234, 0.12)"};
-
-  border-radius: 0.75rem;
-
-  background: ${({ $selected }) =>
-    $selected
-      ? "rgba(143, 173, 234, 0.18)"
-      : "rgba(143, 173, 234, 0.08)"};
-
-  cursor: pointer;
-
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    transform 0.15s ease;
-
-  &:active {
-    transform: scale(0.96);
-  }
-
-  -webkit-tap-highlight-color:
-    transparent;
-`;
-
-export const SkinIcon = styled.img`
-  width: 2.25rem;
-  height: 2.25rem;
-
-  object-fit: contain;
-
-  display: block;
-`;
-
-export const SkinLabels = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  margin-top: 0.5rem;
-
-  color: var(--gray);
-
-  font-family:
-    "Pretendard Variable",
-    "Pretendard",
-    sans-serif;
-
-  font-size: 0.75rem;
-  font-weight: 400;
-`;
-
-export const SymptomOptions = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 0.65rem;
-`;
-
-export const SymptomButton = styled.button`
-  padding:
-    0.65rem 1.1rem;
-
-  border: 1px solid
-    ${({ $selected }) =>
-      $selected
-        ? "var(--light-blue)"
-        : "rgba(143, 173, 234, 0.12)"};
-
+  border: none;
   border-radius: 999px;
 
-  background: ${({ $selected }) =>
-    $selected
-      ? "rgba(143, 173, 234, 0.2)"
-      : "rgba(143, 173, 234, 0.08)"};
+  background: #416bc7;
 
-  color: ${({ $selected }) =>
-    $selected
-      ? "var(--light-blue)"
-      : "var(--gray)"};
+  color: var(--white);
 
-  font-family:
-    "Pretendard Variable",
-    "Pretendard",
-    sans-serif;
-
-  font-size: 0.85rem;
-  font-weight: ${({ $selected }) =>
-    $selected ? 600 : 400};
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
 
   cursor: pointer;
 
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease;
+  box-shadow: 0 0.5rem 1.5rem rgba(65, 107, 199, 0.2);
 
-  -webkit-tap-highlight-color:
-    transparent;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 export const GuideCard = styled.section`
@@ -343,13 +270,10 @@ export const GuideCard = styled.section`
   margin: 1.5rem 0;
   padding: 1.5rem;
 
-  border: 1px solid
-    rgba(93, 217, 186, 0.4);
-
+  border: 1px solid rgba(93, 217, 186, 0.4);
   border-radius: 1.5rem;
 
-  background:
-    rgba(93, 217, 186, 0.07);
+  background: rgba(93, 217, 186, 0.07);
 `;
 
 export const GuideBadge = styled.div`
@@ -360,9 +284,7 @@ export const GuideBadge = styled.div`
 
   margin-bottom: 1.25rem;
 
-  border: 1px solid
-    rgba(93, 217, 186, 0.55);
-
+  border: 1px solid rgba(93, 217, 186, 0.55);
   border-radius: 999px;
 
   color: var(--mint);
@@ -397,37 +319,5 @@ export const GuideParagraph = styled.p`
 
   strong {
     font-weight: 700;
-  }
-`;
-
-export const SaveButton = styled.button`
-  width: 100%;
-  height: 3.5rem;
-
-  margin-top: 0.5rem;
-
-  border: none;
-  border-radius: 999px;
-
-  background: #416bc7;
-
-  color: var(--white);
-
-  font-family: "Pretendard Variable", "Pretendard", sans-serif;
-  font-size: 1.15rem;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 0.5rem 1.5rem
-    rgba(65, 107, 199, 0.2);
-
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
-
-  &:active {
-    transform: scale(0.98);
   }
 `;

@@ -1,29 +1,31 @@
 import { useNavigate } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
+import logo from "../assets/logo_SplashPage.svg";
 
 import {
   Page,
   Content,
-  TopRow,
+  LogoGlow,
+  CompleteLogo,
   Title,
-  DataBadge,
-  ScoreCard,
-  ScoreLabel,
-  Score,
-  StatusBadge,
-  FactorsCard,
-  SectionTitle,
-  FactorRow,
-  FactorLeft,
-  FactorEmoji,
-  FactorName,
-  LevelBadge,
+  Description,
+  StreakCard,
+  StreakTop,
+  FireIcon,
+  StreakInfo,
+  StreakCount,
+  StreakText,
   Divider,
-  AiCard,
-  AiBadge,
-  AiText,
-  MissionButton,
+  ProgressHeader,
+  ProgressLabel,
+  ProgressCount,
+  ProgressTrack,
+  ProgressBar,
+  ProgressDescription,
+  ButtonGroup,
+  PredictionButton,
+  HomeButton,
 } from "../styles/LogCompletePage.styles";
 
 const LogCompletePage = () => {
@@ -32,80 +34,78 @@ const LogCompletePage = () => {
   return (
     <Page>
       <Content>
-        <TopRow>
-          <Title>내일 예측 결과</Title>
+        <LogoGlow>
+          <CompleteLogo
+            src={logo}
+            alt="SKINEARTH"
+          />
+        </LogoGlow>
 
-          <DataBadge>
-            데이터 기반
-          </DataBadge>
-        </TopRow>
+        <Title>
+          기록 완료!
+        </Title>
 
-        <ScoreCard>
-          <ScoreLabel>
-            내일 예측 피부 온도 지수
-          </ScoreLabel>
+        <Description>
+          오늘의 궤도가 기록됐어요.
+        </Description>
 
-          <Score>
-            68
-          </Score>
+        <StreakCard>
+          <StreakTop>
+            <FireIcon>
+              🔥
+            </FireIcon>
 
-          <StatusBadge>
-            ⚠️ 주의
-          </StatusBadge>
-        </ScoreCard>
+            <StreakInfo>
+              <StreakCount>
+                4일 연속
+              </StreakCount>
 
-        <FactorsCard>
-          <SectionTitle>
-            주요 원인
-          </SectionTitle>
-
-          <FactorRow>
-            <FactorLeft>
-              <FactorEmoji>❄️</FactorEmoji>
-              <FactorName>
-                에어컨 노출
-              </FactorName>
-            </FactorLeft>
-
-            <LevelBadge $level="high">
-              높음
-            </LevelBadge>
-          </FactorRow>
+              <StreakText>
+                스트릭 유지 중!
+              </StreakText>
+            </StreakInfo>
+          </StreakTop>
 
           <Divider />
 
-          <FactorRow>
-            <FactorLeft>
-              <FactorEmoji>💻</FactorEmoji>
-              <FactorName>
-                화면 노출
-              </FactorName>
-            </FactorLeft>
+          <ProgressHeader>
+            <ProgressLabel>
+              맞춤 예측까지
+            </ProgressLabel>
 
-            <LevelBadge $level="medium">
-              중간
-            </LevelBadge>
-          </FactorRow>
-        </FactorsCard>
+            <ProgressCount>
+              4/10
+            </ProgressCount>
+          </ProgressHeader>
 
-        <AiCard>
-          <AiBadge>
-            ✦ AI 분석
-          </AiBadge>
+          <ProgressTrack>
+            <ProgressBar />
+          </ProgressTrack>
 
-          <AiText>
-            내일은 에어컨 환경에 오랜 시간 노출될 것으로 보입니다.
-            피부 장벽이 약해질 수 있으니 수분 공급에 특히 신경 써보세요.
-            가습기 사용을 추천드려요.
-          </AiText>
-        </AiCard>
+          <ProgressDescription>
+            6개 더 기록하면 나만의 예측 시작!
+          </ProgressDescription>
+        </StreakCard>
 
-        <MissionButton
-          type="button"
-          onClick={() => navigate("/mission")}
-        >
-          🚀 오늘의 탐험 미션 보기
-        </MissionButton>
+        <ButtonGroup>
+          <PredictionButton
+            type="button"
+            onClick={() =>
+              navigate("/prediction")
+            }
+          >
+            내일 예측 보기
+          </PredictionButton>
+
+          <HomeButton
+            type="button"
+            onClick={() =>
+              navigate("/home")
+            }
+          >
+            홈으로 돌아가기
+          </HomeButton>
+        </ButtonGroup>
       </Content>
 
       <NavBar />

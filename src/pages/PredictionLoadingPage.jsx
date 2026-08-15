@@ -11,14 +11,14 @@ import {
   LoadingLogo,
   Title,
   Description,
-} from "../styles/LogLoadingPage.styles";
+} from "../styles/PredictionLoadingPage.styles";
 
-const LogLoadingPage = () => {
+const PredictionLoadingPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/log/complete", {
+      navigate("/prediction/result", {
         replace: true,
       });
     }, 2000);
@@ -54,4 +54,4 @@ const LogLoadingPage = () => {
   );
 };
 
-export default LogLoadingPage;
+export default PredictionLoadingPage;

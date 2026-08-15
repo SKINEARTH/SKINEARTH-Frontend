@@ -11,7 +11,7 @@ export const Page = styled.main`
 export const Content = styled.div`
   width: 100%;
 
-  padding: 4.5rem 1.25rem 8.5rem;
+  padding: 3rem 1.25rem 8.5rem;
 `;
 
 export const Header = styled.header`

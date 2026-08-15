@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 
@@ -58,6 +59,8 @@ const SYMPTOMS = [
 ];
 
 const LogPage = () => {
+  const navigate = useNavigate();
+
   const [heating, setHeating] = useState(null);
   const [screen, setScreen] = useState(null);
   const [sleep, setSleep] = useState(6);
@@ -87,6 +90,8 @@ const LogPage = () => {
     };
 
     console.log("오늘의 궤도 기록:", logData);
+
+    navigate("/log/loading");
   };
 
   return (

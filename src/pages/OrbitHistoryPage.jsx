@@ -25,6 +25,15 @@ import {
   CauseRiskBadge,
   CauseRiskDot,
   EmptyCauseTimeline,
+  MissionRateCard,
+  MissionRateTitle,
+  MissionRateBody,
+  MissionRateCircle,
+  MissionRateValue,
+  MissionRateInfo,
+  MissionRateCount,
+  MissionRateLabel,
+  MissionRateMessage,
 } from "../styles/OrbitHistoryPage.styles";
 
 const MOCK_SKIN_RECORDS = [
@@ -58,10 +67,32 @@ const MOCK_CAUSE_CHANGES = [
   },
 ];
 
+const MOCK_MISSIONS = [
+  { id: 1, issuedDate: "2025-01-13", completed: true },
+  { id: 2, issuedDate: "2025-01-14", completed: true },
+  { id: 3, issuedDate: "2025-01-15", completed: true },
+  { id: 4, issuedDate: "2025-01-16", completed: true },
+  { id: 5, issuedDate: "2025-01-17", completed: true },
+  { id: 6, issuedDate: "2025-01-18", completed: false },
+  { id: 7, issuedDate: "2025-01-19", completed: false },
+];
+
 const RISK_THEMES = {
   안정: { color: "#6bd2b0", rgb: "107, 210, 176" },
   주의: { color: "#fbf079", rgb: "251, 240, 121" },
   위험: { color: "#f2684b", rgb: "242, 104, 75" },
+};
+
+const getMissionRateTheme = (percentage) => {
+  if (percentage >= 70) {
+    return { color: "#6bd2b0", message: "🔥 거의 다 왔어요!" };
+  }
+
+  if (percentage >= 40) {
+    return { color: "#f9cf6e", message: "👍 좋은 페이스예요!" };
+  }
+
+  return { color: "#f2684b", message: "🫧 조금만 더 노력해 봐요!" };
 };
 
 const parseRecordDate = (date) => new Date(`${date}T00:00:00`);
@@ -107,6 +138,7 @@ const formatCausePeriod = ({ startDate, endDate }) => {
 const OrbitHistoryPage = ({
   records = MOCK_SKIN_RECORDS,
   causeChanges = MOCK_CAUSE_CHANGES,
+  missions = MOCK_MISSIONS,
   referenceDate = new Date("2025-01-15T00:00:00"),
 }) => {
   const [period, setPeriod] = useState("week");
@@ -145,6 +177,25 @@ const OrbitHistoryPage = ({
       )
       .slice(0, 3);
   }, [causeChanges, period, referenceDate]);
+
+  const missionSummary = useMemo(() => {
+    const { start, end } = getPeriodRange(period, referenceDate);
+    const periodMissions = missions.filter(({ issuedDate }) => {
+      const missionDate = parseRecordDate(issuedDate);
+      return missionDate >= start && missionDate <= end;
+    });
+    const completedCount = periodMissions.filter(
+      ({ completed }) => completed,
+    ).length;
+    const totalCount = periodMissions.length;
+    const percentage = totalCount
+      ? Math.round((completedCount / totalCount) * 100)
+      : 0;
+
+    return { completedCount, totalCount, percentage };
+  }, [missions, period, referenceDate]);
+
+  const missionRateTheme = getMissionRateTheme(missionSummary.percentage);
 
   return (
     <Page>
@@ -217,6 +268,35 @@ const OrbitHistoryPage = ({
             </EmptyCauseTimeline>
           )}
         </CauseCard>
+
+        <MissionRateCard>
+          <MissionRateTitle>미션 완료율</MissionRateTitle>
+
+          <MissionRateBody>
+            <MissionRateCircle
+              $percentage={missionSummary.percentage}
+              $color={missionRateTheme.color}
+              role="img"
+              aria-label={`미션 완료율 ${missionSummary.percentage}%`}
+            >
+              <MissionRateValue $color={missionRateTheme.color}>
+                {missionSummary.percentage}%
+              </MissionRateValue>
+            </MissionRateCircle>
+
+            <MissionRateInfo>
+              <MissionRateCount>
+                {missionSummary.completedCount}/{missionSummary.totalCount} 완료
+              </MissionRateCount>
+              <MissionRateLabel>
+                이번 {period === "week" ? "주" : "달"} 미션 달성률
+              </MissionRateLabel>
+              <MissionRateMessage $color={missionRateTheme.color}>
+                {missionRateTheme.message}
+              </MissionRateMessage>
+            </MissionRateInfo>
+          </MissionRateBody>
+        </MissionRateCard>
       </Content>
 
       <NavBar />

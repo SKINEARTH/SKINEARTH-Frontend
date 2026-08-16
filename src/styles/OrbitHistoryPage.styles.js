@@ -273,3 +273,116 @@ export const EmptyCauseTimeline = styled.p`
   font-family: "Pretendard", sans-serif;
   font-size: 12px;
 `;
+
+export const MissionRateCard = styled.section`
+  width: 100%;
+  height: 136px;
+
+  margin-top: 16px;
+  padding: 19px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: #121d38;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+`;
+
+export const MissionRateTitle = styled.h2`
+  color: #8fadea;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  letter-spacing: 0.72px;
+`;
+
+export const MissionRateBody = styled.div`
+  height: 80px;
+
+  padding-top: 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+export const MissionRateCircle = styled.div`
+  width: 60px;
+  height: 60px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: conic-gradient(
+    ${({ $color }) => $color} ${({ $percentage }) => $percentage * 3.6}deg,
+    #26314a 0
+  );
+
+  &::before {
+    width: 48px;
+    height: 48px;
+
+    grid-area: 1 / 1;
+
+    border-radius: 50%;
+    background: #121d38;
+    content: "";
+  }
+`;
+
+export const MissionRateValue = styled.strong`
+  grid-area: 1 / 1;
+  z-index: 1;
+
+  color: ${({ $color }) => $color};
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 24px;
+`;
+
+export const MissionRateInfo = styled.div`
+  min-width: 0;
+`;
+
+export const MissionRateCount = styled.strong`
+  display: block;
+
+  color: #edf1f8;
+
+  font-family: "Noto Sans KR", "Pretendard", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+`;
+
+export const MissionRateLabel = styled.span`
+  display: block;
+
+  color: #a9b4c6;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+`;
+
+export const MissionRateMessage = styled.span`
+  padding-top: 4px;
+
+  display: block;
+
+  color: ${({ $color }) => $color};
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16.5px;
+  white-space: nowrap;
+`;

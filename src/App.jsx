@@ -3,8 +3,10 @@ import { Routes, Route } from "react-router-dom";
 
 import SplashPage from "./pages/SplashPage";
 import OnboardingPage from "./pages/OnboardingPage";
+
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+
 import PersonalizationSurveyPage from "./pages/PersonalizationSurveyPage";
 import FirstRecordGuidePage from "./pages/FirstRecordGuidePage";
 
@@ -33,8 +35,24 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<OnboardingPage />} />
+      {/* 온보딩 */}
+      <Route
+        path="/"
+        element={<OnboardingPage />}
+      />
 
+      {/* 인증 */}
+      <Route
+        path="/login"
+        element={<LoginPage />}
+      />
+
+      <Route
+        path="/signup"
+        element={<SignupPage />}
+      />
+
+      {/* 개인화 */}
       <Route
         path="/personalization"
         element={<PersonalizationSurveyPage />}
@@ -45,12 +63,24 @@ function App() {
         element={<FirstRecordGuidePage />}
       />
 
-      <Route path="/home" element={<HomePage />} />
+      {/* 홈 */}
+      <Route
+        path="/home"
+        element={<HomePage />}
+      />
 
-      <Route path="/log" element={<LogPage />} />
+      {/* 기록 */}
+      <Route
+        path="/log"
+        element={<LogPage />}
+      />
 
-      <Route path="/log/complete" element={<LogCompletePage />} />
+      <Route
+        path="/log/complete"
+        element={<LogCompletePage />}
+      />
 
+      {/* 예측 */}
       <Route
         path="/prediction"
         element={<PredictionPage />}
@@ -66,11 +96,13 @@ function App() {
         element={<PredictionResultPage />}
       />
 
+      {/* 미션 */}
       <Route
         path="/mission"
         element={<MissionPage />}
       />
 
+      {/* 마이 */}
       <Route
         path="/my"
         element={<MyPage />}

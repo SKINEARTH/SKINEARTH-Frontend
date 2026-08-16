@@ -91,6 +91,17 @@ const formatKoreanDate = (date) =>
     weekday: "long",
   }).format(date);
 
+const MILESTONE_CONTENT = {
+  "streak-7": {
+    title: "연속 7일 기록을 축하합니다!",
+    description: "궤도를 연속으로 7일 기록했어요. 대단해요!",
+  },
+  "mission-10": {
+    title: "탐사 미션 10회 완료를 축하합니다!",
+    description: "탐사 미션을 총 10회 완료했어요. 대단해요!",
+  },
+};
+
 const HomePage = ({
   nickname = "여행자",
   score = 62,
@@ -104,11 +115,20 @@ const HomePage = ({
   mainCause = "냉난방",
   missionTitle = "실내 습도 체크하기",
   missionDuration = 3,
+  consecutiveRecordDays = 0,
+  completedMissionCount = 0,
+  milestoneType = null,
 }) => {
   const navigate = useNavigate();
   const normalizedRecordCount = Math.min(Math.max(recordCount, 0), 10);
   const remainingRecordCount = 10 - normalizedRecordCount;
-  const [showRecordMilestone] = useState(normalizedRecordCount >= 10);
+  const [activeMilestone] = useState(() => {
+    if (milestoneType) return milestoneType;
+    if (normalizedRecordCount >= 10) return "record-10";
+    if (consecutiveRecordDays >= 7) return "streak-7";
+    if (completedMissionCount >= 10) return "mission-10";
+    return null;
+  });
   const forecastType = normalizedRecordCount >= 10 ? "데이터 기반" : "추정값";
   const riskTheme = RISK_THEMES[riskStatus] ?? RISK_THEMES.주의;
 
@@ -241,7 +261,7 @@ const HomePage = ({
 
       <NavBar />
 
-      {showRecordMilestone && (
+      {activeMilestone === "record-10" && (
         <MilestoneOverlay role="dialog" aria-modal="true">
           <MilestoneGroup>
             <MilestonePpImage
@@ -278,6 +298,28 @@ const HomePage = ({
               </MilestoneButtons>
             </MilestoneModal>
           </MilestoneGroup>
+        </MilestoneOverlay>
+      )}
+
+      {MILESTONE_CONTENT[activeMilestone] && (
+        <MilestoneOverlay role="dialog" aria-modal="true">
+          <MilestoneModal>
+            <MilestoneTitle>
+              {MILESTONE_CONTENT[activeMilestone].title}
+            </MilestoneTitle>
+
+            <MilestoneDescription>
+              <p>{MILESTONE_CONTENT[activeMilestone].description}</p>
+              <p>PP가 Lv.3 여행자로 레벨업했어요!</p>
+              <p>지금 바로 확인해 보세요.</p>
+            </MilestoneDescription>
+
+            <MilestoneButtons>
+              <PpButton type="button" onClick={() => navigate("/mission")}>
+                PP 보러가기
+              </PpButton>
+            </MilestoneButtons>
+          </MilestoneModal>
         </MilestoneOverlay>
       )}
     </Page>

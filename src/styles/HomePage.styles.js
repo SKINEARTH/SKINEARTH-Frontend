@@ -97,3 +97,105 @@ export const PlanetGaugeImage = styled.img`
   display: block;
   object-fit: contain;
 `;
+
+export const RecordStatusCard = styled.section`
+  width: 100%;
+  height: 79px;
+
+  margin-top: 14px;
+  padding: 19px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: #121d38;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+`;
+
+export const RecordStatusIcon = styled.div`
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: ${({ $recorded }) =>
+    $recorded ? "rgba(107, 210, 176, 0.15)" : "rgba(251, 240, 121, 0.15)"};
+  box-shadow: ${({ $recorded }) =>
+    $recorded
+      ? "0 0 12px rgba(107, 210, 176, 0.5)"
+      : "0 0 12px rgba(251, 240, 121, 0.2)"};
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 20px;
+  line-height: 30px;
+`;
+
+export const RecordStatusIconImage = styled.img`
+  width: 24px;
+  height: 24px;
+
+  display: block;
+`;
+
+export const RecordStatusContent = styled.div`
+  min-width: 0;
+  flex: 1;
+`;
+
+export const RecordStatusTitle = styled.h3`
+  color: var(--white);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  white-space: nowrap;
+`;
+
+export const RecordStatusDescription = styled.p`
+  padding-top: 2px;
+
+  color: var(--gray);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: nowrap;
+`;
+
+export const RecordStatusButton = styled.button`
+  flex-shrink: 0;
+
+  padding: 8px 14px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #375cb2;
+  color: var(--white);
+  box-shadow:
+    0 0 12px rgba(55, 92, 178, 0.35),
+    0 0 4px rgba(55, 92, 178, 0.18);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+
+  cursor: pointer;
+
+  &:active {
+    background: var(--light-blue);
+  }
+`;

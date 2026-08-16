@@ -199,3 +199,175 @@ export const RecordStatusButton = styled.button`
     background: var(--light-blue);
   }
 `;
+
+export const ForecastProgressCard = styled.section`
+  width: 100%;
+  height: 85px;
+
+  margin-top: 14px;
+  padding: 15px 19px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: #121d38;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+`;
+
+export const ForecastProgressHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: var(--gray);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  line-height: 18px;
+`;
+
+export const ForecastProgressCount = styled.strong`
+  color: var(--light-blue);
+  font-weight: 700;
+`;
+
+export const ForecastProgressTrack = styled.div`
+  width: 100%;
+  height: 6px;
+
+  margin-top: 8px;
+
+  border-radius: 999px;
+  background: #26314a;
+
+  overflow: hidden;
+`;
+
+export const ForecastProgressBar = styled.div`
+  width: ${({ $recordCount }) => `${$recordCount * 10}%`};
+  height: 100%;
+
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6bd2b0, #8fadea);
+  box-shadow: 0 0 8px rgba(107, 210, 176, 0.4);
+
+  transition: width 240ms ease;
+`;
+
+export const ForecastProgressHint = styled.p`
+  margin-top: 6px;
+
+  color: var(--dark-gray);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 11px;
+  line-height: 16.5px;
+`;
+
+export const MilestoneOverlay = styled.div`
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(3, 8, 20, 0.76);
+`;
+
+export const MilestoneGroup = styled.div`
+  width: 336px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const MilestonePpImage = styled.img`
+  width: 240px;
+  height: 240px;
+
+  display: block;
+  object-fit: contain;
+`;
+
+export const MilestoneModal = styled.div`
+  width: 336px;
+
+  margin-top: 15px;
+  padding: 20px 28px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  border: 1px solid #6bd2b0;
+  border-radius: 16px;
+
+  background: #14264a;
+  box-shadow: 0 0 10px rgba(107, 210, 176, 0.5);
+`;
+
+export const MilestoneTitle = styled.h2`
+  color: var(--white);
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  white-space: nowrap;
+`;
+
+export const MilestoneDescription = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  color: var(--white);
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 17px;
+  text-align: center;
+`;
+
+export const MilestoneButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+`;
+
+const MilestoneButton = styled.button`
+  height: 38px;
+
+  border: 0;
+  border-radius: 12px;
+
+  color: #1a2748;
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+export const ForecastButton = styled(MilestoneButton)`
+  padding: 0 16px;
+  background: #8fadea;
+`;
+
+export const PpButton = styled(MilestoneButton)`
+  width: 98px;
+  background: #6bd2b0;
+`;

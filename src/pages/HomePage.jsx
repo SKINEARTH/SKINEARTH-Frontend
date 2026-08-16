@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
@@ -25,6 +26,21 @@ import {
   RecordStatusTitle,
   RecordStatusDescription,
   RecordStatusButton,
+  ForecastProgressCard,
+  ForecastProgressHeader,
+  ForecastProgressCount,
+  ForecastProgressTrack,
+  ForecastProgressBar,
+  ForecastProgressHint,
+  MilestoneOverlay,
+  MilestoneGroup,
+  MilestonePpImage,
+  MilestoneModal,
+  MilestoneTitle,
+  MilestoneDescription,
+  MilestoneButtons,
+  ForecastButton,
+  PpButton,
 } from "../styles/HomePage.styles";
 
 const formatKoreanDate = (date) =>
@@ -41,8 +57,13 @@ const HomePage = ({
   status = "주의",
   date = new Date(),
   hasTodayRecord = false,
+  recordCount = 3,
+  hasForecast = false,
 }) => {
   const navigate = useNavigate();
+  const normalizedRecordCount = Math.min(Math.max(recordCount, 0), 10);
+  const remainingRecordCount = 10 - normalizedRecordCount;
+  const [showRecordMilestone] = useState(normalizedRecordCount >= 10);
 
   return (
     <Page>
@@ -110,9 +131,68 @@ const HomePage = ({
             기록
           </RecordStatusButton>
         </RecordStatusCard>
+
+        {normalizedRecordCount < 10 && (
+          <ForecastProgressCard>
+            <ForecastProgressHeader>
+              <span>맞춤 예측까지</span>
+              <ForecastProgressCount>
+                {normalizedRecordCount}/10
+              </ForecastProgressCount>
+            </ForecastProgressHeader>
+
+            <ForecastProgressTrack>
+              <ForecastProgressBar $recordCount={normalizedRecordCount} />
+            </ForecastProgressTrack>
+
+            <ForecastProgressHint>
+              {remainingRecordCount}개 더 기록하면 나만의 예측이 시작돼요
+            </ForecastProgressHint>
+          </ForecastProgressCard>
+        )}
       </Content>
 
       <NavBar />
+
+      {showRecordMilestone && (
+        <MilestoneOverlay role="dialog" aria-modal="true">
+          <MilestoneGroup>
+            <MilestonePpImage
+              src={profileImage}
+              alt="레벨업한 탐사 파트너 PP"
+            />
+
+            <MilestoneModal>
+              <MilestoneTitle>여행자님의 궤도가 완성되었습니다!</MilestoneTitle>
+
+              <MilestoneDescription>
+                <p>궤도를 10건 기록했어요.</p>
+                <p>
+                  이제 데이터 기반 예보를 확인할 수 있습니다.
+                  <br />
+                  PP가 Lv.2 탐사자로 레벨업했어요!
+                </p>
+                <p>지금 바로 확인해 보세요.</p>
+              </MilestoneDescription>
+
+              <MilestoneButtons>
+                <ForecastButton
+                  type="button"
+                  onClick={() =>
+                    navigate(hasForecast ? "/prediction/result" : "/prediction")
+                  }
+                >
+                  예보 확인하기
+                </ForecastButton>
+
+                <PpButton type="button" onClick={() => navigate("/mission")}>
+                  PP 보러가기
+                </PpButton>
+              </MilestoneButtons>
+            </MilestoneModal>
+          </MilestoneGroup>
+        </MilestoneOverlay>
+      )}
     </Page>
   );
 };

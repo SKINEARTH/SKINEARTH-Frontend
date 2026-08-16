@@ -43,7 +43,6 @@ export const Title = styled.h1`
 
   font-family: "Paperlogy", sans-serif;
   font-size: 1.375rem;
-  font-style: normal;
   font-weight: 800;
   line-height: 1.3;
 `;
@@ -86,6 +85,7 @@ export const StreakBadge = styled.div`
 
   font-size: 0.78rem;
   font-weight: 700;
+
   white-space: nowrap;
 `;
 
@@ -151,7 +151,6 @@ export const RobotImage = styled.img`
   height: 12rem;
 
   display: block;
-
   object-fit: contain;
 `;
 
@@ -289,7 +288,7 @@ export const CategoryList = styled.div`
   flex-wrap: wrap;
   align-items: center;
 
-  gap: 0.65rem;
+  gap: 0.5rem;
 
   margin-bottom: 1.5rem;
 `;
@@ -310,7 +309,7 @@ export const CategoryChip = styled.button`
   background: ${({ $selected }) =>
     $selected
       ? "rgba(93, 217, 186, 0.06)"
-      : "rgba(143, 173, 234, 0.10)"};
+      : "rgba(143, 173, 234, 0.1)"};
 
   color: ${({ $selected }) =>
     $selected
@@ -429,10 +428,6 @@ export const MissionDescription = styled.p`
   font-weight: 400;
   line-height: 1.7;
 `;
-
-/* =========================
-   AI BADGE
-========================= */
 
 export const AiBadge = styled.div`
   width: fit-content;
@@ -560,6 +555,118 @@ export const ActionButton = styled.button`
   &:active {
     transform: scale(0.98);
     background: rgba(143, 173, 234, 0.18);
+  }
+
+  -webkit-tap-highlight-color: transparent;
+`;
+
+/* =========================
+   OTHER MISSION MODE
+========================= */
+
+export const MissionSelectionArea = styled.section`
+  width: 100%;
+`;
+
+export const PPMessageRow = styled.div`
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+
+  margin-bottom: 1.5rem;
+`;
+
+export const MiniRobot = styled.img`
+  width: 4.5rem;
+  height: 4.5rem;
+
+  flex-shrink: 0;
+
+  object-fit: contain;
+
+  display: block;
+`;
+
+export const PPBubble = styled.div`
+  position: relative;
+
+  flex: 1;
+
+  padding: 0.9rem 1rem;
+
+  border: 1px solid rgba(143, 173, 234, 0.35);
+  border-radius: 1rem;
+
+  background: rgba(143, 173, 234, 0.12);
+
+  color: var(--white);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.6;
+`;
+
+export const MissionList = styled.div`
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+`;
+
+export const AlternativeMissionCard = styled.section`
+  width: 100%;
+
+  padding: 1.5rem;
+
+  border: 1px solid rgba(143, 173, 234, 0.2);
+  border-radius: 1.5rem;
+
+  background: rgba(143, 173, 234, 0.035);
+`;
+
+export const SelectMissionButton = styled.button`
+  width: 100%;
+  height: 3.5rem;
+
+  margin-top: 1.5rem;
+
+  border: none;
+  border-radius: 999px;
+
+  background: var(--light-blue);
+
+  color: var(--dark-navy);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 1rem;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0.5rem 1.5rem
+    rgba(143, 173, 234, 0.18);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
   }
 
   -webkit-tap-highlight-color: transparent;

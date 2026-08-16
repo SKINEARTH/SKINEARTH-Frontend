@@ -126,3 +126,150 @@ export const EmptyChart = styled.div`
   font-family: "Pretendard", sans-serif;
   font-size: 12px;
 `;
+
+export const CauseCard = styled.section`
+  width: 100%;
+  height: 201px;
+
+  margin-top: 16px;
+  padding: 19px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: #121d38;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+`;
+
+export const CauseCardTitle = styled.h2`
+  color: #8fadea;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  letter-spacing: 0.72px;
+`;
+
+export const CauseTimeline = styled.ol`
+  padding-top: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  list-style: none;
+`;
+
+export const CauseItem = styled.li`
+  min-height: 37px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+export const TimelineMarker = styled.span`
+  width: 8px;
+  height: 37px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+
+  &::after {
+    width: 1px;
+    height: 20px;
+
+    display: ${({ $last }) => ($last ? "none" : "block")};
+
+    background: #1a2440;
+    content: "";
+  }
+`;
+
+export const TimelineDot = styled.span`
+  width: 8px;
+  height: 8px;
+
+  flex-shrink: 0;
+
+  border-radius: 4px;
+  background: ${({ $riskTheme }) => $riskTheme.color};
+  box-shadow:
+    0 0 24px rgba(${({ $riskTheme }) => $riskTheme.rgb}, 0.6),
+    0 0 8px rgba(${({ $riskTheme }) => $riskTheme.rgb}, 0.3);
+`;
+
+export const CauseInfo = styled.div`
+  min-width: 0;
+  flex: 1;
+`;
+
+export const CausePeriod = styled.span`
+  display: block;
+
+  color: #6c7a8e;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16.5px;
+`;
+
+export const CauseName = styled.strong`
+  display: block;
+
+  color: #edf1f8;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 19.5px;
+`;
+
+export const CauseRiskBadge = styled.span`
+  padding: 5px 11px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  border: 1px solid rgba(${({ $riskTheme }) => $riskTheme.rgb}, 0.5);
+  border-radius: 999px;
+
+  background: rgba(${({ $riskTheme }) => $riskTheme.rgb}, 0.15);
+  color: ${({ $riskTheme }) => $riskTheme.color};
+  box-shadow: 0 0 10px rgba(${({ $riskTheme }) => $riskTheme.rgb}, 0.25);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+`;
+
+export const CauseRiskDot = styled.span`
+  width: 6px;
+  height: 6px;
+
+  border-radius: 3px;
+  background: ${({ $riskTheme }) => $riskTheme.color};
+`;
+
+export const EmptyCauseTimeline = styled.p`
+  height: 145px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #6c7a8e;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+`;

@@ -13,6 +13,18 @@ import {
   TrendHeader,
   TrendTitle,
   TrendDescription,
+  CauseCard,
+  CauseCardTitle,
+  CauseTimeline,
+  CauseItem,
+  TimelineMarker,
+  TimelineDot,
+  CauseInfo,
+  CausePeriod,
+  CauseName,
+  CauseRiskBadge,
+  CauseRiskDot,
+  EmptyCauseTimeline,
 } from "../styles/OrbitHistoryPage.styles";
 
 const MOCK_SKIN_RECORDS = [
@@ -24,6 +36,33 @@ const MOCK_SKIN_RECORDS = [
   { date: "2025-01-18", score: 62 },
   { date: "2025-01-19", score: 58 },
 ];
+
+const MOCK_CAUSE_CHANGES = [
+  {
+    startDate: "2025-01-18",
+    endDate: "2025-01-19",
+    cause: "에어컨 노출",
+    risk: "위험",
+  },
+  {
+    startDate: "2025-01-16",
+    endDate: "2025-01-17",
+    cause: "스트레스",
+    risk: "주의",
+  },
+  {
+    startDate: "2025-01-13",
+    endDate: "2025-01-15",
+    cause: "수면 부족",
+    risk: "안정",
+  },
+];
+
+const RISK_THEMES = {
+  안정: { color: "#6bd2b0", rgb: "107, 210, 176" },
+  주의: { color: "#fbf079", rgb: "251, 240, 121" },
+  위험: { color: "#f2684b", rgb: "242, 104, 75" },
+};
 
 const parseRecordDate = (date) => new Date(`${date}T00:00:00`);
 
@@ -51,8 +90,23 @@ const getPeriodRange = (period, referenceDate) => {
   return { start, end };
 };
 
+const formatShortDate = (date) => {
+  const [, month, day] = date.split("-");
+  return `${month}/${day}`;
+};
+
+const formatCausePeriod = ({ startDate, endDate }) => {
+  const start = formatShortDate(startDate);
+  const end = formatShortDate(endDate);
+  const [startMonth] = start.split("/");
+  const [endMonth, endDay] = end.split("/");
+
+  return startMonth === endMonth ? `${start}–${endDay}` : `${start}–${end}`;
+};
+
 const OrbitHistoryPage = ({
   records = MOCK_SKIN_RECORDS,
+  causeChanges = MOCK_CAUSE_CHANGES,
   referenceDate = new Date("2025-01-15T00:00:00"),
 }) => {
   const [period, setPeriod] = useState("week");
@@ -75,6 +129,22 @@ const OrbitHistoryPage = ({
         : null,
     };
   }, [period, records, referenceDate]);
+
+  const visibleCauseChanges = useMemo(() => {
+    const { start, end } = getPeriodRange(period, referenceDate);
+
+    return causeChanges
+      .filter((item) => {
+        const itemStart = parseRecordDate(item.startDate);
+        const itemEnd = parseRecordDate(item.endDate);
+        return itemStart <= end && itemEnd >= start;
+      })
+      .sort(
+        (first, second) =>
+          parseRecordDate(second.startDate) - parseRecordDate(first.startDate),
+      )
+      .slice(0, 3);
+  }, [causeChanges, period, referenceDate]);
 
   return (
     <Page>
@@ -113,6 +183,40 @@ const OrbitHistoryPage = ({
 
           <OrbitTrendChart records={periodSummary.records} period={period} />
         </TrendCard>
+
+        <CauseCard>
+          <CauseCardTitle>주요 원인 변화</CauseCardTitle>
+
+          {visibleCauseChanges.length > 0 ? (
+            <CauseTimeline>
+              {visibleCauseChanges.map((item, index) => {
+                const riskTheme = RISK_THEMES[item.risk] ?? RISK_THEMES.주의;
+
+                return (
+                  <CauseItem key={`${item.startDate}-${item.cause}`}>
+                    <TimelineMarker $last={index === visibleCauseChanges.length - 1}>
+                      <TimelineDot $riskTheme={riskTheme} />
+                    </TimelineMarker>
+
+                    <CauseInfo>
+                      <CausePeriod>{formatCausePeriod(item)}</CausePeriod>
+                      <CauseName>{item.cause}</CauseName>
+                    </CauseInfo>
+
+                    <CauseRiskBadge $riskTheme={riskTheme}>
+                      <CauseRiskDot $riskTheme={riskTheme} />
+                      {item.risk}
+                    </CauseRiskBadge>
+                  </CauseItem>
+                );
+              })}
+            </CauseTimeline>
+          ) : (
+            <EmptyCauseTimeline>
+              선택한 기간에 주요 원인 변화가 없어요.
+            </EmptyCauseTimeline>
+          )}
+        </CauseCard>
       </Content>
 
       <NavBar />

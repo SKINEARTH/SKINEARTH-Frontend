@@ -6,6 +6,7 @@ import OnboardingPage from "./pages/OnboardingPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import PersonalizationSurveyPage from "./pages/PersonalizationSurveyPage";
+import FirstRecordGuidePage from "./pages/FirstRecordGuidePage";
 
 import HomePage from "./pages/HomePage";
 
@@ -37,6 +38,11 @@ function App() {
       <Route
         path="/personalization"
         element={<PersonalizationSurveyPage />}
+      />
+
+      <Route
+        path="/first-record"
+        element={<FirstRecordGuidePage />}
       />
 
       <Route path="/home" element={<HomePage />} />

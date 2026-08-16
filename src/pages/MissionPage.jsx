@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import NavBar from "../components/NavBar";
 import ppRobot from "../assets/third_OnboardingPage.svg";
@@ -64,13 +64,14 @@ import {
   HiddenMissionTitle,
   HiddenMissionDescription,
   RestoreCategoryButton,
+
+  Toast,
+  ToastTitle,
+  ToastDescription,
 } from "../styles/MissionPage.styles";
 
-const MissionPage = () => {
-  /* =========================
-     STATE
-  ========================= */
 
+const MissionPage = () => {
   const [selectedCategory, setSelectedCategory] =
     useState(missionCategories[0]);
 
@@ -85,6 +86,9 @@ const MissionPage = () => {
 
   const [hiddenCategories, setHiddenCategories] =
     useState([]);
+
+  const [toast, setToast] =
+    useState(null);
 
 
   /* =========================
@@ -105,7 +109,26 @@ const MissionPage = () => {
 
 
   /* =========================
-     CATEGORY CHANGE
+     TOAST TIMER
+  ========================= */
+
+  useEffect(() => {
+    if (!toast) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 2800);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [toast]);
+
+
+  /* =========================
+     CATEGORY
   ========================= */
 
   const handleCategoryChange = (category) => {
@@ -120,7 +143,7 @@ const MissionPage = () => {
 
 
   /* =========================
-     COMPLETE MISSION
+     COMPLETE
   ========================= */
 
   const handleCompleteMission = () => {
@@ -143,7 +166,7 @@ const MissionPage = () => {
 
 
   /* =========================
-     SELECT OTHER MISSION
+     SELECT MISSION
   ========================= */
 
   const handleSelectMission = (index) => {
@@ -215,6 +238,17 @@ const MissionPage = () => {
       ];
     });
 
+    /*
+      클릭 당시 카테고리명을
+      Toast에 저장한다.
+
+      이후 selectedCategory가 바뀌어도
+      토스트 문구는 유지됨.
+    */
+    setToast({
+      category: selectedCategory,
+    });
+
     setCompleted(false);
 
     setShowMissionList(false);
@@ -244,6 +278,25 @@ const MissionPage = () => {
 
   return (
     <Page>
+
+      {/* =========================
+          TOAST
+      ========================= */}
+
+      {toast && (
+        <Toast>
+          <ToastTitle>
+            {toast.category} 카테고리를
+            그만 볼게요.
+          </ToastTitle>
+
+          <ToastDescription>
+            오늘은 이 카테고리가 추천되지 않아요.
+          </ToastDescription>
+        </Toast>
+      )}
+
+
       <Content>
 
         {/* =========================
@@ -267,10 +320,6 @@ const MissionPage = () => {
         </HeaderRow>
 
 
-        {/* =================================================
-            기본 미션 화면
-        ================================================= */}
-
         {!showMissionList ? (
           <>
 
@@ -279,11 +328,13 @@ const MissionPage = () => {
             ========================= */}
 
             <JourneyCard>
+
               <SectionTitle>
                 PP의 여행 단계
               </SectionTitle>
 
               <JourneyContent>
+
                 <RobotArea>
                   <RobotImage
                     src={ppRobot}
@@ -292,6 +343,7 @@ const MissionPage = () => {
                 </RobotArea>
 
                 <LevelInfo>
+
                   <LevelTitle>
                     Lv.1 관측자
                   </LevelTitle>
@@ -328,8 +380,11 @@ const MissionPage = () => {
                       $progress={30}
                     />
                   </ProgressTrack>
+
                 </LevelInfo>
+
               </JourneyContent>
+
             </JourneyCard>
 
 
@@ -338,6 +393,7 @@ const MissionPage = () => {
             ========================= */}
 
             <CategoryList>
+
               {missionCategories.map(
                 (category) => {
                   const isHidden =
@@ -355,9 +411,7 @@ const MissionPage = () => {
                         category
                       }
 
-                      $hidden={
-                        isHidden
-                      }
+                      $hidden={isHidden}
 
                       onClick={() =>
                         handleCategoryChange(
@@ -370,22 +424,27 @@ const MissionPage = () => {
                   );
                 }
               )}
+
             </CategoryList>
 
 
-            {/* =================================================
-                비활성 카테고리
-            ================================================= */}
+            {/* =========================
+                HIDDEN CATEGORY
+            ========================= */}
 
             {isCurrentCategoryHidden ? (
               <>
+
                 <HiddenMissionCard>
+
                   <MissionTopRow>
+
                     <MissionCategoryBadge
                       $hidden
                     >
                       {selectedCategory}
                     </MissionCategoryBadge>
+
                   </MissionTopRow>
 
                   <HiddenPlanetIcon>
@@ -402,8 +461,8 @@ const MissionPage = () => {
                     다른 카테고리의 미션을
                     선택하거나,
                     <br />
-                    다시 보기를 통해 돌아올
-                    수 있어요.
+                    다시 보기를 통해 돌아올 수
+                    있어요.
                   </HiddenMissionDescription>
 
                   <RestoreCategoryButton
@@ -414,6 +473,7 @@ const MissionPage = () => {
                   >
                     ⟳ 이 카테고리 다시 보기
                   </RestoreCategoryButton>
+
                 </HiddenMissionCard>
 
 
@@ -423,40 +483,38 @@ const MissionPage = () => {
 
 
                 <ActionList>
+
                   <ActionButton
                     type="button"
+                    onClick={
+                      handleShowOtherMissions
+                    }
                   >
                     🔄 다른 미션 보기
                   </ActionButton>
 
-                  <ActionButton
-                    type="button"
-                  >
-                    ✨ 더 쉬운 미션으로
-                    바꾸기
-                  </ActionButton>
 
                   <ActionButton
                     type="button"
-                    $restore
                     onClick={
-                      handleRestoreCategory
+                      handleEasyMission
                     }
                   >
-                    ⟳ 이 카테고리 다시 보기
+                    ✨ 더 쉬운 미션으로 바꾸기
                   </ActionButton>
+
                 </ActionList>
+
               </>
             ) : (
 
-              /* =================================================
-                  정상 카테고리
-              ================================================= */
-
               currentMission && (
                 <>
+
                   <MissionCard>
+
                     <MissionTopRow>
+
                       <MissionCategoryBadge>
                         {selectedCategory}
                       </MissionCategoryBadge>
@@ -465,11 +523,14 @@ const MissionPage = () => {
                         예상{" "}
                         {currentMission.time}
                       </MissionTime>
+
                     </MissionTopRow>
+
 
                     <MissionTitle>
                       {currentMission.title}
                     </MissionTitle>
+
 
                     <MissionDescription>
                       {
@@ -477,12 +538,14 @@ const MissionPage = () => {
                       }
                     </MissionDescription>
 
+
                     {currentMission.aiRecommended !==
                       false && (
                       <AiBadge>
                         ✦ AI 추천
                       </AiBadge>
                     )}
+
 
                     <CompleteButton
                       type="button"
@@ -494,18 +557,17 @@ const MissionPage = () => {
                         ? "✓ 미션 완료!"
                         : "✓ 미션 완료!"}
                     </CompleteButton>
+
                   </MissionCard>
 
-
-                  {/* =========================
-                      MISSION ADJUST
-                  ========================= */}
 
                   <MissionAdjustLabel>
                     미션 조정
                   </MissionAdjustLabel>
 
+
                   <ActionList>
+
                     <ActionButton
                       type="button"
                       onClick={
@@ -515,15 +577,16 @@ const MissionPage = () => {
                       🔄 다른 미션 보기
                     </ActionButton>
 
+
                     <ActionButton
                       type="button"
                       onClick={
                         handleEasyMission
                       }
                     >
-                      ✨ 더 쉬운 미션으로
-                      바꾸기
+                      ✨ 더 쉬운 미션으로 바꾸기
                     </ActionButton>
+
 
                     <ActionButton
                       type="button"
@@ -533,20 +596,24 @@ const MissionPage = () => {
                     >
                       🚫 이 카테고리 그만 보기
                     </ActionButton>
+
                   </ActionList>
+
                 </>
               )
             )}
+
           </>
         ) : (
 
-          /* =================================================
-             다른 미션 보기
-          ================================================= */
+          /* =========================
+             OTHER MISSION MODE
+          ========================= */
 
           <MissionSelectionArea>
 
             <PPMessageRow>
+
               <MiniRobot
                 src={ppRobot}
                 alt="PP"
@@ -559,12 +626,15 @@ const MissionPage = () => {
                 수행할 미션을 선택해
                 주세요.
               </PPBubble>
+
             </PPMessageRow>
 
 
             <MissionList>
+
               {categoryMissions.map(
                 (mission, index) => {
+
                   if (
                     index ===
                     selectedMissionIndex
@@ -579,7 +649,9 @@ const MissionPage = () => {
                         `${selectedCategory}-${index}`
                       }
                     >
+
                       <MissionTopRow>
+
                         <MissionCategoryBadge>
                           {selectedCategory}
                         </MissionCategoryBadge>
@@ -588,17 +660,21 @@ const MissionPage = () => {
                           예상{" "}
                           {mission.time}
                         </MissionTime>
+
                       </MissionTopRow>
+
 
                       <MissionTitle>
                         {mission.title}
                       </MissionTitle>
+
 
                       <MissionDescription>
                         {
                           mission.description
                         }
                       </MissionDescription>
+
 
                       {mission.aiRecommended !==
                         false && (
@@ -607,8 +683,10 @@ const MissionPage = () => {
                         </AiBadge>
                       )}
 
+
                       <SelectMissionButton
                         type="button"
+
                         onClick={() =>
                           handleSelectMission(
                             index
@@ -617,10 +695,12 @@ const MissionPage = () => {
                       >
                         ✓ 이 미션 선택
                       </SelectMissionButton>
+
                     </AlternativeMissionCard>
                   );
                 }
               )}
+
             </MissionList>
 
 
@@ -628,17 +708,24 @@ const MissionPage = () => {
               미션 조정
             </MissionAdjustLabel>
 
+
             <ActionList>
+
               <ActionButton
                 type="button"
-                onClick={() =>
-                  setShowMissionList(
-                    false
-                  )
-                }
+
+                onClick={() => {
+                  setShowMissionList(false);
+
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                  });
+                }}
               >
                 ↩ 현재 미션으로 돌아가기
               </ActionButton>
+
 
               <ActionButton
                 type="button"
@@ -646,9 +733,9 @@ const MissionPage = () => {
                   handleEasyMission
                 }
               >
-                ✨ 더 쉬운 미션으로
-                바꾸기
+                ✨ 더 쉬운 미션으로 바꾸기
               </ActionButton>
+
 
               <ActionButton
                 type="button"
@@ -658,14 +745,19 @@ const MissionPage = () => {
               >
                 🚫 이 카테고리 그만 보기
               </ActionButton>
+
             </ActionList>
+
           </MissionSelectionArea>
         )}
+
       </Content>
 
       <NavBar />
+
     </Page>
   );
 };
+
 
 export default MissionPage;

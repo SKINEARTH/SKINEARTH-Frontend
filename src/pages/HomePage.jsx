@@ -44,6 +44,13 @@ import {
   RiskBadge,
   RiskDot,
   ForecastCause,
+  MissionCard,
+  MissionIcon,
+  MissionContent,
+  MissionLabel,
+  MissionTitle,
+  MissionDuration,
+  MissionArrow,
   MilestoneOverlay,
   MilestoneGroup,
   MilestonePpImage,
@@ -95,6 +102,8 @@ const HomePage = ({
   forecastScore = 68,
   riskStatus = "주의",
   mainCause = "냉난방",
+  missionTitle = "실내 습도 체크하기",
+  missionDuration = 3,
 }) => {
   const navigate = useNavigate();
   const normalizedRecordCount = Math.min(Math.max(recordCount, 0), 10);
@@ -216,6 +225,18 @@ const HomePage = ({
             </ForecastDetails>
           </ForecastSummaryBody>
         </ForecastSummaryCard>
+
+        <MissionCard type="button" onClick={() => navigate("/mission")}>
+          <MissionIcon aria-hidden="true">🚀</MissionIcon>
+
+          <MissionContent>
+            <MissionLabel>오늘의 탐험 미션</MissionLabel>
+            <MissionTitle>{missionTitle}</MissionTitle>
+            <MissionDuration>예상 소요 {missionDuration}분</MissionDuration>
+          </MissionContent>
+
+          <MissionArrow aria-hidden="true">›</MissionArrow>
+        </MissionCard>
       </Content>
 
       <NavBar />

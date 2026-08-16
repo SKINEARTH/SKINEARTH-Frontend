@@ -406,6 +406,101 @@ export const ForecastCause = styled.p`
   }
 `;
 
+export const MissionCard = styled.button`
+  width: 100%;
+  height: 95px;
+
+  margin-top: 14px;
+  padding: 19px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: linear-gradient(165deg, #121d38 0%, #162244 100%);
+  color: inherit;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+
+  text-align: left;
+  cursor: pointer;
+
+  &:active {
+    background: linear-gradient(165deg, #162244 0%, #1a294f 100%);
+  }
+`;
+
+export const MissionIcon = styled.span`
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+  background: rgba(107, 210, 176, 0.15);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 22px;
+  line-height: 33px;
+`;
+
+export const MissionContent = styled.div`
+  min-width: 0;
+  flex: 1;
+`;
+
+export const MissionLabel = styled.span`
+  display: block;
+
+  color: #6bd2b0;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16.5px;
+`;
+
+export const MissionTitle = styled.strong`
+  padding-top: 2px;
+
+  display: block;
+
+  color: var(--white);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+`;
+
+export const MissionDuration = styled.span`
+  display: block;
+
+  color: var(--gray);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16.5px;
+`;
+
+export const MissionArrow = styled.span`
+  flex-shrink: 0;
+
+  color: var(--light-blue);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+`;
+
 export const MilestoneOverlay = styled.div`
   position: fixed;
   z-index: 200;

@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 
 import SplashPage from "./pages/SplashPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
 
 import HomePage from "./pages/HomePage";
 
@@ -30,6 +32,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<OnboardingPage />} />
+
+      <Route path="/signup" element={<SignupPage />} />
+
+      <Route path="/login" element={<LoginPage />} />
 
       <Route path="/home" element={<HomePage />} />
 

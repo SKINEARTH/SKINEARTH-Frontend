@@ -1,239 +1,575 @@
 import styled from "styled-components";
 
+
+/* =========================
+   CONTAINER
+========================= */
+
 export const Container = styled.main`
   position: relative;
 
   width: 100%;
   min-height: 100dvh;
 
-  background: var(--dark-navy);
+  background:
+    var(--dark-navy);
 
   overflow: hidden;
 `;
 
-export const HeaderLogoGroup = styled.div`
-  position: absolute;
 
-  top: 6.5rem;
-  left: 50%;
+/* =========================
+   HEADER LOGO
+========================= */
 
-  transform: translateX(-50%);
+export const HeaderLogoGroup =
+  styled.div`
+    position: absolute;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    top: 4rem;
+    left: 50%;
 
-  z-index: 2;
-`;
+    transform:
+      translateX(-50%);
 
-export const LogoArea = styled.div`
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  width: 5.5rem;
-  height: 5.5rem;
+    z-index: 2;
+  `;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
-export const Logo = styled.img`
-  width: 100%;
-  height: 100%;
+export const LogoArea =
+  styled.div`
+    position: relative;
 
-  display: block;
-`;
+    width: 5.5rem;
+    height: 5.5rem;
 
-export const Orbit = styled.div`
-  position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
 
-  top: 50%;
-  left: 50%;
 
-  width: 3.9rem;
-  height: 3.9rem;
+export const Logo =
+  styled.img`
+    width: 100%;
+    height: 100%;
 
-  transform: translate(-50%, -50%);
-`;
+    display: block;
+  `;
 
-export const OrangeCircle = styled.img`
-  position: absolute;
 
-  top: 0;
-  left: 50%;
+export const Orbit =
+  styled.div`
+    position: absolute;
 
-  width: 0.75rem;
-  height: 0.75rem;
+    top: 50%;
+    left: 50%;
 
-  transform: translate(-50%, -50%);
+    width: 3.9rem;
+    height: 3.9rem;
 
-  display: block;
-`;
+    transform:
+      translate(
+        -50%,
+        -50%
+      );
+  `;
 
-export const BrandName = styled.h1`
-  margin-top: 1.1rem;
 
-  color: var(--white);
+export const OrangeCircle =
+  styled.img`
+    position: absolute;
 
-  font-family: "EstablishRetrosans", sans-serif;
-  font-size: 1.35rem;
+    top: 0;
+    left: 50%;
 
-  font-style: normal;
-  font-weight: 400;
+    width: 0.75rem;
+    height: 0.75rem;
 
-  line-height: 1;
+    transform:
+      translate(
+        -50%,
+        -50%
+      );
 
-  letter-spacing: 0.09rem;
+    display: block;
+  `;
 
-  white-space: nowrap;
-`;
 
-export const Slider = styled.div`
-  display: flex;
+export const BrandName =
+  styled.h1`
+    margin-top: 1.1rem;
 
-  width: 100%;
-  height: 100dvh;
+    color: var(--white);
 
-  overflow-x: auto;
+    font-family:
+      "EstablishRetrosans",
+      sans-serif;
 
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
+    font-size: 1.35rem;
+    font-style: normal;
+    font-weight: 400;
 
-  scrollbar-width: none;
+    line-height: 1;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
+    letter-spacing:
+      0.09rem;
 
-export const Slide = styled.section`
-  position: relative;
+    white-space: nowrap;
+  `;
 
-  min-width: 100%;
-  height: 100%;
 
-  flex-shrink: 0;
+/* =========================
+   SLIDER
+========================= */
 
-  scroll-snap-align: start;
+export const Slider =
+  styled.div`
+    display: flex;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+    width: 100%;
+    height: 100dvh;
 
-export const Visual = styled.img`
-  position: absolute;
+    overflow-x: auto;
 
-  top: 35%;
-  left: 50%;
+    scroll-snap-type:
+      x mandatory;
 
-  width: 8.75rem;
-  height: auto;
+    scroll-behavior:
+      smooth;
 
-  display: block;
+    scrollbar-width:
+      none;
 
-  opacity: ${({ $active }) => ($active ? 1 : 0)};
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  `;
 
-  transform: ${({ $active }) =>
-    $active
-      ? "translate(-50%, 0)"
-      : "translate(-50%, 1.25rem)"};
 
-  transition:
-    opacity 0.8s ease 0.15s,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
-`;
+/* =========================
+   SLIDE
+========================= */
 
-export const MainTitle = styled.h2`
-  position: absolute;
-  bottom: 16.5rem;
+export const Slide =
+  styled.section`
+    position: relative;
 
-  width: 100%;
+    min-width: 100%;
+    height: 100%;
 
-  color: var(--white);
-  text-align: center;
+    flex-shrink: 0;
 
-  font-family: "Paperlogy", sans-serif;
-  font-size: 1.625rem;
-  font-style: normal;
-  font-weight: 800;
-  line-height: 1.35;
-  letter-spacing: -0.04rem;
+    scroll-snap-align:
+      start;
 
-  opacity: ${({ $active }) => ($active ? 1 : 0)};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  `;
 
-  transform: ${({ $active }) =>
-    $active
-      ? "translateY(0)"
-      : "translateY(1rem)"};
 
-  transition:
-    opacity 0.8s ease 0.3s,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
-`;
+/* =========================
+   VISUAL
+========================= */
 
-export const Highlight = styled.span`
-  color: var(--light-blue);
-`;
+export const Visual =
+  styled.img`
+    position: absolute;
 
-export const Description = styled.p`
-  position: absolute;
-  bottom: 12.5rem;
+    top: 28%;
+    left: 50%;
 
-  width: 100%;
+    width: 12rem;
+    height: auto;
 
-  color: var(--gray);
-  text-align: center;
+    display: block;
 
-  font-family: "Pretendard Variable", "Pretendard", sans-serif;
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.4875rem;
+    opacity:
+      ${({ $active }) =>
+        $active ? 1 : 0};
 
-  opacity: ${({ $active }) => ($active ? 1 : 0)};
+    transform:
+      ${({ $active }) =>
+        $active
+          ? "translate(-50%, 0)"
+          : "translate(-50%, 1.25rem)"};
 
-  transform: ${({ $active }) =>
-    $active
-      ? "translateY(0)"
-      : "translateY(0.75rem)"};
+    transition:
+      opacity
+        0.8s ease
+        0.15s,
+      transform
+        0.8s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        )
+        0.15s;
+  `;
 
-  transition:
-    opacity 0.8s ease 0.45s,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.45s;
-`;
 
-export const Indicator = styled.div`
-  position: absolute;
+/* =========================
+   TITLE
+========================= */
 
-  bottom: 4.5rem;
-  left: 50%;
+export const MainTitle =
+  styled.h2`
+    position: absolute;
 
-  transform: translateX(-50%);
+    bottom: 18rem;
 
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
+    width: 100%;
 
-  z-index: 2;
-`;
+    color:
+      var(--white);
 
-export const ActiveDot = styled.div`
-  width: 3rem;
-  height: 0.7rem;
+    text-align: center;
 
-  border-radius: 999px;
-  background: var(--light-blue);
+    font-family:
+      "Paperlogy",
+      sans-serif;
 
-  transition: 0.3s ease;
-`;
+    font-size: 1.625rem;
 
-export const Dot = styled.div`
-  width: 0.7rem;
-  height: 0.7rem;
+    font-style: normal;
 
-  border-radius: 50%;
-  background: var(--dark-gray);
+    font-weight: 800;
 
-  transition: 0.3s ease;
-`;
+    line-height: 1.35;
+
+    letter-spacing:
+      -0.04rem;
+
+    opacity:
+      ${({ $active }) =>
+        $active ? 1 : 0};
+
+    transform:
+      ${({ $active }) =>
+        $active
+          ? "translateY(0)"
+          : "translateY(1rem)"};
+
+    transition:
+      opacity
+        0.8s ease
+        0.3s,
+      transform
+        0.8s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        )
+        0.3s;
+  `;
+
+
+export const Highlight =
+  styled.span`
+    color:
+      var(--light-blue);
+  `;
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+export const Description =
+  styled.p`
+    position: absolute;
+
+    bottom: 14rem;
+
+    width: 100%;
+
+    color: var(--gray);
+
+    text-align: center;
+
+    font-family:
+      "Pretendard Variable",
+      "Pretendard",
+      sans-serif;
+
+    font-size: 0.875rem;
+
+    font-style: normal;
+
+    font-weight: 400;
+
+    line-height:
+      1.4875rem;
+
+    opacity:
+      ${({ $active }) =>
+        $active ? 1 : 0};
+
+    transform:
+      ${({ $active }) =>
+        $active
+          ? "translateY(0)"
+          : "translateY(0.75rem)"};
+
+    transition:
+      opacity
+        0.8s ease
+        0.45s,
+      transform
+        0.8s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        )
+        0.45s;
+  `;
+
+
+/* =========================
+   INDICATOR
+========================= */
+
+export const Indicator =
+  styled.div`
+    position: absolute;
+
+    bottom:
+      ${({ $last }) =>
+        $last
+          ? "10.3rem"
+          : "4.5rem"};
+
+    left: 50%;
+
+    transform:
+      translateX(-50%);
+
+    display: flex;
+    align-items: center;
+
+    gap: 0.55rem;
+
+    z-index: 3;
+
+    transition:
+      bottom
+      0.35s ease;
+  `;
+
+
+export const ActiveDot =
+  styled.div`
+    width: 3rem;
+    height: 0.7rem;
+
+    border-radius:
+      999px;
+
+    background:
+      var(--light-blue);
+
+    transition:
+      0.3s ease;
+  `;
+
+
+export const Dot =
+  styled.div`
+    width: 0.7rem;
+    height: 0.7rem;
+
+    border-radius: 50%;
+
+    background:
+      var(--dark-gray);
+
+    transition:
+      0.3s ease;
+  `;
+
+
+/* =========================
+   START AREA
+========================= */
+
+export const StartArea =
+  styled.div`
+    position: absolute;
+
+    left: 50%;
+    bottom: 3rem;
+
+    z-index: 5;
+
+    width:
+      calc(
+        100% - 2.5rem
+      );
+
+    max-width: 30rem;
+
+    transform:
+      translateX(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    animation:
+      startFadeIn
+      0.6s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      )
+      forwards;
+
+    @keyframes startFadeIn {
+      from {
+        opacity: 0;
+        transform:
+          translate(
+            -50%,
+            1rem
+          );
+      }
+
+      to {
+        opacity: 1;
+        transform:
+          translate(
+            -50%,
+            0
+          );
+      }
+    }
+  `;
+
+
+/* =========================
+   START BUTTON
+========================= */
+
+export const StartButton =
+  styled.button`
+    width: 100%;
+    height: 3.5rem;
+
+    border: none;
+
+    border-radius:
+      999px;
+
+    background:
+      #416bc7;
+
+    color:
+      var(--white);
+
+    font-family:
+      "Pretendard Variable",
+      "Pretendard",
+      sans-serif;
+
+    font-size: 1.15rem;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+      0
+      0.5rem
+      1.5rem
+      rgba(
+        65,
+        107,
+        199,
+        0.22
+      );
+
+    transition:
+      transform
+        0.15s ease,
+      opacity
+        0.15s ease;
+
+    &:active {
+      transform:
+        scale(0.98);
+    }
+
+    -webkit-tap-highlight-color:
+      transparent;
+  `;
+
+
+/* =========================
+   SIGNUP
+========================= */
+
+export const SignupText =
+  styled.p`
+    margin-top: 1.25rem;
+
+    color:
+      var(--dark-gray);
+
+    font-family:
+      "Pretendard Variable",
+      "Pretendard",
+      sans-serif;
+
+    font-size: 0.8rem;
+
+    font-weight: 400;
+
+    text-align: center;
+  `;
+
+
+export const SignupButton =
+  styled.button`
+    padding: 0;
+
+    border: none;
+
+    background:
+      transparent;
+
+    color:
+      var(--light-blue);
+
+    font-family:
+      "Pretendard Variable",
+      "Pretendard",
+      sans-serif;
+
+    font-size: 0.8rem;
+
+    font-weight: 500;
+
+    text-decoration:
+      underline;
+
+    text-underline-offset:
+      0.15rem;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color:
+      transparent;
+  `;

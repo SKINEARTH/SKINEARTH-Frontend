@@ -11,6 +11,7 @@ import PersonalizationSurveyPage from "./pages/PersonalizationSurveyPage";
 import FirstRecordGuidePage from "./pages/FirstRecordGuidePage";
 
 import HomePage from "./pages/HomePage";
+import OrbitHistoryPage from "./pages/OrbitHistoryPage";
 
 import LogPage from "./pages/LogPage";
 import LogCompletePage from "./pages/LogCompletePage";
@@ -67,6 +68,11 @@ function App() {
       <Route
         path="/home"
         element={<HomePage />}
+      />
+
+      <Route
+        path="/orbit-history"
+        element={<OrbitHistoryPage />}
       />
 
       {/* 기록 */}

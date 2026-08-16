@@ -28,8 +28,6 @@ export const HeaderRow = styled.header`
   align-items: flex-start;
   justify-content: space-between;
 
-  gap: 1rem;
-
   margin-bottom: 1.75rem;
 `;
 
@@ -194,7 +192,7 @@ export const LevelDescription = styled.p`
     "Pretendard",
     sans-serif;
 
-  font-size: 0.75rem;
+  font-size: 0.6rem;
   line-height: 1.55;
 `;
 
@@ -222,7 +220,7 @@ export const NextLevelDescription = styled.p`
     "Pretendard",
     sans-serif;
 
-  font-size: 0.72rem;
+  font-size: 0.6rem;
   line-height: 1.5;
 `;
 
@@ -717,8 +715,8 @@ export const PPMessageRow = styled.div`
 `;
 
 export const MiniRobot = styled.img`
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 6rem;
+  height: 6rem;
 
   object-fit: contain;
 

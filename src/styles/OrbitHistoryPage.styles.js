@@ -64,3 +64,65 @@ export const PeriodButton = styled.button`
 
   cursor: pointer;
 `;
+
+export const TrendCard = styled.section`
+  width: 100%;
+  height: 231px;
+
+  margin-top: 16px;
+  padding: 17px 9px 9px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: #121d38;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+`;
+
+export const TrendHeader = styled.header`
+  height: 37px;
+
+  padding: 0 8px;
+`;
+
+export const TrendTitle = styled.h2`
+  color: #8fadea;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+`;
+
+export const TrendDescription = styled.p`
+  padding-top: 2px;
+
+  color: #6c7a8e;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16.5px;
+`;
+
+export const Chart = styled.svg`
+  width: 100%;
+  height: 168px;
+
+  display: block;
+
+  font-family: "Inter", "Pretendard", sans-serif;
+`;
+
+export const EmptyChart = styled.div`
+  height: 168px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #6c7a8e;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+`;

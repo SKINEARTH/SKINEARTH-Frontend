@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 
 import NavBar from "../components/NavBar";
+import OrbitTrendChart from "../components/OrbitTrendChart";
 
 import {
   Page,
@@ -8,16 +9,20 @@ import {
   PageTitle,
   PeriodToggle,
   PeriodButton,
+  TrendCard,
+  TrendHeader,
+  TrendTitle,
+  TrendDescription,
 } from "../styles/OrbitHistoryPage.styles";
 
 const MOCK_SKIN_RECORDS = [
-  { date: "2025-01-09", score: 45 },
-  { date: "2025-01-10", score: 52 },
-  { date: "2025-01-11", score: 48 },
-  { date: "2025-01-12", score: 67 },
-  { date: "2025-01-13", score: 71 },
-  { date: "2025-01-14", score: 62 },
-  { date: "2025-01-15", score: 58 },
+  { date: "2025-01-13", score: 45 },
+  { date: "2025-01-14", score: 52 },
+  { date: "2025-01-15", score: 48 },
+  { date: "2025-01-16", score: 67 },
+  { date: "2025-01-17", score: 71 },
+  { date: "2025-01-18", score: 62 },
+  { date: "2025-01-19", score: 58 },
 ];
 
 const parseRecordDate = (date) => new Date(`${date}T00:00:00`);
@@ -99,6 +104,15 @@ const OrbitHistoryPage = ({
             월간
           </PeriodButton>
         </PeriodToggle>
+
+        <TrendCard>
+          <TrendHeader>
+            <TrendTitle>피부 온도 지수 추이</TrendTitle>
+            <TrendDescription>낮을수록 안정적인 피부 상태</TrendDescription>
+          </TrendHeader>
+
+          <OrbitTrendChart records={periodSummary.records} period={period} />
+        </TrendCard>
       </Content>
 
       <NavBar />

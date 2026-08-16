@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import SplashPage from "./pages/SplashPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import PersonalizationSurveyPage from "./pages/PersonalizationSurveyPage";
 
 import HomePage from "./pages/HomePage";
 
@@ -30,6 +31,11 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<OnboardingPage />} />
+
+      <Route
+        path="/personalization"
+        element={<PersonalizationSurveyPage />}
+      />
 
       <Route path="/home" element={<HomePage />} />
 

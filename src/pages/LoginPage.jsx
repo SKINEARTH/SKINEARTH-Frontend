@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AuthInput from "../components/AuthInput";
 import logo from "../assets/logo_Auth.svg";
@@ -20,7 +21,8 @@ import {
   PageSwitchButton,
 } from "../styles/AuthPage.styles";
 
-const LoginPage = ({ onMoveToSignup }) => {
+const LoginPage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -89,7 +91,7 @@ const LoginPage = ({ onMoveToSignup }) => {
 
         <PageSwitchText>
           아직 계정이 없으신가요?{" "}
-          <PageSwitchButton type="button" onClick={onMoveToSignup}>
+          <PageSwitchButton type="button" onClick={() => navigate("/signup")}>
             회원가입
           </PageSwitchButton>
         </PageSwitchText>

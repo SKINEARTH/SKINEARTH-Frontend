@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 
 import SplashPage from "./pages/SplashPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
 import PersonalizationSurveyPage from "./pages/PersonalizationSurveyPage";
 import FirstRecordGuidePage from "./pages/FirstRecordGuidePage";
 

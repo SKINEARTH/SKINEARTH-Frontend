@@ -32,6 +32,18 @@ import {
   ForecastProgressTrack,
   ForecastProgressBar,
   ForecastProgressHint,
+  ForecastSummaryCard,
+  ForecastSummaryHeader,
+  ForecastSummaryTitle,
+  ForecastTypeBadge,
+  ForecastSummaryBody,
+  ForecastScoreGroup,
+  ForecastScore,
+  ForecastScoreLabel,
+  ForecastDetails,
+  RiskBadge,
+  RiskDot,
+  ForecastCause,
   MilestoneOverlay,
   MilestoneGroup,
   MilestonePpImage,
@@ -42,6 +54,27 @@ import {
   ForecastButton,
   PpButton,
 } from "../styles/HomePage.styles";
+
+const RISK_THEMES = {
+  안정: {
+    color: "#6bd2b0",
+    background: "rgba(107, 210, 176, 0.15)",
+    border: "rgba(107, 210, 176, 0.5)",
+    shadow: "rgba(107, 210, 176, 0.25)",
+  },
+  주의: {
+    color: "#fbf079",
+    background: "rgba(251, 240, 121, 0.15)",
+    border: "rgba(251, 240, 121, 0.5)",
+    shadow: "rgba(251, 240, 121, 0.25)",
+  },
+  위험: {
+    color: "#f2684b",
+    background: "rgba(242, 104, 75, 0.15)",
+    border: "rgba(242, 104, 75, 0.5)",
+    shadow: "rgba(242, 104, 75, 0.25)",
+  },
+};
 
 const formatKoreanDate = (date) =>
   new Intl.DateTimeFormat("ko-KR", {
@@ -59,11 +92,16 @@ const HomePage = ({
   hasTodayRecord = false,
   recordCount = 3,
   hasForecast = false,
+  forecastScore = 68,
+  riskStatus = "주의",
+  mainCause = "냉난방",
 }) => {
   const navigate = useNavigate();
   const normalizedRecordCount = Math.min(Math.max(recordCount, 0), 10);
   const remainingRecordCount = 10 - normalizedRecordCount;
   const [showRecordMilestone] = useState(normalizedRecordCount >= 10);
+  const forecastType = normalizedRecordCount >= 10 ? "데이터 기반" : "추정값";
+  const riskTheme = RISK_THEMES[riskStatus] ?? RISK_THEMES.주의;
 
   return (
     <Page>
@@ -150,6 +188,34 @@ const HomePage = ({
             </ForecastProgressHint>
           </ForecastProgressCard>
         )}
+
+        <ForecastSummaryCard
+          type="button"
+          onClick={() => navigate("/prediction/result")}
+        >
+          <ForecastSummaryHeader>
+            <ForecastSummaryTitle>내일 예측</ForecastSummaryTitle>
+            <ForecastTypeBadge>{forecastType}</ForecastTypeBadge>
+          </ForecastSummaryHeader>
+
+          <ForecastSummaryBody>
+            <ForecastScoreGroup>
+              <ForecastScore>{forecastScore}</ForecastScore>
+              <ForecastScoreLabel>예측 지수</ForecastScoreLabel>
+            </ForecastScoreGroup>
+
+            <ForecastDetails>
+              <RiskBadge $riskTheme={riskTheme}>
+                <RiskDot $riskTheme={riskTheme} />
+                {riskStatus}
+              </RiskBadge>
+
+              <ForecastCause>
+                주요 원인: <strong>{mainCause}</strong>
+              </ForecastCause>
+            </ForecastDetails>
+          </ForecastSummaryBody>
+        </ForecastSummaryCard>
       </Content>
 
       <NavBar />

@@ -264,6 +264,148 @@ export const ForecastProgressHint = styled.p`
   line-height: 16.5px;
 `;
 
+export const ForecastSummaryCard = styled.button`
+  width: 100%;
+  height: 133px;
+
+  margin-top: 14px;
+  padding: 19px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: #121d38;
+  color: inherit;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+
+  text-align: left;
+  cursor: pointer;
+
+  &:active {
+    background: #162244;
+  }
+`;
+
+export const ForecastSummaryHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+export const ForecastSummaryTitle = styled.h3`
+  color: var(--white);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+`;
+
+export const ForecastTypeBadge = styled.span`
+  padding: 5.5px 11.5px;
+
+  border: 1.5px dashed var(--dark-gray);
+  border-radius: 999px;
+
+  color: var(--dark-gray);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16.5px;
+`;
+
+export const ForecastSummaryBody = styled.div`
+  height: 67px;
+
+  padding-top: 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+`;
+
+export const ForecastScoreGroup = styled.div`
+  width: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const ForecastScore = styled.strong`
+  color: #fbf079;
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 38px;
+`;
+
+export const ForecastScoreLabel = styled.span`
+  padding-top: 2px;
+
+  color: var(--dark-gray);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 10px;
+  line-height: 15px;
+  white-space: nowrap;
+`;
+
+export const ForecastDetails = styled.div`
+  min-width: 0;
+  flex: 1;
+`;
+
+export const RiskBadge = styled.span`
+  width: fit-content;
+
+  padding: 5px 11px;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  border: 1px solid ${({ $riskTheme }) => $riskTheme.border};
+  border-radius: 999px;
+
+  background: ${({ $riskTheme }) => $riskTheme.background};
+  color: ${({ $riskTheme }) => $riskTheme.color};
+  box-shadow: 0 0 10px ${({ $riskTheme }) => $riskTheme.shadow};
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+`;
+
+export const RiskDot = styled.span`
+  width: 6px;
+  height: 6px;
+
+  border-radius: 3px;
+  background: ${({ $riskTheme }) => $riskTheme.color};
+`;
+
+export const ForecastCause = styled.p`
+  padding-top: 8px;
+
+  color: var(--gray);
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+
+  strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+`;
+
 export const MilestoneOverlay = styled.div`
   position: fixed;
   z-index: 200;

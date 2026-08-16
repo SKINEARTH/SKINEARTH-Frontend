@@ -1,11 +1,3 @@
----
-name: "Default"
-about: "기본 PR 템플릿"
-title: "[] "
-labels: ""
-assignees: ""
----
-
 ## 🔗 관련 이슈
 <!-- Merge 시 이슈를 자동으로 닫으려면 Closes #이슈번호 -->
 

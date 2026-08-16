@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 
 import NavBar from "../components/NavBar";
 import OrbitTrendChart from "../components/OrbitTrendChart";
+import PpJourneyCard from "../components/PpJourneyCard";
 
 import {
   Page,
@@ -139,6 +140,9 @@ const OrbitHistoryPage = ({
   records = MOCK_SKIN_RECORDS,
   causeChanges = MOCK_CAUSE_CHANGES,
   missions = MOCK_MISSIONS,
+  validRecordCount = 3,
+  consecutiveRecordDays = 4,
+  completedMissionCount = 3,
   referenceDate = new Date("2025-01-15T00:00:00"),
 }) => {
   const [period, setPeriod] = useState("week");
@@ -245,7 +249,9 @@ const OrbitHistoryPage = ({
 
                 return (
                   <CauseItem key={`${item.startDate}-${item.cause}`}>
-                    <TimelineMarker $last={index === visibleCauseChanges.length - 1}>
+                    <TimelineMarker
+                      $last={index === visibleCauseChanges.length - 1}
+                    >
                       <TimelineDot $riskTheme={riskTheme} />
                     </TimelineMarker>
 
@@ -297,6 +303,12 @@ const OrbitHistoryPage = ({
             </MissionRateInfo>
           </MissionRateBody>
         </MissionRateCard>
+
+        <PpJourneyCard
+          validRecordCount={validRecordCount}
+          consecutiveRecordDays={consecutiveRecordDays}
+          completedMissionCount={completedMissionCount}
+        />
       </Content>
 
       <NavBar />

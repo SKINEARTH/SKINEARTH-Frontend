@@ -386,3 +386,152 @@ export const MissionRateMessage = styled.span`
   line-height: 16.5px;
   white-space: nowrap;
 `;
+
+export const JourneyCard = styled.section`
+  width: 100%;
+  min-height: ${({ $level }) =>
+    $level === 2 ? "190px" : $level === 3 ? "166px" : "169px"};
+
+  margin-top: 16px;
+  padding: 19px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  border: 1px solid #26314a;
+  border-radius: 20px;
+
+  background: #121d38;
+  box-shadow: 0 0 10px rgba(55, 92, 178, 0.12);
+`;
+
+export const JourneyCardTitle = styled.h2`
+  color: #8fadea;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  letter-spacing: 0.72px;
+`;
+
+export const JourneyBody = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+`;
+
+export const JourneyImage = styled.img`
+  width: 100px;
+  height: 100px;
+
+  flex-shrink: 0;
+
+  display: block;
+  object-fit: cover;
+
+  filter: drop-shadow(0 0 30px rgba(107, 210, 176, 0.65));
+`;
+
+export const JourneyContent = styled.div`
+  min-width: 0;
+  flex: 1;
+`;
+
+export const JourneyLevel = styled.h3`
+  color: #04e6d3;
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 14px;
+`;
+
+export const JourneyDescription = styled.p`
+  padding-top: 4px;
+
+  color: #edf1f8;
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 12px;
+
+  span {
+    display: block;
+  }
+`;
+
+export const JourneyConditionTitle = styled.h4`
+  padding-top: 8px;
+
+  color: #6bd2b0;
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 12px;
+`;
+
+export const JourneyCondition = styled.p`
+  padding-top: 4px;
+
+  color: #fff;
+
+  font-family: "Paperlogy", sans-serif;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 12px;
+  white-space: nowrap;
+`;
+
+export const JourneyProgressList = styled.div`
+  padding-top: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const JourneyProgress = styled.div`
+  width: 100%;
+`;
+
+export const JourneyProgressHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  color: #a9b4c6;
+
+  font-family: "Pretendard", sans-serif;
+  font-size: 8px;
+  font-weight: 400;
+  line-height: 10px;
+`;
+
+export const JourneyProgressCount = styled.strong`
+  color: #8fadea;
+  font-weight: 700;
+`;
+
+export const JourneyProgressTrack = styled.div`
+  width: 100%;
+  height: 3px;
+
+  margin-top: 4px;
+
+  overflow: hidden;
+
+  border-radius: 99px;
+  background: #26314a;
+`;
+
+export const JourneyProgressBar = styled.div`
+  width: ${({ $percentage }) => `${$percentage}%`};
+  height: 100%;
+
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6bd2b0, #8fadea);
+  box-shadow: 0 0 8px rgba(107, 210, 176, 0.4);
+`;

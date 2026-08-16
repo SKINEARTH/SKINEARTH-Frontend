@@ -187,35 +187,39 @@ const MissionPage = () => {
      EASY MISSION
   ========================= */
 
-  const handleEasyMission = () => {
-    if (categoryMissions.length === 0) {
-      return;
-    }
+const handleEasyMission = () => {
+  if (categoryMissions.length === 0) {
+    return;
+  }
 
-    const easyMissionIndex =
-      categoryMissions.findIndex(
-        (mission) =>
-          mission.difficulty === "easy"
-      );
+  const currentMission =
+    categoryMissions[selectedMissionIndex];
 
-    if (easyMissionIndex !== -1) {
-      setSelectedMissionIndex(
-        easyMissionIndex
-      );
-    } else {
-      const nextIndex =
-        (selectedMissionIndex + 1) %
-        categoryMissions.length;
+  // 현재 미션이 이미 가장 쉬운 난이도인 경우
+  if (currentMission?.difficulty === "easy") {
+    setToast({
+      type: "noEasierMission",
+    });
 
-      setSelectedMissionIndex(
-        nextIndex
-      );
-    }
+    return;
+  }
 
-    setCompleted(false);
+  // 더 쉬운 미션 찾기
+  const easyMissionIndex =
+    categoryMissions.findIndex(
+      (mission) =>
+        mission.difficulty === "easy"
+    );
 
-    setShowMissionList(false);
-  };
+  if (easyMissionIndex !== -1) {
+    setSelectedMissionIndex(
+      easyMissionIndex
+    );
+  }
+
+  setCompleted(false);
+  setShowMissionList(false);
+};
 
 
   /* =========================
@@ -246,6 +250,7 @@ const MissionPage = () => {
       토스트 문구는 유지됨.
     */
     setToast({
+      type: "hideCategory",
       category: selectedCategory,
     });
 
@@ -283,18 +288,35 @@ const MissionPage = () => {
           TOAST
       ========================= */}
 
-      {toast && (
-        <Toast>
-          <ToastTitle>
-            {toast.category} 카테고리를
-            그만 볼게요.
-          </ToastTitle>
+{toast && (
+  <Toast>
+    {toast.type === "hideCategory" && (
+      <>
+        <ToastTitle>
+          {toast.category} 카테고리를 그만 볼게요.
+        </ToastTitle>
 
-          <ToastDescription>
-            오늘은 이 카테고리가 추천되지 않아요.
-          </ToastDescription>
-        </Toast>
-      )}
+        <ToastDescription>
+          오늘은 이 카테고리가 추천되지 않아요.
+        </ToastDescription>
+      </>
+    )}
+
+    {toast.type === "noEasierMission" && (
+      <>
+        <ToastTitle>
+          더 쉬운 미션으로 조정할 수 없어요.
+        </ToastTitle>
+
+        <ToastDescription>
+          미션 수행이 어렵다면,
+          <br />
+          ‘다른 미션 보기’를 클릭해 보세요.
+        </ToastDescription>
+      </>
+    )}
+  </Toast>
+)}
 
 
       <Content>

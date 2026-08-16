@@ -18,6 +18,7 @@ export const Content = styled.div`
   padding: 3rem 1.25rem 8.5rem;
 `;
 
+
 /* =========================
    HEADER
 ========================= */
@@ -41,7 +42,10 @@ export const Title = styled.h1`
 
   color: var(--white);
 
-  font-family: "Paperlogy", sans-serif;
+  font-family:
+    "Paperlogy",
+    sans-serif;
+
   font-size: 1.375rem;
   font-weight: 800;
   line-height: 1.3;
@@ -71,10 +75,13 @@ export const StreakBadge = styled.div`
 
   padding: 0.55rem 0.85rem;
 
-  border: 1px solid rgba(255, 226, 89, 0.35);
+  border: 1px solid
+    rgba(255, 226, 89, 0.35);
+
   border-radius: 999px;
 
-  background: rgba(255, 226, 89, 0.08);
+  background:
+    rgba(255, 226, 89, 0.08);
 
   color: #ffe259;
 
@@ -89,8 +96,9 @@ export const StreakBadge = styled.div`
   white-space: nowrap;
 `;
 
+
 /* =========================
-   JOURNEY CARD
+   JOURNEY
 ========================= */
 
 export const JourneyCard = styled.section`
@@ -99,10 +107,13 @@ export const JourneyCard = styled.section`
   margin-bottom: 1.5rem;
   padding: 1.5rem;
 
-  border: 1px solid rgba(143, 173, 234, 0.2);
+  border: 1px solid
+    rgba(143, 173, 234, 0.2);
+
   border-radius: 1.5rem;
 
-  background: rgba(143, 173, 234, 0.035);
+  background:
+    rgba(143, 173, 234, 0.035);
 `;
 
 export const SectionTitle = styled.h2`
@@ -117,7 +128,6 @@ export const SectionTitle = styled.h2`
 
   font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.4;
 `;
 
 export const JourneyContent = styled.div`
@@ -151,11 +161,13 @@ export const RobotImage = styled.img`
   height: 12rem;
 
   display: block;
+
   object-fit: contain;
 `;
 
 export const LevelInfo = styled.div`
   flex: 1;
+
   min-width: 0;
 `;
 
@@ -164,10 +176,12 @@ export const LevelTitle = styled.h3`
 
   color: var(--mint);
 
-  font-family: "Paperlogy", sans-serif;
+  font-family:
+    "Paperlogy",
+    sans-serif;
+
   font-size: 1rem;
   font-weight: 800;
-  line-height: 1.4;
 `;
 
 export const LevelDescription = styled.p`
@@ -181,7 +195,6 @@ export const LevelDescription = styled.p`
     sans-serif;
 
   font-size: 0.75rem;
-  font-weight: 400;
   line-height: 1.55;
 `;
 
@@ -210,9 +223,9 @@ export const NextLevelDescription = styled.p`
     sans-serif;
 
   font-size: 0.72rem;
-  font-weight: 400;
   line-height: 1.5;
 `;
+
 
 /* =========================
    PROGRESS
@@ -220,8 +233,8 @@ export const NextLevelDescription = styled.p`
 
 export const ProgressHeader = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 
   margin-top: 0.8rem;
   margin-bottom: 0.35rem;
@@ -236,7 +249,6 @@ export const ProgressLabel = styled.span`
     sans-serif;
 
   font-size: 0.7rem;
-  font-weight: 400;
 `;
 
 export const ProgressCount = styled.span`
@@ -259,11 +271,14 @@ export const ProgressTrack = styled.div`
 
   border-radius: 999px;
 
-  background: rgba(143, 173, 234, 0.15);
+  background:
+    rgba(143, 173, 234, 0.15);
 `;
 
 export const ProgressBar = styled.div`
-  width: ${({ $progress }) => `${$progress ?? 30}%`};
+  width: ${({ $progress }) =>
+    `${$progress ?? 30}%`};
+
   height: 100%;
 
   border-radius: inherit;
@@ -273,12 +288,11 @@ export const ProgressBar = styled.div`
     var(--mint),
     var(--light-blue)
   );
-
-  transition: width 0.3s ease;
 `;
 
+
 /* =========================
-   CATEGORY CHIPS
+   CATEGORY
 ========================= */
 
 export const CategoryList = styled.div`
@@ -286,7 +300,6 @@ export const CategoryList = styled.div`
 
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
 
   gap: 0.5rem;
 
@@ -294,27 +307,50 @@ export const CategoryList = styled.div`
 `;
 
 export const CategoryChip = styled.button`
-  flex-shrink: 0;
-
   padding: 0.5rem 0.85rem;
 
-  border: 1px solid
-    ${({ $selected }) =>
-      $selected
-        ? "var(--mint)"
-        : "rgba(143, 173, 234, 0.12)"};
+  border-width: 1px;
+
+  border-style: ${({ $hidden }) =>
+    $hidden ? "dashed" : "solid"};
+
+  border-color: ${({ $selected, $hidden }) => {
+    if ($hidden) {
+      return "rgba(143, 173, 234, 0.22)";
+    }
+
+    if ($selected) {
+      return "var(--mint)";
+    }
+
+    return "rgba(143, 173, 234, 0.12)";
+  }};
 
   border-radius: 999px;
 
-  background: ${({ $selected }) =>
-    $selected
-      ? "rgba(93, 217, 186, 0.06)"
-      : "rgba(143, 173, 234, 0.1)"};
+  background: ${({ $selected, $hidden }) => {
+    if ($hidden) {
+      return "rgba(143, 173, 234, 0.035)";
+    }
 
-  color: ${({ $selected }) =>
-    $selected
-      ? "var(--mint)"
-      : "var(--gray)"};
+    if ($selected) {
+      return "rgba(93, 217, 186, 0.06)";
+    }
+
+    return "rgba(143, 173, 234, 0.1)";
+  }};
+
+  color: ${({ $selected, $hidden }) => {
+    if ($hidden) {
+      return "rgba(169, 180, 198, 0.45)";
+    }
+
+    if ($selected) {
+      return "var(--mint)";
+    }
+
+    return "var(--gray)";
+  }};
 
   font-family:
     "Pretendard Variable",
@@ -330,10 +366,14 @@ export const CategoryChip = styled.button`
 
   cursor: pointer;
 
+  opacity: ${({ $hidden }) =>
+    $hidden ? 0.75 : 1};
+
   transition:
-    background 0.2s ease,
     border-color 0.2s ease,
+    background 0.2s ease,
     color 0.2s ease,
+    opacity 0.2s ease,
     transform 0.15s ease;
 
   &:active {
@@ -342,6 +382,7 @@ export const CategoryChip = styled.button`
 
   -webkit-tap-highlight-color: transparent;
 `;
+
 
 /* =========================
    MISSION CARD
@@ -352,16 +393,19 @@ export const MissionCard = styled.section`
 
   padding: 1.5rem;
 
-  border: 1px solid rgba(143, 173, 234, 0.2);
+  border: 1px solid
+    rgba(143, 173, 234, 0.2);
+
   border-radius: 1.5rem;
 
-  background: rgba(143, 173, 234, 0.035);
+  background:
+    rgba(143, 173, 234, 0.035);
 `;
 
 export const MissionTopRow = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 
   gap: 1rem;
 
@@ -369,18 +413,29 @@ export const MissionTopRow = styled.div`
 `;
 
 export const MissionCategoryBadge = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  width: fit-content;
 
   padding: 0.4rem 0.8rem;
 
-  border: 1px solid rgba(93, 217, 186, 0.45);
+  border: 1px solid
+    ${({ $hidden }) =>
+      $hidden
+        ? "rgba(143, 173, 234, 0.25)"
+        : "rgba(93, 217, 186, 0.45)"};
+
   border-radius: 999px;
 
-  background: rgba(93, 217, 186, 0.1);
+  background:
+    ${({ $hidden }) =>
+      $hidden
+        ? "rgba(143, 173, 234, 0.04)"
+        : "rgba(93, 217, 186, 0.1)"};
 
-  color: var(--mint);
+  color:
+    ${({ $hidden }) =>
+      $hidden
+        ? "var(--gray)"
+        : "var(--mint)"};
 
   font-family:
     "Pretendard Variable",
@@ -400,7 +455,6 @@ export const MissionTime = styled.span`
     sans-serif;
 
   font-size: 0.8rem;
-  font-weight: 400;
 `;
 
 export const MissionTitle = styled.h2`
@@ -408,7 +462,10 @@ export const MissionTitle = styled.h2`
 
   color: var(--white);
 
-  font-family: "Paperlogy", sans-serif;
+  font-family:
+    "Paperlogy",
+    sans-serif;
+
   font-size: 1.375rem;
   font-weight: 800;
   line-height: 1.4;
@@ -425,7 +482,6 @@ export const MissionDescription = styled.p`
     sans-serif;
 
   font-size: 0.875rem;
-  font-weight: 400;
   line-height: 1.7;
 `;
 
@@ -434,15 +490,15 @@ export const AiBadge = styled.div`
 
   margin-top: 1.25rem;
 
-  display: inline-flex;
-  align-items: center;
-
   padding: 0.4rem 0.75rem;
 
-  border: 1px solid rgba(225, 104, 195, 0.45);
+  border: 1px solid
+    rgba(225, 104, 195, 0.45);
+
   border-radius: 999px;
 
-  background: rgba(225, 104, 195, 0.08);
+  background:
+    rgba(225, 104, 195, 0.08);
 
   color: #e168c3;
 
@@ -454,10 +510,6 @@ export const AiBadge = styled.div`
   font-size: 0.75rem;
   font-weight: 700;
 `;
-
-/* =========================
-   COMPLETE BUTTON
-========================= */
 
 export const CompleteButton = styled.button`
   width: 100%;
@@ -485,15 +537,106 @@ export const CompleteButton = styled.button`
   box-shadow:
     0 0.5rem 1.5rem
     rgba(93, 217, 186, 0.2);
-
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
-
-  &:active {
-    transform: scale(0.98);
-  }
 `;
+
+
+/* =========================
+   HIDDEN CATEGORY
+========================= */
+
+export const HiddenMissionCard = styled.section`
+  width: 100%;
+
+  min-height: 22rem;
+
+  padding: 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  border: 1px solid
+    rgba(143, 173, 234, 0.2);
+
+  border-radius: 1.5rem;
+
+  background:
+    rgba(143, 173, 234, 0.035);
+`;
+
+export const HiddenPlanetIcon = styled.div`
+  margin-top: 1.6rem;
+
+  color: var(--gray);
+
+  font-size: 3.5rem;
+
+  opacity: 0.65;
+
+  filter: grayscale(1);
+`;
+
+export const HiddenMissionTitle = styled.h2`
+  margin-top: 1rem;
+
+  color: var(--gray);
+
+  text-align: center;
+
+  font-family:
+    "Paperlogy",
+    sans-serif;
+
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.45;
+`;
+
+export const HiddenMissionDescription = styled.p`
+  margin-top: 0.8rem;
+
+  color: var(--gray);
+
+  text-align: center;
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.7;
+
+  opacity: 0.7;
+`;
+
+export const RestoreCategoryButton = styled.button`
+  width: 85%;
+  height: 3.25rem;
+
+  margin-top: 1.5rem;
+
+  border: 1px solid
+    rgba(143, 173, 234, 0.45);
+
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: var(--light-blue);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.875rem;
+  font-weight: 600;
+
+  cursor: pointer;
+`;
+
 
 /* =========================
    MISSION ADJUST
@@ -510,7 +653,6 @@ export const MissionAdjustLabel = styled.p`
     sans-serif;
 
   font-size: 0.8rem;
-  font-weight: 400;
 `;
 
 export const ActionList = styled.div`
@@ -528,12 +670,19 @@ export const ActionButton = styled.button`
   display: flex;
   align-items: center;
 
-  border: 1px solid rgba(143, 173, 234, 0.1);
+  border: 1px solid
+    rgba(143, 173, 234, 0.1);
+
   border-radius: 999px;
 
-  background: rgba(143, 173, 234, 0.12);
+  background:
+    rgba(143, 173, 234, 0.12);
 
-  color: var(--gray);
+  color:
+    ${({ $restore }) =>
+      $restore
+        ? "var(--light-blue)"
+        : "var(--gray)"};
 
   text-align: left;
 
@@ -543,25 +692,13 @@ export const ActionButton = styled.button`
     sans-serif;
 
   font-size: 0.875rem;
-  font-weight: 400;
 
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.15s ease;
-
-  &:active {
-    transform: scale(0.98);
-    background: rgba(143, 173, 234, 0.18);
-  }
-
-  -webkit-tap-highlight-color: transparent;
 `;
 
+
 /* =========================
-   OTHER MISSION MODE
+   OTHER MISSION
 ========================= */
 
 export const MissionSelectionArea = styled.section`
@@ -583,24 +720,23 @@ export const MiniRobot = styled.img`
   width: 4.5rem;
   height: 4.5rem;
 
-  flex-shrink: 0;
-
   object-fit: contain;
 
-  display: block;
+  flex-shrink: 0;
 `;
 
 export const PPBubble = styled.div`
-  position: relative;
-
   flex: 1;
 
   padding: 0.9rem 1rem;
 
-  border: 1px solid rgba(143, 173, 234, 0.35);
+  border: 1px solid
+    rgba(143, 173, 234, 0.35);
+
   border-radius: 1rem;
 
-  background: rgba(143, 173, 234, 0.12);
+  background:
+    rgba(143, 173, 234, 0.12);
 
   color: var(--white);
 
@@ -615,8 +751,6 @@ export const PPBubble = styled.div`
 `;
 
 export const MissionList = styled.div`
-  width: 100%;
-
   display: flex;
   flex-direction: column;
 
@@ -628,10 +762,13 @@ export const AlternativeMissionCard = styled.section`
 
   padding: 1.5rem;
 
-  border: 1px solid rgba(143, 173, 234, 0.2);
+  border: 1px solid
+    rgba(143, 173, 234, 0.2);
+
   border-radius: 1.5rem;
 
-  background: rgba(143, 173, 234, 0.035);
+  background:
+    rgba(143, 173, 234, 0.035);
 `;
 
 export const SelectMissionButton = styled.button`
@@ -660,14 +797,4 @@ export const SelectMissionButton = styled.button`
   box-shadow:
     0 0.5rem 1.5rem
     rgba(143, 173, 234, 0.18);
-
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
-
-  &:active {
-    transform: scale(0.98);
-  }
-
-  -webkit-tap-highlight-color: transparent;
 `;

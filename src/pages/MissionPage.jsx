@@ -12,14 +12,12 @@ import {
   Page,
   Content,
 
-  // Header
   HeaderRow,
   HeaderText,
   Title,
   Subtitle,
   StreakBadge,
 
-  // Journey
   JourneyCard,
   SectionTitle,
   JourneyContent,
@@ -31,18 +29,15 @@ import {
   NextLevelTitle,
   NextLevelDescription,
 
-  // Progress
   ProgressHeader,
   ProgressLabel,
   ProgressCount,
   ProgressTrack,
   ProgressBar,
 
-  // Category
   CategoryList,
   CategoryChip,
 
-  // Mission
   MissionCard,
   MissionTopRow,
   MissionCategoryBadge,
@@ -52,12 +47,10 @@ import {
   AiBadge,
   CompleteButton,
 
-  // Mission Adjust
   MissionAdjustLabel,
   ActionList,
   ActionButton,
 
-  // Other Mission
   MissionSelectionArea,
   PPMessageRow,
   MiniRobot,
@@ -65,8 +58,13 @@ import {
   MissionList,
   AlternativeMissionCard,
   SelectMissionButton,
-} from "../styles/MissionPage.styles";
 
+  HiddenMissionCard,
+  HiddenPlanetIcon,
+  HiddenMissionTitle,
+  HiddenMissionDescription,
+  RestoreCategoryButton,
+} from "../styles/MissionPage.styles";
 
 const MissionPage = () => {
   /* =========================
@@ -85,6 +83,9 @@ const MissionPage = () => {
   const [completed, setCompleted] =
     useState(false);
 
+  const [hiddenCategories, setHiddenCategories] =
+    useState([]);
+
 
   /* =========================
      CURRENT DATA
@@ -97,20 +98,29 @@ const MissionPage = () => {
     categoryMissions[selectedMissionIndex] ||
     categoryMissions[0];
 
+  const isCurrentCategoryHidden =
+    hiddenCategories.includes(
+      selectedCategory
+    );
+
 
   /* =========================
-     CATEGORY
+     CATEGORY CHANGE
   ========================= */
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
+
     setSelectedMissionIndex(0);
+
     setCompleted(false);
+
+    setShowMissionList(false);
   };
 
 
   /* =========================
-     COMPLETE
+     COMPLETE MISSION
   ========================= */
 
   const handleCompleteMission = () => {
@@ -133,7 +143,7 @@ const MissionPage = () => {
 
 
   /* =========================
-     SELECT MISSION
+     SELECT OTHER MISSION
   ========================= */
 
   const handleSelectMission = (index) => {
@@ -155,24 +165,33 @@ const MissionPage = () => {
   ========================= */
 
   const handleEasyMission = () => {
-    if (categoryMissions.length <= 1) {
+    if (categoryMissions.length === 0) {
       return;
     }
 
-    const nextIndex =
-      (selectedMissionIndex + 1) %
-      categoryMissions.length;
+    const easyMissionIndex =
+      categoryMissions.findIndex(
+        (mission) =>
+          mission.difficulty === "easy"
+      );
 
-    setSelectedMissionIndex(nextIndex);
+    if (easyMissionIndex !== -1) {
+      setSelectedMissionIndex(
+        easyMissionIndex
+      );
+    } else {
+      const nextIndex =
+        (selectedMissionIndex + 1) %
+        categoryMissions.length;
+
+      setSelectedMissionIndex(
+        nextIndex
+      );
+    }
 
     setCompleted(false);
 
     setShowMissionList(false);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
   };
 
 
@@ -181,13 +200,45 @@ const MissionPage = () => {
   ========================= */
 
   const handleHideCategory = () => {
-    console.log(
-      `${selectedCategory} 카테고리 그만 보기`
+    setHiddenCategories((prev) => {
+      if (
+        prev.includes(
+          selectedCategory
+        )
+      ) {
+        return prev;
+      }
+
+      return [
+        ...prev,
+        selectedCategory,
+      ];
+    });
+
+    setCompleted(false);
+
+    setShowMissionList(false);
+  };
+
+
+  /* =========================
+     RESTORE CATEGORY
+  ========================= */
+
+  const handleRestoreCategory = () => {
+    setHiddenCategories((prev) =>
+      prev.filter(
+        (category) =>
+          category !==
+          selectedCategory
+      )
     );
 
-    // TODO:
-    // 백엔드 연동 후 사용자별
-    // 숨김 카테고리 저장
+    setSelectedMissionIndex(0);
+
+    setCompleted(false);
+
+    setShowMissionList(false);
   };
 
 
@@ -197,7 +248,6 @@ const MissionPage = () => {
 
         {/* =========================
             HEADER
-            두 화면 모두 유지
         ========================= */}
 
         <HeaderRow>
@@ -229,30 +279,22 @@ const MissionPage = () => {
             ========================= */}
 
             <JourneyCard>
-
               <SectionTitle>
                 PP의 여행 단계
               </SectionTitle>
 
-
               <JourneyContent>
-
                 <RobotArea>
-
                   <RobotImage
                     src={ppRobot}
                     alt="PP"
                   />
-
                 </RobotArea>
 
-
                 <LevelInfo>
-
                   <LevelTitle>
                     Lv.1 관측자
                   </LevelTitle>
-
 
                   <LevelDescription>
                     가장 기본적인 형태의
@@ -262,20 +304,16 @@ const MissionPage = () => {
                     아메리카노라고 해요.
                   </LevelDescription>
 
-
                   <NextLevelTitle>
                     다음 레벨까지 남은 조건
                   </NextLevelTitle>
-
 
                   <NextLevelDescription>
                     궤도를 10건 이상
                     기록하세요.
                   </NextLevelDescription>
 
-
                   <ProgressHeader>
-
                     <ProgressLabel>
                       궤도 기록하기
                     </ProgressLabel>
@@ -283,114 +321,101 @@ const MissionPage = () => {
                     <ProgressCount>
                       3/10
                     </ProgressCount>
-
                   </ProgressHeader>
 
-
                   <ProgressTrack>
-
                     <ProgressBar
                       $progress={30}
                     />
-
                   </ProgressTrack>
-
                 </LevelInfo>
-
               </JourneyContent>
-
             </JourneyCard>
 
 
             {/* =========================
-                CATEGORY CHIPS
+                CATEGORY
             ========================= */}
 
             <CategoryList>
-
               {missionCategories.map(
-                (category) => (
-                  <CategoryChip
-                    key={category}
-                    type="button"
-
-                    $selected={
-                      selectedCategory ===
+                (category) => {
+                  const isHidden =
+                    hiddenCategories.includes(
                       category
-                    }
+                    );
 
-                    onClick={() =>
-                      handleCategoryChange(
+                  return (
+                    <CategoryChip
+                      key={category}
+                      type="button"
+
+                      $selected={
+                        selectedCategory ===
                         category
-                      )
-                    }
-                  >
-                    {category}
-                  </CategoryChip>
-                )
-              )}
+                      }
 
+                      $hidden={
+                        isHidden
+                      }
+
+                      onClick={() =>
+                        handleCategoryChange(
+                          category
+                        )
+                      }
+                    >
+                      {category}
+                    </CategoryChip>
+                  );
+                }
+              )}
             </CategoryList>
 
 
-            {/* =========================
-                CURRENT MISSION
-            ========================= */}
+            {/* =================================================
+                비활성 카테고리
+            ================================================= */}
 
-            {currentMission && (
+            {isCurrentCategoryHidden ? (
               <>
-
-                <MissionCard>
-
+                <HiddenMissionCard>
                   <MissionTopRow>
-
-                    <MissionCategoryBadge>
+                    <MissionCategoryBadge
+                      $hidden
+                    >
                       {selectedCategory}
                     </MissionCategoryBadge>
-
-
-                    <MissionTime>
-                      예상 {currentMission.time}
-                    </MissionTime>
-
                   </MissionTopRow>
 
+                  <HiddenPlanetIcon>
+                    🪐
+                  </HiddenPlanetIcon>
 
-                  <MissionTitle>
-                    {currentMission.title}
-                  </MissionTitle>
+                  <HiddenMissionTitle>
+                    이 카테고리의 미션은
+                    <br />
+                    그만 보기 했어요
+                  </HiddenMissionTitle>
 
+                  <HiddenMissionDescription>
+                    다른 카테고리의 미션을
+                    선택하거나,
+                    <br />
+                    다시 보기를 통해 돌아올
+                    수 있어요.
+                  </HiddenMissionDescription>
 
-                  <MissionDescription>
-                    {currentMission.description}
-                  </MissionDescription>
-
-
-                  {currentMission.aiRecommended !==
-                    false && (
-                    <AiBadge>
-                      ✦ AI 추천
-                    </AiBadge>
-                  )}
-
-
-                  <CompleteButton
+                  <RestoreCategoryButton
                     type="button"
                     onClick={
-                      handleCompleteMission
+                      handleRestoreCategory
                     }
                   >
-                    {completed
-                      ? "✓ 미션 완료!"
-                      : "✓ 미션 완료!"}
-                  </CompleteButton>
+                    ⟳ 이 카테고리 다시 보기
+                  </RestoreCategoryButton>
+                </HiddenMissionCard>
 
-                </MissionCard>
-
-
-                {/* =========================
-                    MISSION ADJUST
-                ========================= */}
 
                 <MissionAdjustLabel>
                   미션 조정
@@ -398,96 +423,154 @@ const MissionPage = () => {
 
 
                 <ActionList>
-
                   <ActionButton
                     type="button"
-                    onClick={
-                      handleShowOtherMissions
-                    }
                   >
                     🔄 다른 미션 보기
                   </ActionButton>
 
+                  <ActionButton
+                    type="button"
+                  >
+                    ✨ 더 쉬운 미션으로
+                    바꾸기
+                  </ActionButton>
 
                   <ActionButton
                     type="button"
+                    $restore
                     onClick={
-                      handleEasyMission
+                      handleRestoreCategory
                     }
                   >
-                    ✨ 더 쉬운 미션으로 바꾸기
+                    ⟳ 이 카테고리 다시 보기
                   </ActionButton>
-
-
-                  <ActionButton
-                    type="button"
-                    onClick={
-                      handleHideCategory
-                    }
-                  >
-                    🚫 이 카테고리 그만 보기
-                  </ActionButton>
-
                 </ActionList>
-
               </>
-            )}
+            ) : (
 
+              /* =================================================
+                  정상 카테고리
+              ================================================= */
+
+              currentMission && (
+                <>
+                  <MissionCard>
+                    <MissionTopRow>
+                      <MissionCategoryBadge>
+                        {selectedCategory}
+                      </MissionCategoryBadge>
+
+                      <MissionTime>
+                        예상{" "}
+                        {currentMission.time}
+                      </MissionTime>
+                    </MissionTopRow>
+
+                    <MissionTitle>
+                      {currentMission.title}
+                    </MissionTitle>
+
+                    <MissionDescription>
+                      {
+                        currentMission.description
+                      }
+                    </MissionDescription>
+
+                    {currentMission.aiRecommended !==
+                      false && (
+                      <AiBadge>
+                        ✦ AI 추천
+                      </AiBadge>
+                    )}
+
+                    <CompleteButton
+                      type="button"
+                      onClick={
+                        handleCompleteMission
+                      }
+                    >
+                      {completed
+                        ? "✓ 미션 완료!"
+                        : "✓ 미션 완료!"}
+                    </CompleteButton>
+                  </MissionCard>
+
+
+                  {/* =========================
+                      MISSION ADJUST
+                  ========================= */}
+
+                  <MissionAdjustLabel>
+                    미션 조정
+                  </MissionAdjustLabel>
+
+                  <ActionList>
+                    <ActionButton
+                      type="button"
+                      onClick={
+                        handleShowOtherMissions
+                      }
+                    >
+                      🔄 다른 미션 보기
+                    </ActionButton>
+
+                    <ActionButton
+                      type="button"
+                      onClick={
+                        handleEasyMission
+                      }
+                    >
+                      ✨ 더 쉬운 미션으로
+                      바꾸기
+                    </ActionButton>
+
+                    <ActionButton
+                      type="button"
+                      onClick={
+                        handleHideCategory
+                      }
+                    >
+                      🚫 이 카테고리 그만 보기
+                    </ActionButton>
+                  </ActionList>
+                </>
+              )
+            )}
           </>
         ) : (
 
           /* =================================================
-             다른 미션 보기 화면
-             
-             중요:
-             여기에는 JourneyCard와 CategoryList가
-             아예 존재하지 않음
+             다른 미션 보기
           ================================================= */
 
           <MissionSelectionArea>
 
-            {/* =========================
-                PP MESSAGE
-            ========================= */}
-
             <PPMessageRow>
-
               <MiniRobot
                 src={ppRobot}
                 alt="PP"
               />
 
-
               <PPBubble>
-                PP가 새로운 미션을 가져왔어요!
+                PP가 새로운 미션을
+                가져왔어요!
                 <br />
-                수행할 미션을 선택해 주세요.
+                수행할 미션을 선택해
+                주세요.
               </PPBubble>
-
             </PPMessageRow>
 
 
-            {/* =========================
-                OTHER MISSIONS
-            ========================= */}
-
             <MissionList>
-
               {categoryMissions.map(
                 (mission, index) => {
-
-                  /*
-                   * 현재 보고 있던 미션은
-                   * 후보에서 제외
-                   */
-
                   if (
                     index ===
                     selectedMissionIndex
                   ) {
                     return null;
                   }
-
 
                   return (
                     <AlternativeMissionCard
@@ -496,30 +579,26 @@ const MissionPage = () => {
                         `${selectedCategory}-${index}`
                       }
                     >
-
                       <MissionTopRow>
-
                         <MissionCategoryBadge>
                           {selectedCategory}
                         </MissionCategoryBadge>
 
-
                         <MissionTime>
-                          예상 {mission.time}
+                          예상{" "}
+                          {mission.time}
                         </MissionTime>
-
                       </MissionTopRow>
-
 
                       <MissionTitle>
                         {mission.title}
                       </MissionTitle>
 
-
                       <MissionDescription>
-                        {mission.description}
+                        {
+                          mission.description
+                        }
                       </MissionDescription>
-
 
                       {mission.aiRecommended !==
                         false && (
@@ -528,10 +607,8 @@ const MissionPage = () => {
                         </AiBadge>
                       )}
 
-
                       <SelectMissionButton
                         type="button"
-
                         onClick={() =>
                           handleSelectMission(
                             index
@@ -540,41 +617,28 @@ const MissionPage = () => {
                       >
                         ✓ 이 미션 선택
                       </SelectMissionButton>
-
                     </AlternativeMissionCard>
                   );
                 }
               )}
-
             </MissionList>
 
-
-            {/* =========================
-                MISSION ADJUST
-            ========================= */}
 
             <MissionAdjustLabel>
               미션 조정
             </MissionAdjustLabel>
 
-
             <ActionList>
-
               <ActionButton
                 type="button"
-
-                onClick={() => {
-                  setShowMissionList(false);
-
-                  window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                  });
-                }}
+                onClick={() =>
+                  setShowMissionList(
+                    false
+                  )
+                }
               >
                 ↩ 현재 미션으로 돌아가기
               </ActionButton>
-
 
               <ActionButton
                 type="button"
@@ -582,9 +646,9 @@ const MissionPage = () => {
                   handleEasyMission
                 }
               >
-                ✨ 더 쉬운 미션으로 바꾸기
+                ✨ 더 쉬운 미션으로
+                바꾸기
               </ActionButton>
-
 
               <ActionButton
                 type="button"
@@ -594,24 +658,14 @@ const MissionPage = () => {
               >
                 🚫 이 카테고리 그만 보기
               </ActionButton>
-
             </ActionList>
-
           </MissionSelectionArea>
         )}
-
       </Content>
 
-
-      {/* =========================
-          NAVBAR
-      ========================= */}
-
       <NavBar />
-
     </Page>
   );
 };
-
 
 export default MissionPage;

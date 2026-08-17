@@ -36,12 +36,19 @@ export const Page = styled.main`
   width: 100%;
   min-height: 100dvh;
 
+  display: flex;
+  justify-content: center;
+
   background: var(--dark-navy);
   color: var(--white);
 `;
 
 export const Content = styled.div`
   width: 100%;
+  max-width: 390px;
+  min-height: 100dvh;
+
+  margin: 0 auto;
 
   padding: 4rem 1.25rem 8.5rem;
 `;
@@ -396,7 +403,6 @@ export const ResetButton = styled.button`
 
 export const ModalOverlay = styled.div`
   position: fixed;
-
   inset: 0;
 
   z-index: 9999;
@@ -405,25 +411,24 @@ export const ModalOverlay = styled.div`
   align-items: flex-end;
   justify-content: center;
 
-  background:
-    rgba(0, 0, 0, 0.55);
+  padding: 0 1.5rem;
+
+  background: rgba(0, 0, 0, 0.55);
 
   backdrop-filter: blur(0.15rem);
 
-  animation:
-    ${fadeIn}
-    0.25s ease forwards;
+  animation: ${fadeIn} 0.25s ease forwards;
 `;
 
 export const ResetSheet = styled.section`
   width: 100%;
+  max-width: 390px;
 
-  max-width: 30rem;
+  padding: 2rem 1.5rem 2.5rem;
 
-  padding: 2rem 1.5rem 2.25rem;
+  box-sizing: border-box;
 
-  border: 1px solid
-    rgba(143, 173, 234, 0.2);
+  border: 1px solid rgba(143, 173, 234, 0.2);
 
   border-radius:
     1.75rem
@@ -431,8 +436,7 @@ export const ResetSheet = styled.section`
     0
     0;
 
-  background:
-    rgba(20, 35, 68, 0.98);
+  background: rgba(20, 35, 68, 0.98);
 
   box-shadow:
     0 -1rem 3rem
@@ -441,12 +445,7 @@ export const ResetSheet = styled.section`
   animation:
     ${slideUp}
     0.45s
-    cubic-bezier(
-      0.22,
-      1,
-      0.36,
-      1
-    )
+    cubic-bezier(0.22, 1, 0.36, 1)
     forwards;
 `;
 
@@ -460,13 +459,10 @@ export const WarningIcon = styled.div`
   align-items: center;
   justify-content: center;
 
-  border: 2px solid
-    rgba(255, 103, 76, 0.55);
-
+  border: 2px solid rgba(255, 103, 76, 0.55);
   border-radius: 50%;
 
-  background:
-    rgba(255, 103, 76, 0.08);
+  background: rgba(255, 103, 76, 0.08);
 
   color: var(--white);
 
@@ -484,12 +480,10 @@ export const ResetTitle = styled.h2`
 
   text-align: center;
 
-  font-family:
-    "Paperlogy",
-    sans-serif;
-
+  font-family: "Paperlogy", sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
+  line-height: 1.4;
 `;
 
 export const ResetDescription = styled.p`
@@ -504,13 +498,15 @@ export const ResetDescription = styled.p`
     "Pretendard",
     sans-serif;
 
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 400;
   line-height: 1.7;
 `;
 
 export const ResetList = styled.div`
-  margin-top: 1.5rem;
+  width: 100%;
 
+  margin-top: 1.5rem;
   padding: 1.25rem;
 
   display: flex;
@@ -518,13 +514,12 @@ export const ResetList = styled.div`
 
   gap: 1rem;
 
-  border: 1px solid
-    rgba(255, 103, 76, 0.35);
+  box-sizing: border-box;
 
+  border: 1px solid rgba(255, 103, 76, 0.35);
   border-radius: 1rem;
 
-  background:
-    rgba(255, 103, 76, 0.05);
+  background: rgba(255, 103, 76, 0.05);
 `;
 
 export const ResetListItem = styled.div`
@@ -540,13 +535,18 @@ export const ResetListItem = styled.div`
     "Pretendard",
     sans-serif;
 
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
 `;
 
 export const ResetX = styled.span`
+  flex-shrink: 0;
+
   color: #ff674c;
 
   font-size: 1.3rem;
+  line-height: 1;
 `;
 
 export const ResetConfirmButton = styled.button`
@@ -556,7 +556,6 @@ export const ResetConfirmButton = styled.button`
   margin-top: 1.5rem;
 
   border: none;
-
   border-radius: 999px;
 
   background: #ff674c;
@@ -564,7 +563,8 @@ export const ResetConfirmButton = styled.button`
   color: var(--white);
 
   font-family:
-    "pretendard Variable",
+    "Pretendard Variable",
+    "Pretendard",
     sans-serif;
 
   font-size: 1.05rem;
@@ -576,9 +576,15 @@ export const ResetConfirmButton = styled.button`
     0 0.5rem 1.5rem
     rgba(255, 103, 76, 0.2);
 
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
   &:active {
     transform: scale(0.98);
   }
+
+  -webkit-tap-highlight-color: transparent;
 `;
 
 export const ResetCancelButton = styled.button`
@@ -587,13 +593,10 @@ export const ResetCancelButton = styled.button`
 
   margin-top: 0.75rem;
 
-  border: 1px solid
-    rgba(143, 173, 234, 0.12);
-
+  border: 1px solid rgba(143, 173, 234, 0.12);
   border-radius: 999px;
 
-  background:
-    rgba(143, 173, 234, 0.08);
+  background: rgba(143, 173, 234, 0.08);
 
   color: var(--gray);
 
@@ -603,10 +606,20 @@ export const ResetCancelButton = styled.button`
     sans-serif;
 
   font-size: 1rem;
+  font-weight: 400;
 
   cursor: pointer;
 
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+
   &:active {
     transform: scale(0.98);
+
+    background:
+      rgba(143, 173, 234, 0.12);
   }
+
+  -webkit-tap-highlight-color: transparent;
 `;

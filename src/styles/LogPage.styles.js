@@ -4,12 +4,18 @@ export const Page = styled.main`
   width: 100%;
   min-height: 100dvh;
 
+  display: flex;
+  justify-content: center;
+
   background: var(--dark-navy);
   color: var(--white);
 `;
 
 export const Content = styled.div`
   width: 100%;
+  max-width: 390px;
+  min-height: 100dvh;
+  margin: 0 auto;
 
   padding: 3rem 1.25rem 8.5rem;
 `;

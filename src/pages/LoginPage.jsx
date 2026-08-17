@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import AuthInput from "../components/AuthInput";
 import logo from "../assets/logo_Auth.svg";
+import { login } from "../api/auth";
 
 import {
   AuthContainer,
@@ -23,27 +24,63 @@ import {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const canLogin = email.trim() !== "" && password.trim() !== "";
+  const canLogin =
+    email.trim() !== "" &&
+    password.trim() !== "";
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!canLogin) {
       return;
     }
 
-    // TODO: 인증 API 연동
+    try {
+      const result = await login(
+        email.trim(),
+        password
+      );
+
+      const {
+        accessToken,
+        personalizationCompleted,
+      } = result.data;
+
+      localStorage.setItem(
+        "accessToken",
+        accessToken
+      );
+
+      if (personalizationCompleted) {
+        navigate("/home", {
+          replace: true,
+        });
+      } else {
+        navigate("/personalization", {
+          replace: true,
+        });
+      }
+    } catch (error) {
+      console.error("로그인 실패:", error);
+      alert(error.message);
+    }
   };
 
   return (
     <AuthContainer>
       <AuthContent>
         <BrandHeader>
-          <BrandLogo src={logo} alt="SKINEARTH" />
-          <BrandName>SKINEARTH</BrandName>
+          <BrandLogo
+            src={logo}
+            alt="SKINEARTH"
+          />
+          <BrandName>
+            SKINEARTH
+          </BrandName>
         </BrandHeader>
 
         <TitleArea>
@@ -53,7 +90,9 @@ const LoginPage = () => {
             여행자님!
           </AuthTitle>
 
-          <AuthDescription>로그인하여 나만의 여정을 시작하세요</AuthDescription>
+          <AuthDescription>
+            로그인하여 나만의 여정을 시작하세요
+          </AuthDescription>
         </TitleArea>
 
         <AuthForm onSubmit={handleSubmit}>
@@ -62,7 +101,9 @@ const LoginPage = () => {
               label="이메일"
               type="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
               placeholder="이메일을 입력하세요"
               autoComplete="email"
             />
@@ -71,7 +112,9 @@ const LoginPage = () => {
               label="비밀번호"
               type="password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
               placeholder="비밀번호를 입력하세요"
               autoComplete="current-password"
             />
@@ -84,14 +127,22 @@ const LoginPage = () => {
             비밀번호를 잊으셨나요?
           </PasswordResetButton>
 
-          <SubmitButton type="submit" disabled={!canLogin}>
+          <SubmitButton
+            type="submit"
+            disabled={!canLogin}
+          >
             로그인
           </SubmitButton>
         </AuthForm>
 
         <PageSwitchText>
           아직 계정이 없으신가요?{" "}
-          <PageSwitchButton type="button" onClick={() => navigate("/signup")}>
+          <PageSwitchButton
+            type="button"
+            onClick={() =>
+              navigate("/signup")
+            }
+          >
             회원가입
           </PageSwitchButton>
         </PageSwitchText>

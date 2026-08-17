@@ -244,7 +244,7 @@ export const ForecastProgressTrack = styled.div`
 `;
 
 export const ForecastProgressBar = styled.div`
-  width: ${({ $recordCount }) => `${$recordCount * 10}%`};
+  width: ${({ $percentage }) => `${$percentage}%`};
   height: 100%;
 
   border-radius: inherit;

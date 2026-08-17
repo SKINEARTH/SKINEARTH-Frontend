@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AuthInput from "../components/AuthInput";
 import logo from "../assets/logo_Auth.svg";
+import { signup } from "../api/auth";
 
 import {
   AuthContainer,
@@ -24,6 +26,8 @@ import {
 } from "../styles/AuthPage.styles";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -45,7 +49,9 @@ const SignupPage = () => {
       : "";
 
   const allAgreed =
-    agreements.service && agreements.health && agreements.research;
+    agreements.service &&
+    agreements.health &&
+    agreements.research;
 
   const canSignup =
     email.trim() !== "" &&
@@ -71,15 +77,32 @@ const SignupPage = () => {
     });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    if (!canSignup) {
-      return;
-    }
+  if (!canSignup) {
+    return;
+  }
 
-    // TODO: 회원가입 API 연동
-  };
+  try {
+    await signup({
+      email,
+      password,
+      passwordConfirm,
+      serviceTermsAgreed: agreements.service,
+      sensitiveDataAgreed: agreements.health,
+      researchDataAgreed: agreements.research,
+    });
+
+    alert("회원가입이 완료되었습니다.");
+
+    navigate("/login", {
+      replace: true,
+    });
+  } catch (error) {
+    alert(error.message);
+  }
+};
 
   return (
     <AuthContainer>
@@ -193,7 +216,6 @@ const SignupPage = () => {
             </SubmitButton>
           </SignupButtonArea>
         </AuthForm>
-
       </AuthContent>
     </AuthContainer>
   );

@@ -1,4 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import logo from "../assets/logo_SplashPage.svg";
@@ -30,6 +33,37 @@ import {
 
 const LogCompletePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const record = location.state?.record;
+
+  const currentStreak =
+    record?.currentStreak ?? 0;
+
+  const validRecordCount =
+    record?.validRecordCount ?? 0;
+
+  const targetRecordCount =
+    record?.targetRecordCount ?? 10;
+
+  const forecastReady =
+    record?.forecastReady ?? false;
+
+  const remainingRecordCount =
+    Math.max(
+      targetRecordCount - validRecordCount,
+      0
+    );
+
+  const progressPercent =
+    targetRecordCount > 0
+      ? Math.min(
+          (validRecordCount /
+            targetRecordCount) *
+            100,
+          100
+        )
+      : 0;
 
   return (
     <Page>
@@ -57,7 +91,7 @@ const LogCompletePage = () => {
 
             <StreakInfo>
               <StreakCount>
-                4일 연속
+                {currentStreak}일 연속
               </StreakCount>
 
               <StreakText>
@@ -74,16 +108,23 @@ const LogCompletePage = () => {
             </ProgressLabel>
 
             <ProgressCount>
-              4/10
+              {validRecordCount}/
+              {targetRecordCount}
             </ProgressCount>
           </ProgressHeader>
 
           <ProgressTrack>
-            <ProgressBar />
+            <ProgressBar
+              $progress={
+                progressPercent
+              }
+            />
           </ProgressTrack>
 
           <ProgressDescription>
-            6개 더 기록하면 나만의 예측 시작!
+            {forecastReady
+              ? "맞춤 예측이 준비됐어요!"
+              : `${remainingRecordCount}개 더 기록하면 나만의 예측 시작!`}
           </ProgressDescription>
         </StreakCard>
 

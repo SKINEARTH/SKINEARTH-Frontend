@@ -11,7 +11,6 @@ import {
   Subtitle,
   Card,
   CardHeader,
-  PredictionIcon,
   CardTitleGroup,
   SectionTitle,
   SectionDescription,
@@ -36,32 +35,52 @@ const SCORE_OPTIONS = [1, 2, 3, 4, 5];
 const PredictionPage = () => {
   const navigate = useNavigate();
 
-  // 목데이터 기준 기본값
-  const [heating, setHeating] = useState();
-  const [screen, setScreen] = useState();
-  const [sleep, setSleep] = useState();
-  const [stress, setStress] = useState();
-  const [meal, setMeal] = useState();
+  const [heating, setHeating] = useState(null);
+  const [screen, setScreen] = useState(null);
+  const [sleep, setSleep] = useState(6);
+  const [stress, setStress] = useState(null);
+  const [meal, setMeal] = useState(null);
+
+  const canPredict =
+    heating !== null &&
+    screen !== null &&
+    sleep !== null &&
+    stress !== null &&
+    meal !== null;
 
   const handlePrediction = () => {
-    const predictionData = {
-      heating,
-      screen,
-      sleep,
-      stress,
-      meal,
+    if (!canPredict) {
+      return;
+    }
+
+    const requestData = {
+      inputAc: heating,
+      inputScreenTime: screen,
+      inputSleepHours: sleep,
+      inputStress: stress,
+      inputMeal: meal,
     };
 
-    console.log("내일 예측 조건:", predictionData);
+    console.log(
+      "예측 API 요청 데이터:",
+      requestData
+    );
 
-    navigate("/prediction/loading");
+    navigate("/prediction/loading", {
+      state: {
+        requestData,
+      },
+    });
   };
 
   return (
     <Page>
       <Content>
         <Header>
-          <Title>내일의 궤도 예보</Title>
+          <Title>
+            내일의 궤도 예보
+          </Title>
+
           <Subtitle>
             내일 예상되는 환경을 선택해 주세요
           </Subtitle>
@@ -71,7 +90,7 @@ const PredictionPage = () => {
           <CardHeader>
             <CardTitleGroup>
               <SectionTitle>
-              🌀 내일의 예측 조건
+                🌀 내일의 예측 조건
               </SectionTitle>
 
               <SectionDescription>
@@ -92,7 +111,9 @@ const PredictionPage = () => {
                   <ScoreButton
                     key={score}
                     type="button"
-                    $selected={heating === score}
+                    $selected={
+                      heating === score
+                    }
                     onClick={() =>
                       setHeating(score)
                     }
@@ -114,7 +135,9 @@ const PredictionPage = () => {
                   <ScoreButton
                     key={score}
                     type="button"
-                    $selected={screen === score}
+                    $selected={
+                      screen === score
+                    }
                     onClick={() =>
                       setScreen(score)
                     }
@@ -143,9 +166,11 @@ const PredictionPage = () => {
                 max="10"
                 step="1"
                 value={sleep}
-                onChange={(e) =>
+                onChange={(event) =>
                   setSleep(
-                    Number(e.target.value)
+                    Number(
+                      event.target.value
+                    )
                   )
                 }
               />
@@ -162,7 +187,9 @@ const PredictionPage = () => {
                   <ScoreButton
                     key={score}
                     type="button"
-                    $selected={stress === score}
+                    $selected={
+                      stress === score
+                    }
                     onClick={() =>
                       setStress(score)
                     }
@@ -184,7 +211,9 @@ const PredictionPage = () => {
                   <ScoreButton
                     key={score}
                     type="button"
-                    $selected={meal === score}
+                    $selected={
+                      meal === score
+                    }
                     onClick={() =>
                       setMeal(score)
                     }
@@ -199,6 +228,7 @@ const PredictionPage = () => {
 
         <PredictionButton
           type="button"
+          disabled={!canPredict}
           onClick={handlePrediction}
         >
           예측 시작하기
@@ -219,20 +249,26 @@ const PredictionPage = () => {
               <strong>
                 냉난방 노출, 화면 노출:
               </strong>{" "}
-              내일 예상 노출 시간이 길다면 5에 <br />
+              내일 예상 노출 시간이 길다면 5에
+              <br />
               가깝게, 적절하다면 1에 가깝게 기록해 주세요.
             </GuideParagraph>
 
             <GuideParagraph>
-              <strong>스트레스:</strong>{" "}
+              <strong>
+                스트레스:
+              </strong>{" "}
               스트레스를 많이 받는 하루가 예상된다면
-              5에 <br/> 가깝게,
-              스트레스가 거의 없는 하루가
+              5에
+              <br />
+              가깝게, 스트레스가 거의 없는 하루가
               예상된다면 1에 가깝게 기록해 주세요.
             </GuideParagraph>
 
             <GuideParagraph>
-              <strong>식사 규칙성:</strong>{" "}
+              <strong>
+                식사 규칙성:
+              </strong>{" "}
               규칙적인 식사를 할 수 있으면 5에
               가깝게,
               <br />

@@ -1,8 +1,25 @@
-import { useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import NavBar from "../components/NavBar";
 import OrbitTrendChart from "../components/OrbitTrendChart";
 import PpJourneyCard from "../components/PpJourneyCard";
+
+import {
+  getHistory,
+  getCauseTimeline,
+} from "../api/history";
+
+import {
+  getMissionHistory,
+} from "../api/mission";
+
+import {
+  getUserStage,
+} from "../api/badge";
 
 import {
   Page,
@@ -37,194 +54,325 @@ import {
   MissionRateMessage,
 } from "../styles/OrbitHistoryPage.styles";
 
-const MOCK_SKIN_RECORDS = [
-  { date: "2025-01-13", score: 45 },
-  { date: "2025-01-14", score: 52 },
-  { date: "2025-01-15", score: 48 },
-  { date: "2025-01-16", score: 67 },
-  { date: "2025-01-17", score: 71 },
-  { date: "2025-01-18", score: 62 },
-  { date: "2025-01-19", score: 58 },
-];
-
-const MOCK_CAUSE_CHANGES = [
-  {
-    startDate: "2025-01-18",
-    endDate: "2025-01-19",
-    cause: "에어컨 노출",
-    risk: "위험",
-  },
-  {
-    startDate: "2025-01-16",
-    endDate: "2025-01-17",
-    cause: "스트레스",
-    risk: "주의",
-  },
-  {
-    startDate: "2025-01-13",
-    endDate: "2025-01-15",
-    cause: "수면 부족",
-    risk: "안정",
-  },
-];
-
-const MOCK_MISSIONS = [
-  { id: 1, issuedDate: "2025-01-13", completed: true },
-  { id: 2, issuedDate: "2025-01-14", completed: true },
-  { id: 3, issuedDate: "2025-01-15", completed: true },
-  { id: 4, issuedDate: "2025-01-16", completed: true },
-  { id: 5, issuedDate: "2025-01-17", completed: true },
-  { id: 6, issuedDate: "2025-01-18", completed: false },
-  { id: 7, issuedDate: "2025-01-19", completed: false },
-];
-
 const RISK_THEMES = {
-  안정: { color: "#6bd2b0", rgb: "107, 210, 176" },
-  주의: { color: "#fbf079", rgb: "251, 240, 121" },
-  위험: { color: "#f2684b", rgb: "242, 104, 75" },
+  낮음: {
+    color: "#6bd2b0",
+    rgb: "107, 210, 176",
+  },
+
+  중간: {
+    color: "#fbf079",
+    rgb: "251, 240, 121",
+  },
+
+  높음: {
+    color: "#f2684b",
+    rgb: "242, 104, 75",
+  },
 };
 
-const getMissionRateTheme = (percentage) => {
+const getMissionRateTheme = (
+  percentage
+) => {
   if (percentage >= 70) {
-    return { color: "#6bd2b0", message: "🔥 거의 다 왔어요!" };
+    return {
+      color: "#6bd2b0",
+      message: "🔥 거의 다 왔어요!",
+    };
   }
 
   if (percentage >= 40) {
-    return { color: "#f9cf6e", message: "👍 좋은 페이스예요!" };
+    return {
+      color: "#f9cf6e",
+      message: "👍 좋은 페이스예요!",
+    };
   }
 
-  return { color: "#f2684b", message: "🫧 조금만 더 노력해 봐요!" };
-};
-
-const parseRecordDate = (date) => new Date(`${date}T00:00:00`);
-
-const getPeriodRange = (period, referenceDate) => {
-  const start = new Date(referenceDate);
-  start.setHours(0, 0, 0, 0);
-
-  if (period === "week") {
-    const daysFromMonday = (start.getDay() + 6) % 7;
-    start.setDate(start.getDate() - daysFromMonday);
-  } else {
-    start.setDate(1);
-  }
-
-  const end = new Date(start);
-
-  if (period === "week") {
-    end.setDate(start.getDate() + 6);
-  } else {
-    end.setMonth(start.getMonth() + 1, 0);
-  }
-
-  end.setHours(23, 59, 59, 999);
-
-  return { start, end };
+  return {
+    color: "#f2684b",
+    message: "🫧 조금만 더 노력해 봐요!",
+  };
 };
 
 const formatShortDate = (date) => {
-  const [, month, day] = date.split("-");
+  if (!date) {
+    return "";
+  }
+
+  const [, month, day] =
+    date.split("-");
+
   return `${month}/${day}`;
 };
 
-const formatCausePeriod = ({ startDate, endDate }) => {
-  const start = formatShortDate(startDate);
-  const end = formatShortDate(endDate);
-  const [startMonth] = start.split("/");
-  const [endMonth, endDay] = end.split("/");
+const formatCausePeriod = ({
+  startDate,
+  endDate,
+}) => {
+  if (!startDate || !endDate) {
+    return "";
+  }
 
-  return startMonth === endMonth ? `${start}–${endDay}` : `${start}–${end}`;
+  const start =
+    formatShortDate(startDate);
+
+  const end =
+    formatShortDate(endDate);
+
+  const [startMonth] =
+    start.split("/");
+
+  const [endMonth, endDay] =
+    end.split("/");
+
+  return startMonth === endMonth
+    ? `${start}–${endDay}`
+    : `${start}–${end}`;
 };
 
-const OrbitHistoryPage = ({
-  records = MOCK_SKIN_RECORDS,
-  causeChanges = MOCK_CAUSE_CHANGES,
-  missions = MOCK_MISSIONS,
-  validRecordCount = 3,
-  consecutiveRecordDays = 4,
-  completedMissionCount = 3,
-  referenceDate = new Date("2025-01-15T00:00:00"),
-}) => {
-  const [period, setPeriod] = useState("week");
+const OrbitHistoryPage = () => {
+  const [period, setPeriod] =
+    useState("WEEKLY");
 
-  const periodSummary = useMemo(() => {
-    const { start, end } = getPeriodRange(period, referenceDate);
-    const periodRecords = records.filter(({ date }) => {
-      const recordDate = parseRecordDate(date);
-      return recordDate >= start && recordDate <= end;
-    });
-    const scoreTotal = periodRecords.reduce(
-      (total, record) => total + record.score,
-      0,
-    );
+  const [
+    historyData,
+    setHistoryData,
+  ] = useState(null);
 
-    return {
-      records: periodRecords,
-      averageScore: periodRecords.length
-        ? Math.round(scoreTotal / periodRecords.length)
-        : null,
+  const [
+    causeTimeline,
+    setCauseTimeline,
+  ] = useState([]);
+
+  const [
+    missionHistory,
+    setMissionHistory,
+  ] = useState(null);
+
+  const [
+    stageData,
+    setStageData,
+  ] = useState(null);
+
+  const [
+    isLoading,
+    setIsLoading,
+  ] = useState(true);
+
+  const [
+    errorMessage,
+    setErrorMessage,
+  ] = useState("");
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+
+        const [
+          historyResult,
+          causeResult,
+          missionResult,
+          stageResult,
+        ] = await Promise.all([
+          getHistory(period),
+          getCauseTimeline(period),
+          getMissionHistory(period),
+          getUserStage(),
+        ]);
+
+        console.log(
+          "히스토리:",
+          historyResult
+        );
+
+        console.log(
+          "원인 타임라인:",
+          causeResult
+        );
+
+        console.log(
+          "미션 히스토리:",
+          missionResult
+        );
+
+        console.log(
+          "PP 단계:",
+          stageResult
+        );
+
+        setHistoryData(
+          historyResult.data
+        );
+
+        setCauseTimeline(
+          causeResult.data || []
+        );
+
+        setMissionHistory(
+          missionResult.data
+        );
+
+        setStageData(
+          stageResult.data
+        );
+      } catch (error) {
+        console.error(
+          "히스토리 페이지 로딩 실패:",
+          error
+        );
+
+        setErrorMessage(
+          error.message ||
+            "히스토리를 불러오지 못했습니다."
+        );
+      } finally {
+        setIsLoading(false);
+      }
     };
-  }, [period, records, referenceDate]);
 
-  const visibleCauseChanges = useMemo(() => {
-    const { start, end } = getPeriodRange(period, referenceDate);
+    loadData();
+  }, [period]);
 
-    return causeChanges
-      .filter((item) => {
-        const itemStart = parseRecordDate(item.startDate);
-        const itemEnd = parseRecordDate(item.endDate);
-        return itemStart <= end && itemEnd >= start;
+  const chartRecords = useMemo(() => {
+    if (!historyData?.points) {
+      return [];
+    }
+
+    return historyData.points.map(
+      (point) => ({
+        date: point.date,
+
+        score:
+          point.skinCondition === null
+            ? null
+            : point.skinCondition,
       })
-      .sort(
-        (first, second) =>
-          parseRecordDate(second.startDate) - parseRecordDate(first.startDate),
-      )
-      .slice(0, 3);
-  }, [causeChanges, period, referenceDate]);
+    );
+  }, [historyData]);
 
-  const missionSummary = useMemo(() => {
-    const { start, end } = getPeriodRange(period, referenceDate);
-    const periodMissions = missions.filter(({ issuedDate }) => {
-      const missionDate = parseRecordDate(issuedDate);
-      return missionDate >= start && missionDate <= end;
-    });
-    const completedCount = periodMissions.filter(
-      ({ completed }) => completed,
-    ).length;
-    const totalCount = periodMissions.length;
-    const percentage = totalCount
-      ? Math.round((completedCount / totalCount) * 100)
+  const visibleCauseChanges =
+    useMemo(() => {
+      return [...causeTimeline]
+        .sort(
+          (first, second) =>
+            new Date(
+              `${second.startDate}T00:00:00`
+            ) -
+            new Date(
+              `${first.startDate}T00:00:00`
+            )
+        )
+        .slice(0, 3);
+    }, [causeTimeline]);
+
+  const missionPercentage =
+    missionHistory
+      ? Math.round(
+          missionHistory
+            .completionRatePercent
+        )
       : 0;
 
-    return { completedCount, totalCount, percentage };
-  }, [missions, period, referenceDate]);
+  const missionRateTheme =
+    getMissionRateTheme(
+      missionPercentage
+    );
 
-  const missionRateTheme = getMissionRateTheme(missionSummary.percentage);
+  const averageSkinCondition =
+    historyData
+      ?.averageSkinCondition ??
+    null;
+
+  if (isLoading) {
+    return (
+      <Page>
+        <Content>
+          <PageTitle>
+            궤도 히스토리
+          </PageTitle>
+
+          <TrendCard>
+            <TrendHeader>
+              <TrendTitle>
+                기록을 불러오는 중...
+              </TrendTitle>
+            </TrendHeader>
+          </TrendCard>
+        </Content>
+
+        <NavBar />
+      </Page>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <Page>
+        <Content>
+          <PageTitle>
+            궤도 히스토리
+          </PageTitle>
+
+          <TrendCard>
+            <TrendHeader>
+              <TrendTitle>
+                {errorMessage}
+              </TrendTitle>
+            </TrendHeader>
+          </TrendCard>
+        </Content>
+
+        <NavBar />
+      </Page>
+    );
+  }
 
   return (
     <Page>
       <Content
         data-period={period}
-        data-record-count={periodSummary.records.length}
-        data-average-score={periodSummary.averageScore ?? ""}
+        data-record-count={
+          historyData?.recordCount ?? 0
+        }
+        data-average-score={
+          averageSkinCondition ?? ""
+        }
       >
-        <PageTitle>궤도 히스토리</PageTitle>
+        <PageTitle>
+          궤도 히스토리
+        </PageTitle>
 
-        <PeriodToggle aria-label="조회 기간 선택">
+        <PeriodToggle
+          aria-label="조회 기간 선택"
+        >
           <PeriodButton
             type="button"
-            $active={period === "week"}
-            aria-pressed={period === "week"}
-            onClick={() => setPeriod("week")}
+            $active={
+              period === "WEEKLY"
+            }
+            aria-pressed={
+              period === "WEEKLY"
+            }
+            onClick={() =>
+              setPeriod("WEEKLY")
+            }
           >
             주간
           </PeriodButton>
 
           <PeriodButton
             type="button"
-            $active={period === "month"}
-            aria-pressed={period === "month"}
-            onClick={() => setPeriod("month")}
+            $active={
+              period === "MONTHLY"
+            }
+            aria-pressed={
+              period === "MONTHLY"
+            }
+            onClick={() =>
+              setPeriod("MONTHLY")
+            }
           >
             월간
           </PeriodButton>
@@ -232,82 +380,166 @@ const OrbitHistoryPage = ({
 
         <TrendCard>
           <TrendHeader>
-            <TrendTitle>피부 온도 지수 추이</TrendTitle>
-            <TrendDescription>낮을수록 안정적인 피부 상태</TrendDescription>
+            <TrendTitle>
+              피부 온도 지수 추이
+            </TrendTitle>
+
+            <TrendDescription>
+              {averageSkinCondition ===
+              null
+                ? "아직 기록이 없어요."
+                : `평균 피부 상태 ${averageSkinCondition}`}
+            </TrendDescription>
           </TrendHeader>
 
-          <OrbitTrendChart records={periodSummary.records} period={period} />
+          <OrbitTrendChart
+            records={chartRecords}
+            period={
+              period === "WEEKLY"
+                ? "week"
+                : "month"
+            }
+          />
         </TrendCard>
 
         <CauseCard>
-          <CauseCardTitle>주요 원인 변화</CauseCardTitle>
+          <CauseCardTitle>
+            주요 원인 변화
+          </CauseCardTitle>
 
-          {visibleCauseChanges.length > 0 ? (
+          {visibleCauseChanges.length >
+          0 ? (
             <CauseTimeline>
-              {visibleCauseChanges.map((item, index) => {
-                const riskTheme = RISK_THEMES[item.risk] ?? RISK_THEMES.주의;
+              {visibleCauseChanges.map(
+                (item, index) => {
+                  const riskTheme =
+                    RISK_THEMES[
+                      item.level
+                    ] ||
+                    RISK_THEMES.중간;
 
-                return (
-                  <CauseItem key={`${item.startDate}-${item.cause}`}>
-                    <TimelineMarker
-                      $last={index === visibleCauseChanges.length - 1}
+                  return (
+                    <CauseItem
+                      key={`${item.startDate}-${item.factorName}-${index}`}
                     >
-                      <TimelineDot $riskTheme={riskTheme} />
-                    </TimelineMarker>
+                      <TimelineMarker
+                        $last={
+                          index ===
+                          visibleCauseChanges.length -
+                            1
+                        }
+                      >
+                        <TimelineDot
+                          $riskTheme={
+                            riskTheme
+                          }
+                        />
+                      </TimelineMarker>
 
-                    <CauseInfo>
-                      <CausePeriod>{formatCausePeriod(item)}</CausePeriod>
-                      <CauseName>{item.cause}</CauseName>
-                    </CauseInfo>
+                      <CauseInfo>
+                        <CausePeriod>
+                          {formatCausePeriod(
+                            item
+                          )}
+                        </CausePeriod>
 
-                    <CauseRiskBadge $riskTheme={riskTheme}>
-                      <CauseRiskDot $riskTheme={riskTheme} />
-                      {item.risk}
-                    </CauseRiskBadge>
-                  </CauseItem>
-                );
-              })}
+                        <CauseName>
+                          {
+                            item.factorName
+                          }
+                        </CauseName>
+                      </CauseInfo>
+
+                      <CauseRiskBadge
+                        $riskTheme={
+                          riskTheme
+                        }
+                      >
+                        <CauseRiskDot
+                          $riskTheme={
+                            riskTheme
+                          }
+                        />
+
+                        {item.level}
+                      </CauseRiskBadge>
+                    </CauseItem>
+                  );
+                }
+              )}
             </CauseTimeline>
           ) : (
             <EmptyCauseTimeline>
-              선택한 기간에 주요 원인 변화가 없어요.
+              선택한 기간에 주요 원인
+              변화가 없어요.
             </EmptyCauseTimeline>
           )}
         </CauseCard>
 
         <MissionRateCard>
-          <MissionRateTitle>미션 완료율</MissionRateTitle>
+          <MissionRateTitle>
+            미션 완료율
+          </MissionRateTitle>
 
           <MissionRateBody>
             <MissionRateCircle
-              $percentage={missionSummary.percentage}
-              $color={missionRateTheme.color}
+              $percentage={
+                missionPercentage
+              }
+              $color={
+                missionRateTheme.color
+              }
               role="img"
-              aria-label={`미션 완료율 ${missionSummary.percentage}%`}
+              aria-label={`미션 완료율 ${missionPercentage}%`}
             >
-              <MissionRateValue $color={missionRateTheme.color}>
-                {missionSummary.percentage}%
+              <MissionRateValue
+                $color={
+                  missionRateTheme.color
+                }
+              >
+                {missionPercentage}%
               </MissionRateValue>
             </MissionRateCircle>
 
             <MissionRateInfo>
               <MissionRateCount>
-                {missionSummary.completedCount}/{missionSummary.totalCount} 완료
+                {
+                  missionHistory
+                    ?.completedCount ??
+                  0
+                }
+                /
+                {
+                  missionHistory
+                    ?.targetCount ??
+                  0
+                }{" "}
+                완료
               </MissionRateCount>
+
               <MissionRateLabel>
-                이번 {period === "week" ? "주" : "달"} 미션 달성률
+                이번{" "}
+                {period === "WEEKLY"
+                  ? "주"
+                  : "달"}{" "}
+                미션 달성률
               </MissionRateLabel>
-              <MissionRateMessage $color={missionRateTheme.color}>
-                {missionRateTheme.message}
+
+              <MissionRateMessage
+                $color={
+                  missionRateTheme.color
+                }
+              >
+                {
+                  missionRateTheme.message
+                }
               </MissionRateMessage>
             </MissionRateInfo>
           </MissionRateBody>
         </MissionRateCard>
 
         <PpJourneyCard
-          validRecordCount={validRecordCount}
-          consecutiveRecordDays={consecutiveRecordDays}
-          completedMissionCount={completedMissionCount}
+          stageData={stageData}
         />
       </Content>
 

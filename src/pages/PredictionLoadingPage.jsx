@@ -1,8 +1,13 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import logo from "../assets/logo_SplashPage.svg";
+
+import { createForecast } from "../api/forecast";
 
 import {
   Page,
@@ -15,16 +20,69 @@ import {
 
 const PredictionLoadingPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const requestData =
+    location.state?.requestData;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate("/prediction/result", {
-        replace: true,
-      });
-    }, 2000);
+    const runPrediction = async () => {
+      /*
+       * PredictionPage를 거치지 않고
+       * loading URL로 직접 접근한 경우
+       */
+      if (!requestData) {
+        navigate("/prediction", {
+          replace: true,
+        });
 
-    return () => clearTimeout(timer);
-  }, [navigate]);
+        return;
+      }
+
+      try {
+        console.log(
+          "예측 요청:",
+          requestData
+        );
+
+        const result =
+          await createForecast(
+            requestData
+          );
+
+        console.log(
+          "예측 성공:",
+          result
+        );
+
+        navigate(
+          "/prediction/result",
+          {
+            replace: true,
+            state: {
+              forecast: result.data,
+            },
+          }
+        );
+      } catch (error) {
+        console.error(
+          "예측 실패:",
+          error
+        );
+
+        alert(error.message);
+
+        navigate("/prediction", {
+          replace: true,
+        });
+      }
+    };
+
+    runPrediction();
+  }, [
+    navigate,
+    requestData,
+  ]);
 
   return (
     <Page>

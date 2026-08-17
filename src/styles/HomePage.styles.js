@@ -16,7 +16,7 @@ export const Content = styled.div`
   max-width: 390px;
   min-height: 100dvh;
 
-  padding: 64px 20px 112px;
+  padding: 3rem 20px 112px;
 `;
 
 export const GreetingHeader = styled.header`

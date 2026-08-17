@@ -26,7 +26,7 @@ export const HeaderLogoGroup =
   styled.div`
     position: absolute;
 
-    top: 4rem;
+    top: 2rem;
     left: 50%;
 
     transform:
@@ -181,7 +181,7 @@ export const Visual =
   styled.img`
     position: absolute;
 
-    top: 28%;
+    top: 24%;
     left: 50%;
 
     width: 12rem;
@@ -223,7 +223,7 @@ export const MainTitle =
   styled.h2`
     position: absolute;
 
-    bottom: 18rem;
+    bottom: 16rem;
 
     width: 100%;
 
@@ -288,7 +288,7 @@ export const Description =
   styled.p`
     position: absolute;
 
-    bottom: 14rem;
+    bottom: 12rem;
 
     width: 100%;
 
@@ -347,7 +347,7 @@ export const Indicator =
     bottom:
       ${({ $last }) =>
         $last
-          ? "10.3rem"
+          ? "10rem"
           : "4.5rem"};
 
     left: 50%;
@@ -466,7 +466,7 @@ export const StartArea =
 export const StartButton =
   styled.button`
     width: 100%;
-    height: 3.5rem;
+    height: 3rem;
 
     border: none;
 

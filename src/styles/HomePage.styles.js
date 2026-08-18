@@ -61,9 +61,9 @@ export const Greeting = styled.h1`
 
 export const PlanetSection = styled.section`
   width: 100%;
-  height: 246px;
 
   margin-top: 14px;
+  margin-bottom: 14px;
   padding: 8px 0;
 
   display: flex;
@@ -290,7 +290,7 @@ export const RecordStatusCard = styled.section`
   width: 100%;
   height: 79px;
 
-  margin-top: 24px;
+  margin-top: 14px;
   padding: 19px;
 
   display: flex;

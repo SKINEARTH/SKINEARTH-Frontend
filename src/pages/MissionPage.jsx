@@ -115,54 +115,64 @@ const MissionPage = () => {
    * =========================
    */
   useEffect(() => {
-    const loadTodayMission = async () => {
-      try {
-        setIsLoading(true);
+    const loadTodayMission =
+      async () => {
+        try {
+          setIsLoading(true);
 
-        const result =
-          await getTodayMission();
+          const result =
+            await getTodayMission();
 
-        console.log(
-          "오늘 미션 조회 성공:",
-          result
-        );
+          console.log(
+            "오늘 미션 조회 성공:",
+            result
+          );
 
-        setCurrentMission(
-          result.data
-        );
-      } catch (error) {
-        console.error(
-          "오늘 미션 조회 실패:",
-          error
-        );
+          setCurrentMission(
+            result.data
+          );
+        } catch (error) {
+          console.error(
+            "오늘 미션 조회 실패:",
+            error
+          );
 
-        /*
-         * 오늘 발급된 미션 없음
-         */
-        if (error.status === 404) {
-          setCurrentMission(null);
-          return;
-        }
+          /*
+           * 오늘 발급된 미션 없음
+           */
+          if (
+            error.status === 404
+          ) {
+            setCurrentMission(
+              null
+            );
 
-        /*
-         * 개인화 설문 미완료
-         */
-        if (error.status === 400) {
+            return;
+          }
+
+          /*
+           * 개인화 설문 미완료
+           */
+          if (
+            error.status === 400
+          ) {
+            setToast({
+              type:
+                "personalizationRequired",
+            });
+
+            return;
+          }
+
           setToast({
-            type: "personalizationRequired",
+            type: "error",
+            message:
+              error.message,
           });
-
-          return;
+        } finally {
+          setIsLoading(false);
         }
-
-        setToast({
-          type: "error",
-          message: error.message,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      };
 
     loadTodayMission();
   }, []);
@@ -213,21 +223,23 @@ const MissionPage = () => {
         );
 
         /*
-         * 2. 최신 미션 상태 다시 조회
-         *
-         * complete 응답에는 streak가 없으므로
-         * GET today를 다시 호출해
-         * isCompleted / streak 최신값 반영
+         * 2. 완료 후 최신 상태 조회
          */
         const refreshed =
           await getTodayMission();
+
+        console.log(
+          "미션 완료 후 최신 상태:",
+          refreshed
+        );
 
         setCurrentMission(
           refreshed.data
         );
 
         setToast({
-          type: "completeMission",
+          type:
+            "completeMission",
         });
       } catch (error) {
         console.error(
@@ -237,7 +249,8 @@ const MissionPage = () => {
 
         setToast({
           type: "error",
-          message: error.message,
+          message:
+            error.message,
         });
       } finally {
         setIsProcessing(false);
@@ -267,7 +280,7 @@ const MissionPage = () => {
         );
 
         /*
-         * 서버가 대체 후보 1개를 반환
+         * regenerate는 후보 미션만 반환
          */
         setAlternativeMission(
           result.data
@@ -286,12 +299,14 @@ const MissionPage = () => {
         );
 
         if (
-          error.status === 409 &&
+          error.status ===
+            409 &&
           error.code ===
             "MISSION_CANDIDATE_NOT_FOUND"
         ) {
           setToast({
-            type: "noCandidateMission",
+            type:
+              "noCandidateMission",
           });
 
           return;
@@ -299,7 +314,8 @@ const MissionPage = () => {
 
         setToast({
           type: "error",
-          message: error.message,
+          message:
+            error.message,
         });
       } finally {
         setIsProcessing(false);
@@ -309,6 +325,12 @@ const MissionPage = () => {
   /*
    * =========================
    * 대체 미션 확정
+   *
+   * 핵심 수정:
+   * confirm 결과만 바로 쓰지 않고
+   * GET today를 다시 호출해서
+   * 새 미션의 isCompleted 값을
+   * 서버 기준으로 다시 반영
    * =========================
    */
   const handleSelectMission =
@@ -323,28 +345,50 @@ const MissionPage = () => {
       try {
         setIsProcessing(true);
 
-        const result =
+        /*
+         * 1. 후보 미션 확정
+         */
+        const confirmResult =
           await confirmMission();
 
         console.log(
           "대체 미션 확정:",
-          result
+          confirmResult
         );
 
         /*
-         * confirm은 완전한 MissionCard 형태 반환
+         * 2. 확정된 현재 미션
+         * 최신 상태 다시 조회
+         *
+         * 이전 미션의 완료 상태가
+         * 다음 미션으로 넘어오는 문제 방지
          */
-        setCurrentMission(
-          result.data
+        const refreshed =
+          await getTodayMission();
+
+        console.log(
+          "대체 미션 확정 후 최신 상태:",
+          refreshed
         );
 
+        setCurrentMission(
+          refreshed.data
+        );
+
+        /*
+         * 후보 관련 상태 초기화
+         */
         setAlternativeMission(
           null
         );
 
-        setShowMissionList(false);
+        setShowMissionList(
+          false
+        );
 
-        setExcludedCategory(null);
+        setExcludedCategory(
+          null
+        );
 
         window.scrollTo({
           top: 0,
@@ -358,7 +402,8 @@ const MissionPage = () => {
 
         setToast({
           type: "error",
-          message: error.message,
+          message:
+            error.message,
         });
       } finally {
         setIsProcessing(false);
@@ -388,8 +433,7 @@ const MissionPage = () => {
         );
 
         /*
-         * 성공 시에도 후보 1개를 반환하므로
-         * confirm 전까지는 실제 미션이 아님
+         * 성공해도 아직 후보 상태
          */
         setAlternativeMission(
           result.data
@@ -407,28 +451,29 @@ const MissionPage = () => {
           error
         );
 
-        /*
-         * 실제 Swagger에서 확인된 409
-         */
         if (
-          error.status === 409 &&
+          error.status ===
+            409 &&
           error.code ===
             "MISSION_ALREADY_LIGHT"
         ) {
           setToast({
-            type: "noEasierMission",
+            type:
+              "noEasierMission",
           });
 
           return;
         }
 
         if (
-          error.status === 409 &&
+          error.status ===
+            409 &&
           error.code ===
             "MISSION_CANDIDATE_NOT_FOUND"
         ) {
           setToast({
-            type: "noCandidateMission",
+            type:
+              "noCandidateMission",
           });
 
           return;
@@ -436,7 +481,8 @@ const MissionPage = () => {
 
         setToast({
           type: "error",
-          message: error.message,
+          message:
+            error.message,
         });
       } finally {
         setIsProcessing(false);
@@ -469,22 +515,23 @@ const MissionPage = () => {
         );
 
         const category =
-          result.data?.category ||
+          result.data
+            ?.category ||
           currentMission.category;
 
-        /*
-         * 백엔드에서 제외된 실제 카테고리
-         */
         setExcludedCategory(
           category
         );
 
         setToast({
-          type: "hideCategory",
+          type:
+            "hideCategory",
           category,
         });
 
-        setShowMissionList(false);
+        setShowMissionList(
+          false
+        );
 
         setAlternativeMission(
           null
@@ -496,12 +543,14 @@ const MissionPage = () => {
         );
 
         if (
-          error.status === 409 &&
+          error.status ===
+            409 &&
           error.code ===
             "MISSION_CANDIDATE_NOT_FOUND"
         ) {
           setToast({
-            type: "noCandidateMission",
+            type:
+              "noCandidateMission",
           });
 
           return;
@@ -509,11 +558,33 @@ const MissionPage = () => {
 
         setToast({
           type: "error",
-          message: error.message,
+          message:
+            error.message,
         });
       } finally {
         setIsProcessing(false);
       }
+    };
+
+  /*
+   * =========================
+   * 카테고리 다시 보기
+   *
+   * 현재 백엔드에
+   * 제외 취소 API가 없기 때문에
+   * 프론트 화면에서만 복구
+   * =========================
+   */
+  const handleRestoreCategory =
+    () => {
+      setExcludedCategory(
+        null
+      );
+
+      setToast({
+        type:
+          "restoreCategory",
+      });
     };
 
   /*
@@ -523,9 +594,13 @@ const MissionPage = () => {
    */
   const handleReturnCurrentMission =
     () => {
-      setShowMissionList(false);
+      setShowMissionList(
+        false
+      );
 
-      setAlternativeMission(null);
+      setAlternativeMission(
+        null
+      );
 
       window.scrollTo({
         top: 0,
@@ -549,8 +624,8 @@ const MissionPage = () => {
               </Title>
 
               <Subtitle>
-                오늘의 미션을 불러오는
-                중이에요
+                오늘의 미션을
+                불러오는 중이에요
               </Subtitle>
             </HeaderText>
           </HeaderRow>
@@ -573,13 +648,32 @@ const MissionPage = () => {
             "hideCategory" && (
             <>
               <ToastTitle>
-                {toast.category} 카테고리를
-                그만 볼게요.
+                {
+                  toast.category
+                }{" "}
+                카테고리를 그만
+                볼게요.
               </ToastTitle>
 
               <ToastDescription>
-                오늘은 이 카테고리가
+                오늘은 이
+                카테고리가
                 추천되지 않아요.
+              </ToastDescription>
+            </>
+          )}
+
+          {toast.type ===
+            "restoreCategory" && (
+            <>
+              <ToastTitle>
+                카테고리를 다시
+                볼게요.
+              </ToastTitle>
+
+              <ToastDescription>
+                기존 미션을 다시
+                확인할 수 있어요.
               </ToastDescription>
             </>
           )}
@@ -593,7 +687,8 @@ const MissionPage = () => {
               </ToastTitle>
 
               <ToastDescription>
-                미션 수행이 어렵다면,
+                미션 수행이
+                어렵다면,
                 <br />
                 ‘다른 미션 보기’를
                 클릭해 보세요.
@@ -634,7 +729,8 @@ const MissionPage = () => {
             "personalizationRequired" && (
             <>
               <ToastTitle>
-                개인화 설문이 필요해요.
+                개인화 설문이
+                필요해요.
               </ToastTitle>
 
               <ToastDescription>
@@ -645,7 +741,8 @@ const MissionPage = () => {
             </>
           )}
 
-          {toast.type === "error" && (
+          {toast.type ===
+            "error" && (
             <>
               <ToastTitle>
                 요청을 처리하지
@@ -672,13 +769,15 @@ const MissionPage = () => {
             </Title>
 
             <Subtitle>
-              오늘의 피부 기후 개선 미션
+              오늘의 피부 기후 개선
+              미션
             </Subtitle>
           </HeaderText>
 
           <StreakBadge>
             🔥{" "}
-            {currentMission?.streak ?? 0}
+            {currentMission
+              ?.streak ?? 0}
             일 연속 수행 중
           </StreakBadge>
         </HeaderRow>
@@ -687,8 +786,6 @@ const MissionPage = () => {
           <>
             {/* =========================
                 PP 여행 단계
-
-                현재는 기존 UI 유지
             ========================= */}
 
             <JourneyCard>
@@ -699,7 +796,9 @@ const MissionPage = () => {
               <JourneyContent>
                 <RobotArea>
                   <RobotImage
-                    src={ppRobot}
+                    src={
+                      ppRobot
+                    }
                     alt="PP"
                   />
                 </RobotArea>
@@ -710,15 +809,18 @@ const MissionPage = () => {
                   </LevelTitle>
 
                   <LevelDescription>
-                    가장 기본적인 형태의
-                    신입사원 PP입니다.
+                    가장 기본적인
+                    형태의 신입사원
+                    PP입니다.
                     <br />
                     좋아하는 음료는
-                    아메리카노라고 해요.
+                    아메리카노라고
+                    해요.
                   </LevelDescription>
 
                   <NextLevelTitle>
-                    다음 레벨까지 남은 조건
+                    다음 레벨까지
+                    남은 조건
                   </NextLevelTitle>
 
                   <NextLevelDescription>
@@ -738,7 +840,9 @@ const MissionPage = () => {
 
                   <ProgressTrack>
                     <ProgressBar
-                      $progress={30}
+                      $progress={
+                        30
+                      }
                     />
                   </ProgressTrack>
                 </LevelInfo>
@@ -750,30 +854,55 @@ const MissionPage = () => {
             ========================= */}
 
             {excludedCategory ? (
-              <HiddenMissionCard>
-                <MissionTopRow>
-                  <MissionCategoryBadge
-                    $hidden
+              <>
+                <HiddenMissionCard>
+                  <MissionTopRow>
+                    <MissionCategoryBadge
+                      $hidden
+                    >
+                      {
+                        excludedCategory
+                      }
+                    </MissionCategoryBadge>
+                  </MissionTopRow>
+
+                  <HiddenPlanetIcon>
+                    🪐
+                  </HiddenPlanetIcon>
+
+                  <HiddenMissionTitle>
+                    이 카테고리의
+                    미션은
+                    <br />
+                    그만 보기 했어요
+                  </HiddenMissionTitle>
+
+                  <HiddenMissionDescription>
+                    오늘은 이
+                    카테고리가 더 이상
+                    추천되지 않아요.
+                  </HiddenMissionDescription>
+                </HiddenMissionCard>
+
+                <MissionAdjustLabel>
+                  미션 조정
+                </MissionAdjustLabel>
+
+                <ActionList>
+                  <ActionButton
+                    type="button"
+                    disabled={
+                      isProcessing
+                    }
+                    onClick={
+                      handleRestoreCategory
+                    }
                   >
-                    {excludedCategory}
-                  </MissionCategoryBadge>
-                </MissionTopRow>
-
-                <HiddenPlanetIcon>
-                  🪐
-                </HiddenPlanetIcon>
-
-                <HiddenMissionTitle>
-                  이 카테고리의 미션은
-                  <br />
-                  그만 보기 했어요
-                </HiddenMissionTitle>
-
-                <HiddenMissionDescription>
-                  오늘은 이 카테고리가
-                  더 이상 추천되지 않아요.
-                </HiddenMissionDescription>
-              </HiddenMissionCard>
+                    ↩ 이 카테고리
+                    다시 보기
+                  </ActionButton>
+                </ActionList>
+              </>
             ) : currentMission ? (
               <>
                 {/* =========================
@@ -784,7 +913,8 @@ const MissionPage = () => {
                   <MissionTopRow>
                     <MissionCategoryBadge>
                       {
-                        currentMission.category
+                        currentMission
+                          .category
                       }
                     </MissionCategoryBadge>
 
@@ -800,7 +930,8 @@ const MissionPage = () => {
 
                   <MissionTitle>
                     {
-                      currentMission.title
+                      currentMission
+                        .title
                     }
                   </MissionTitle>
 
@@ -859,8 +990,8 @@ const MissionPage = () => {
                       handleEasyMission
                     }
                   >
-                    ✨ 더 쉬운 미션으로
-                    바꾸기
+                    ✨ 더 쉬운
+                    미션으로 바꾸기
                   </ActionButton>
 
                   <ActionButton
@@ -872,7 +1003,8 @@ const MissionPage = () => {
                       handleHideCategory
                     }
                   >
-                    🚫 이 카테고리 그만 보기
+                    🚫 이 카테고리
+                    그만 보기
                   </ActionButton>
                 </ActionList>
               </>
@@ -883,13 +1015,14 @@ const MissionPage = () => {
                 </HiddenPlanetIcon>
 
                 <HiddenMissionTitle>
-                  오늘 발행된 미션이
-                  없어요
+                  오늘 발행된
+                  미션이 없어요
                 </HiddenMissionTitle>
 
                 <HiddenMissionDescription>
-                  미션이 발행되면 이곳에서
-                  확인할 수 있어요.
+                  미션이 발행되면
+                  이곳에서 확인할 수
+                  있어요.
                 </HiddenMissionDescription>
               </HiddenMissionCard>
             )}
@@ -902,7 +1035,9 @@ const MissionPage = () => {
           <MissionSelectionArea>
             <PPMessageRow>
               <MiniRobot
-                src={ppRobot}
+                src={
+                  ppRobot
+                }
                 alt="PP"
               />
 
@@ -910,7 +1045,8 @@ const MissionPage = () => {
                 PP가 새로운 미션을
                 가져왔어요!
                 <br />
-                수행할 미션을 선택해 주세요.
+                수행할 미션을
+                선택해 주세요.
               </PPBubble>
             </PPMessageRow>
 
@@ -920,7 +1056,8 @@ const MissionPage = () => {
                   <MissionTopRow>
                     <MissionCategoryBadge>
                       {
-                        alternativeMission.category
+                        alternativeMission
+                          .category
                       }
                     </MissionCategoryBadge>
 
@@ -936,7 +1073,8 @@ const MissionPage = () => {
 
                   <MissionTitle>
                     {
-                      alternativeMission.title
+                      alternativeMission
+                        .title
                     }
                   </MissionTitle>
 
@@ -980,7 +1118,8 @@ const MissionPage = () => {
                   handleReturnCurrentMission
                 }
               >
-                ↩ 현재 미션으로 돌아가기
+                ↩ 현재 미션으로
+                돌아가기
               </ActionButton>
 
               <ActionButton
@@ -992,7 +1131,8 @@ const MissionPage = () => {
                   handleEasyMission
                 }
               >
-                ✨ 더 쉬운 미션으로 바꾸기
+                ✨ 더 쉬운 미션으로
+                바꾸기
               </ActionButton>
 
               <ActionButton
@@ -1004,7 +1144,8 @@ const MissionPage = () => {
                   handleHideCategory
                 }
               >
-                🚫 이 카테고리 그만 보기
+                🚫 이 카테고리
+                그만 보기
               </ActionButton>
             </ActionList>
           </MissionSelectionArea>

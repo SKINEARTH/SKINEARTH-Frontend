@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 
-import { getMyPage } from "../api/myPage";
+import {
+  getMyPage,
+  updateMyPage,
+} from "../api/myPage";
+
 import { resetUserData } from "../api/dataReset";
 
 import profileLevel1 from "../assets/profile_level_1.svg";
@@ -34,6 +38,14 @@ import {
   RowValue,
   EditButton,
   Divider,
+
+  EditArea,
+  EditInput,
+  OptionGroup,
+  OptionButton,
+  EditButtonGroup,
+  SaveButton,
+  CancelButton,
 
   NotificationRow,
   NotificationLabel,
@@ -71,6 +83,21 @@ const STATUS_MAP = {
   OTHER: "기타",
 };
 
+const STATUS_OPTIONS = [
+  {
+    value: "EMPLOYEE",
+    label: "직장인",
+  },
+  {
+    value: "STUDENT",
+    label: "학생",
+  },
+  {
+    value: "OTHER",
+    label: "기타",
+  },
+];
+
 const SKIN_CONCERN_MAP = {
   DRYNESS: "건조함",
   REDNESS: "홍조",
@@ -81,6 +108,41 @@ const SKIN_CONCERN_MAP = {
   PORES: "모공",
   NONE: "없음",
 };
+
+const SKIN_CONCERN_OPTIONS = [
+  {
+    value: "DRYNESS",
+    label: "건조함",
+  },
+  {
+    value: "REDNESS",
+    label: "홍조",
+  },
+  {
+    value: "TROUBLE",
+    label: "트러블",
+  },
+  {
+    value: "OILINESS",
+    label: "기름기",
+  },
+  {
+    value: "SENSITIVITY",
+    label: "민감성",
+  },
+  {
+    value: "DULLNESS",
+    label: "칙칙함",
+  },
+  {
+    value: "PORES",
+    label: "모공",
+  },
+  {
+    value: "NONE",
+    label: "없음",
+  },
+];
 
 const formatJoinedDate = (date) => {
   if (!date) {
@@ -110,6 +172,31 @@ const MyPage = () => {
   ] = useState("");
 
   const [
+    editingField,
+    setEditingField,
+  ] = useState(null);
+
+  const [
+    editNickname,
+    setEditNickname,
+  ] = useState("");
+
+  const [
+    editStatus,
+    setEditStatus,
+  ] = useState("");
+
+  const [
+    editSkinConcerns,
+    setEditSkinConcerns,
+  ] = useState([]);
+
+  const [
+    isSaving,
+    setIsSaving,
+  ] = useState(false);
+
+  const [
     notifications,
     setNotifications,
   ] = useState({
@@ -128,38 +215,166 @@ const MyPage = () => {
     setIsResetting,
   ] = useState(false);
 
+  const loadUser = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage("");
+
+      const result =
+        await getMyPage();
+
+      console.log(
+        "마이페이지 조회 성공:",
+        result
+      );
+
+      setUser(result.data);
+    } catch (error) {
+      console.error(
+        "마이페이지 조회 실패:",
+        error
+      );
+
+      setErrorMessage(
+        error.message ||
+          "사용자 정보를 불러오지 못했습니다."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        setIsLoading(true);
-        setErrorMessage("");
-
-        const result =
-          await getMyPage();
-
-        console.log(
-          "마이페이지 조회 성공:",
-          result
-        );
-
-        setUser(result.data);
-      } catch (error) {
-        console.error(
-          "마이페이지 조회 실패:",
-          error
-        );
-
-        setErrorMessage(
-          error.message ||
-            "사용자 정보를 불러오지 못했습니다."
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadUser();
   }, []);
+
+  const handleEditStart = (
+    field
+  ) => {
+    setEditingField(field);
+
+    setEditNickname(
+      user.nickname || ""
+    );
+
+    setEditStatus(
+      user.userStatus || "OTHER"
+    );
+
+    setEditSkinConcerns(
+      user.skinConcerns || []
+    );
+  };
+
+  const handleEditCancel = () => {
+    setEditingField(null);
+  };
+
+  const handleSkinConcernToggle = (
+    value
+  ) => {
+    if (value === "NONE") {
+      setEditSkinConcerns([
+        "NONE",
+      ]);
+
+      return;
+    }
+
+    setEditSkinConcerns(
+      (previous) => {
+        const withoutNone =
+          previous.filter(
+            (item) =>
+              item !== "NONE"
+          );
+
+        if (
+          withoutNone.includes(
+            value
+          )
+        ) {
+          return withoutNone.filter(
+            (item) =>
+              item !== value
+          );
+        }
+
+        return [
+          ...withoutNone,
+          value,
+        ];
+      }
+    );
+  };
+
+  const handleSave = async () => {
+    if (isSaving) {
+      return;
+    }
+
+    if (!editNickname.trim()) {
+      alert(
+        "닉네임을 입력해주세요."
+      );
+
+      return;
+    }
+
+    if (
+      editSkinConcerns.length === 0
+    ) {
+      alert(
+        "피부 고민을 한 개 이상 선택해주세요."
+      );
+
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+
+      const result =
+        await updateMyPage({
+          nickname:
+            editNickname.trim(),
+          userStatus:
+            editStatus,
+          skinConcerns:
+            editSkinConcerns,
+        });
+
+      console.log(
+        "프로필 수정 성공:",
+        result
+      );
+
+      setUser(
+        (previous) => ({
+          ...previous,
+          ...result.data,
+        })
+      );
+
+      setEditingField(null);
+
+      alert(
+        "프로필이 수정되었습니다."
+      );
+    } catch (error) {
+      console.error(
+        "프로필 수정 실패:",
+        error
+      );
+
+      alert(
+        error.message ||
+          "프로필 수정에 실패했습니다."
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleNotificationToggle = (
     key
@@ -217,15 +432,12 @@ const MyPage = () => {
 
       setShowResetModal(false);
 
-      /*
-       * 개인화 정보도 초기화되므로
-       * 다시 개인화 설문으로 이동
-       *
-       * accessToken은 삭제하지 않음
-       */
-      navigate("/personalization", {
-        replace: true,
-      });
+      navigate(
+        "/personalization",
+        {
+          replace: true,
+        }
+      );
     } catch (error) {
       console.error(
         "데이터 초기화 실패:",
@@ -250,7 +462,10 @@ const MyPage = () => {
     );
   }
 
-  if (errorMessage || !user) {
+  if (
+    errorMessage ||
+    !user
+  ) {
     return (
       <Page>
         <Content>
@@ -264,7 +479,9 @@ const MyPage = () => {
   }
 
   const currentProfileImage =
-    PROFILE_IMAGES[user.stage] ||
+    PROFILE_IMAGES[
+      user.stage
+    ] ||
     PROFILE_IMAGES[1];
 
   const userStatus =
@@ -281,7 +498,8 @@ const MyPage = () => {
             (concern) =>
               SKIN_CONCERN_MAP[
                 concern
-              ] || concern
+              ] ||
+              concern
           )
           .join(", ")
       : "없음";
@@ -326,57 +544,241 @@ const MyPage = () => {
             프로필 편집
           </SectionTitle>
 
-          <ProfileRow>
-            <RowLabel>
-              닉네임
-            </RowLabel>
+          {editingField ===
+          "nickname" ? (
+            <EditArea>
+              <RowLabel>
+                닉네임
+              </RowLabel>
 
-            <RowValue>
-              {user.nickname}
-            </RowValue>
+              <EditInput
+                type="text"
+                value={
+                  editNickname
+                }
+                onChange={(
+                  event
+                ) =>
+                  setEditNickname(
+                    event.target
+                      .value
+                  )
+                }
+                maxLength={20}
+              />
 
-            <EditButton
-              type="button"
-            >
-              편집
-            </EditButton>
-          </ProfileRow>
+              <EditButtonGroup>
+                <CancelButton
+                  type="button"
+                  onClick={
+                    handleEditCancel
+                  }
+                >
+                  취소
+                </CancelButton>
+
+                <SaveButton
+                  type="button"
+                  onClick={
+                    handleSave
+                  }
+                  disabled={
+                    isSaving
+                  }
+                >
+                  {isSaving
+                    ? "저장 중..."
+                    : "저장"}
+                </SaveButton>
+              </EditButtonGroup>
+            </EditArea>
+          ) : (
+            <ProfileRow>
+              <RowLabel>
+                닉네임
+              </RowLabel>
+
+              <RowValue>
+                {user.nickname}
+              </RowValue>
+
+              <EditButton
+                type="button"
+                onClick={() =>
+                  handleEditStart(
+                    "nickname"
+                  )
+                }
+              >
+                편집
+              </EditButton>
+            </ProfileRow>
+          )}
 
           <Divider />
 
-          <ProfileRow>
-            <RowLabel>
-              현재 상태
-            </RowLabel>
+          {editingField ===
+          "status" ? (
+            <EditArea>
+              <RowLabel>
+                현재 상태
+              </RowLabel>
 
-            <RowValue>
-              {userStatus}
-            </RowValue>
+              <OptionGroup>
+                {STATUS_OPTIONS.map(
+                  (option) => (
+                    <OptionButton
+                      key={
+                        option.value
+                      }
+                      type="button"
+                      $active={
+                        editStatus ===
+                        option.value
+                      }
+                      onClick={() =>
+                        setEditStatus(
+                          option.value
+                        )
+                      }
+                    >
+                      {
+                        option.label
+                      }
+                    </OptionButton>
+                  )
+                )}
+              </OptionGroup>
 
-            <EditButton
-              type="button"
-            >
-              편집
-            </EditButton>
-          </ProfileRow>
+              <EditButtonGroup>
+                <CancelButton
+                  type="button"
+                  onClick={
+                    handleEditCancel
+                  }
+                >
+                  취소
+                </CancelButton>
+
+                <SaveButton
+                  type="button"
+                  onClick={
+                    handleSave
+                  }
+                  disabled={
+                    isSaving
+                  }
+                >
+                  {isSaving
+                    ? "저장 중..."
+                    : "저장"}
+                </SaveButton>
+              </EditButtonGroup>
+            </EditArea>
+          ) : (
+            <ProfileRow>
+              <RowLabel>
+                현재 상태
+              </RowLabel>
+
+              <RowValue>
+                {userStatus}
+              </RowValue>
+
+              <EditButton
+                type="button"
+                onClick={() =>
+                  handleEditStart(
+                    "status"
+                  )
+                }
+              >
+                편집
+              </EditButton>
+            </ProfileRow>
+          )}
 
           <Divider />
 
-          <ProfileRow>
-            <RowLabel>
-              주요 피부 고민
-            </RowLabel>
+          {editingField ===
+          "skinConcerns" ? (
+            <EditArea>
+              <RowLabel>
+                주요 피부 고민
+              </RowLabel>
 
-            <RowValue>
-              {skinConcernText}
-            </RowValue>
+              <OptionGroup>
+                {SKIN_CONCERN_OPTIONS.map(
+                  (option) => (
+                    <OptionButton
+                      key={
+                        option.value
+                      }
+                      type="button"
+                      $active={editSkinConcerns.includes(
+                        option.value
+                      )}
+                      onClick={() =>
+                        handleSkinConcernToggle(
+                          option.value
+                        )
+                      }
+                    >
+                      {
+                        option.label
+                      }
+                    </OptionButton>
+                  )
+                )}
+              </OptionGroup>
 
-            <EditButton
-              type="button"
-            >
-              편집
-            </EditButton>
-          </ProfileRow>
+              <EditButtonGroup>
+                <CancelButton
+                  type="button"
+                  onClick={
+                    handleEditCancel
+                  }
+                >
+                  취소
+                </CancelButton>
+
+                <SaveButton
+                  type="button"
+                  onClick={
+                    handleSave
+                  }
+                  disabled={
+                    isSaving
+                  }
+                >
+                  {isSaving
+                    ? "저장 중..."
+                    : "저장"}
+                </SaveButton>
+              </EditButtonGroup>
+            </EditArea>
+          ) : (
+            <ProfileRow>
+              <RowLabel>
+                주요 피부 고민
+              </RowLabel>
+
+              <RowValue>
+                {skinConcernText}
+              </RowValue>
+
+              <EditButton
+                type="button"
+                onClick={() =>
+                  handleEditStart(
+                    "skinConcerns"
+                  )
+                }
+              >
+                편집
+              </EditButton>
+            </ProfileRow>
+          )}
         </Card>
 
         <Card>

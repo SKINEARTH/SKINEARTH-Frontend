@@ -623,3 +623,150 @@ export const ResetCancelButton = styled.button`
 
   -webkit-tap-highlight-color: transparent;
 `;
+
+export const EditArea = styled.div`
+  width: 100%;
+
+  padding: 1rem 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.8rem;
+`;
+
+export const EditInput = styled.input`
+  width: 100%;
+  height: 3rem;
+
+  padding: 0 1rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid
+    rgba(143, 173, 234, 0.25);
+
+  border-radius: 0.8rem;
+
+  outline: none;
+
+  background:
+    rgba(143, 173, 234, 0.08);
+
+  color: var(--white);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.9rem;
+
+  &:focus {
+    border-color:
+      var(--light-blue);
+  }
+`;
+
+export const OptionGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 0.5rem;
+`;
+
+export const OptionButton = styled.button`
+  padding:
+    0.55rem
+    0.9rem;
+
+  border: 1px solid
+    ${({ $active }) =>
+      $active
+        ? "var(--light-blue)"
+        : "rgba(143, 173, 234, 0.18)"};
+
+  border-radius: 999px;
+
+  background:
+    ${({ $active }) =>
+      $active
+        ? "rgba(65, 107, 199, 0.35)"
+        : "rgba(143, 173, 234, 0.06)"};
+
+  color:
+    ${({ $active }) =>
+      $active
+        ? "var(--white)"
+        : "var(--gray)"};
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.8rem;
+
+  cursor: pointer;
+`;
+
+export const EditButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 0.5rem;
+
+  margin-top: 0.2rem;
+`;
+
+export const SaveButton = styled.button`
+  padding:
+    0.55rem
+    1rem;
+
+  border: none;
+  border-radius: 0.65rem;
+
+  background: #416bc7;
+
+  color: var(--white);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+`;
+
+export const CancelButton = styled.button`
+  padding:
+    0.55rem
+    1rem;
+
+  border: 1px solid
+    rgba(143, 173, 234, 0.15);
+
+  border-radius: 0.65rem;
+
+  background: transparent;
+
+  color: var(--gray);
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 0.8rem;
+
+  cursor: pointer;
+`;

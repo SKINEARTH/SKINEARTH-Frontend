@@ -16,6 +16,10 @@ import {
 } from "../api/mission";
 
 import {
+  getUserStage,
+} from "../api/badge";
+
+import {
   Page,
   Content,
 
@@ -80,6 +84,11 @@ const MissionPage = () => {
   ] = useState(null);
 
   const [
+    stageData,
+    setStageData,
+  ] = useState(null);
+
+  const [
     alternativeMission,
     setAlternativeMission,
   ] = useState(null);
@@ -111,71 +120,128 @@ const MissionPage = () => {
 
   /*
    * =========================
-   * 오늘 미션 조회
+   * 오늘 미션 + PP 단계 조회
    * =========================
    */
   useEffect(() => {
-    const loadTodayMission =
+    const loadMissionPage =
       async () => {
         try {
           setIsLoading(true);
 
-          const result =
-            await getTodayMission();
-
-          console.log(
-            "오늘 미션 조회 성공:",
-            result
-          );
-
-          setCurrentMission(
-            result.data
-          );
-        } catch (error) {
-          console.error(
-            "오늘 미션 조회 실패:",
-            error
-          );
-
           /*
-           * 오늘 발급된 미션 없음
+           * 오늘 미션 조회
            */
-          if (
-            error.status === 404
-          ) {
-            setCurrentMission(
-              null
+          try {
+            const missionResult =
+              await getTodayMission();
+
+            console.log(
+              "오늘 미션 조회 성공:",
+              missionResult
             );
 
-            return;
+            setCurrentMission(
+              missionResult.data
+            );
+          } catch (error) {
+            console.error(
+              "오늘 미션 조회 실패:",
+              error
+            );
+
+            if (
+              error.status === 404
+            ) {
+              setCurrentMission(
+                null
+              );
+            } else if (
+              error.status === 400
+            ) {
+              setToast({
+                type:
+                  "personalizationRequired",
+              });
+            } else {
+              setToast({
+                type: "error",
+                message:
+                  error.message,
+              });
+            }
           }
 
           /*
-           * 개인화 설문 미완료
+           * PP 여행 단계 조회
+           * 실제 기록 진행률 사용
            */
-          if (
-            error.status === 400
-          ) {
-            setToast({
-              type:
-                "personalizationRequired",
-            });
+          try {
+            const stageResult =
+              await getUserStage();
 
-            return;
+            console.log(
+              "PP 여행 단계 조회 성공:",
+              stageResult
+            );
+
+            setStageData(
+              stageResult.data
+            );
+          } catch (error) {
+            console.error(
+              "PP 여행 단계 조회 실패:",
+              error
+            );
+
+            setStageData(null);
           }
-
-          setToast({
-            type: "error",
-            message:
-              error.message,
-          });
         } finally {
           setIsLoading(false);
         }
       };
 
-    loadTodayMission();
+    loadMissionPage();
   }, []);
+
+/*
+ * =========================
+ * PP 실제 기록 진행률
+ * OrbitHistory의 PpJourneyCard와
+ * 동일하게 stageData.progressList 사용
+ * =========================
+ */
+
+const recordProgress =
+  stageData?.progressList?.find(
+    (progress) =>
+      progress.label?.includes("궤도")
+  ) ??
+  stageData?.progressList?.[0] ??
+  null;
+
+const currentRecordCount =
+  Number(
+    recordProgress?.current ?? 0
+  );
+
+const targetRecordCount =
+  Number(
+    recordProgress?.target ?? 10
+  );
+
+const recordProgressPercent =
+  targetRecordCount > 0
+    ? Math.min(
+        Math.max(
+          (currentRecordCount /
+            targetRecordCount) *
+            100,
+          0
+        ),
+        100
+      )
+    : 0;
 
   /*
    * =========================
@@ -215,16 +281,10 @@ const MissionPage = () => {
       try {
         setIsProcessing(true);
 
-        /*
-         * 1. 완료 API 호출
-         */
         await completeMission(
           currentMission.id
         );
 
-        /*
-         * 2. 완료 후 최신 상태 조회
-         */
         const refreshed =
           await getTodayMission();
 
@@ -236,6 +296,24 @@ const MissionPage = () => {
         setCurrentMission(
           refreshed.data
         );
+
+        /*
+         * 혹시 단계/진행률도
+         * 바뀌었을 수 있으므로 재조회
+         */
+        try {
+          const stageResult =
+            await getUserStage();
+
+          setStageData(
+            stageResult.data
+          );
+        } catch (error) {
+          console.error(
+            "PP 단계 재조회 실패:",
+            error
+          );
+        }
 
         setToast({
           type:
@@ -279,9 +357,6 @@ const MissionPage = () => {
           result
         );
 
-        /*
-         * regenerate는 후보 미션만 반환
-         */
         setAlternativeMission(
           result.data
         );
@@ -325,12 +400,6 @@ const MissionPage = () => {
   /*
    * =========================
    * 대체 미션 확정
-   *
-   * 핵심 수정:
-   * confirm 결과만 바로 쓰지 않고
-   * GET today를 다시 호출해서
-   * 새 미션의 isCompleted 값을
-   * 서버 기준으로 다시 반영
    * =========================
    */
   const handleSelectMission =
@@ -345,9 +414,6 @@ const MissionPage = () => {
       try {
         setIsProcessing(true);
 
-        /*
-         * 1. 후보 미션 확정
-         */
         const confirmResult =
           await confirmMission();
 
@@ -356,13 +422,6 @@ const MissionPage = () => {
           confirmResult
         );
 
-        /*
-         * 2. 확정된 현재 미션
-         * 최신 상태 다시 조회
-         *
-         * 이전 미션의 완료 상태가
-         * 다음 미션으로 넘어오는 문제 방지
-         */
         const refreshed =
           await getTodayMission();
 
@@ -375,9 +434,6 @@ const MissionPage = () => {
           refreshed.data
         );
 
-        /*
-         * 후보 관련 상태 초기화
-         */
         setAlternativeMission(
           null
         );
@@ -399,6 +455,20 @@ const MissionPage = () => {
           "대체 미션 확정 실패:",
           error
         );
+
+        if (
+          error.status ===
+            409 &&
+          error.code ===
+            "MISSION_CANDIDATE_NOT_FOUND"
+        ) {
+          setToast({
+            type:
+              "noCandidateMission",
+          });
+
+          return;
+        }
 
         setToast({
           type: "error",
@@ -432,9 +502,6 @@ const MissionPage = () => {
           result
         );
 
-        /*
-         * 성공해도 아직 후보 상태
-         */
         setAlternativeMission(
           result.data
         );
@@ -569,10 +636,6 @@ const MissionPage = () => {
   /*
    * =========================
    * 카테고리 다시 보기
-   *
-   * 현재 백엔드에
-   * 제외 취소 API가 없기 때문에
-   * 프론트 화면에서만 복구
    * =========================
    */
   const handleRestoreCategory =
@@ -786,6 +849,7 @@ const MissionPage = () => {
           <>
             {/* =========================
                 PP 여행 단계
+                디자인 그대로 유지
             ========================= */}
 
             <JourneyCard>
@@ -834,14 +898,20 @@ const MissionPage = () => {
                     </ProgressLabel>
 
                     <ProgressCount>
-                      3/10
+                      {
+                        currentRecordCount
+                      }
+                      /
+                      {
+                        targetRecordCount
+                      }
                     </ProgressCount>
                   </ProgressHeader>
 
                   <ProgressTrack>
                     <ProgressBar
                       $progress={
-                        30
+                        recordProgressPercent
                       }
                     />
                   </ProgressTrack>
@@ -990,8 +1060,8 @@ const MissionPage = () => {
                       handleEasyMission
                     }
                   >
-                    ✨ 더 쉬운
-                    미션으로 바꾸기
+                    ✨ 더 쉬운 미션으로
+                    바꾸기
                   </ActionButton>
 
                   <ActionButton
@@ -1015,8 +1085,8 @@ const MissionPage = () => {
                 </HiddenPlanetIcon>
 
                 <HiddenMissionTitle>
-                  오늘 발행된
-                  미션이 없어요
+                  오늘 발행된 미션이
+                  없어요
                 </HiddenMissionTitle>
 
                 <HiddenMissionDescription>

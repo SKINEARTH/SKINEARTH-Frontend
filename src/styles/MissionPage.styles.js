@@ -299,17 +299,6 @@ export const ProgressBar = styled.div`
    CATEGORY
 ========================= */
 
-export const CategoryList = styled.div`
-  width: 100%;
-
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 0.5rem;
-
-  margin-bottom: 1.5rem;
-`;
-
 export const CategoryChip = styled.button`
   padding: 0.5rem 0.85rem;
 
@@ -552,7 +541,7 @@ export const CompleteButton = styled.button`
   box-shadow: ${({ disabled }) =>
     disabled
       ? "none"
-      : "0 0.5rem 1.5rem var(--mint)"};
+      : "0 0.5rem 1.5rem "};
 
   transition:
     background 0.2s ease,

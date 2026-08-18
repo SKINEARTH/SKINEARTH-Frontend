@@ -42,9 +42,6 @@ import {
   ProgressTrack,
   ProgressBar,
 
-  CategoryList,
-  CategoryChip,
-
   MissionCard,
   MissionTopRow,
   MissionCategoryBadge,
@@ -749,26 +746,6 @@ const MissionPage = () => {
             </JourneyCard>
 
             {/* =========================
-                CATEGORY
-
-                백엔드에서 받은 현재
-                미션 카테고리만 표시
-            ========================= */}
-
-            {currentMission?.category && (
-              <CategoryList>
-                <CategoryChip
-                  type="button"
-                  $selected
-                >
-                  {
-                    currentMission.category
-                  }
-                </CategoryChip>
-              </CategoryList>
-            )}
-
-            {/* =========================
                 EXCLUDED CATEGORY
             ========================= */}
 
@@ -851,7 +828,7 @@ const MissionPage = () => {
                   >
                     {currentMission
                       .isCompleted
-                      ? "미션 완료 ✓"
+                      ? "✓ 완료한 미션"
                       : "미션 완료하기"}
                   </CompleteButton>
                 </MissionCard>

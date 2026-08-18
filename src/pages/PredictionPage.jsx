@@ -1,7 +1,13 @@
-import { useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
+
+import { getForecast } from "../api/forecast";
 
 import {
   Page,
@@ -35,11 +41,78 @@ const SCORE_OPTIONS = [1, 2, 3, 4, 5];
 const PredictionPage = () => {
   const navigate = useNavigate();
 
-  const [heating, setHeating] = useState(null);
-  const [screen, setScreen] = useState(null);
-  const [sleep, setSleep] = useState(6);
-  const [stress, setStress] = useState(null);
-  const [meal, setMeal] = useState(null);
+  const [heating, setHeating] =
+    useState(null);
+
+  const [screen, setScreen] =
+    useState(null);
+
+  const [sleep, setSleep] =
+    useState(6);
+
+  const [stress, setStress] =
+    useState(null);
+
+  const [meal, setMeal] =
+    useState(null);
+
+  const [isChecking, setIsChecking] =
+    useState(true);
+
+  /*
+   * 예측 페이지 진입 시
+   * 오늘 이미 생성한 내일 예측이 있는지 확인
+   */
+  useEffect(() => {
+    const checkForecast = async () => {
+      try {
+        const result =
+          await getForecast();
+
+        console.log(
+          "기존 예측 조회 성공:",
+          result
+        );
+
+        /*
+         * GET 성공 = 이미 오늘 예측 완료
+         *
+         * 기존 예측 데이터를 가지고
+         * 결과 페이지로 바로 이동
+         */
+        if (result?.data) {
+          navigate(
+            "/prediction/result",
+            {
+              replace: true,
+              state: {
+                forecast:
+                  result.data,
+              },
+            }
+          );
+
+          return;
+        }
+      } catch (error) {
+        /*
+         * 404 =
+         * 아직 내일 예측을 생성하지 않은 상태
+         *
+         * 이 경우 현재 입력 페이지를
+         * 그대로 보여주면 됨
+         */
+        console.log(
+          "기존 예측 없음:",
+          error
+        );
+      } finally {
+        setIsChecking(false);
+      }
+    };
+
+    checkForecast();
+  }, [navigate]);
 
   const canPredict =
     heating !== null &&
@@ -72,6 +145,23 @@ const PredictionPage = () => {
       },
     });
   };
+
+  /*
+   * 서버 확인 중 예측 입력 페이지가
+   * 잠깐 보였다가 결과 페이지로 넘어가는
+   * 깜빡임 방지
+   */
+  if (isChecking) {
+    return (
+      <Page>
+        <Content>
+          예측 정보를 확인하고 있어요...
+        </Content>
+
+        <NavBar />
+      </Page>
+    );
+  }
 
   return (
     <Page>
@@ -107,20 +197,25 @@ const PredictionPage = () => {
               </FactorLabel>
 
               <ScoreButtons>
-                {SCORE_OPTIONS.map((score) => (
-                  <ScoreButton
-                    key={score}
-                    type="button"
-                    $selected={
-                      heating === score
-                    }
-                    onClick={() =>
-                      setHeating(score)
-                    }
-                  >
-                    {score}
-                  </ScoreButton>
-                ))}
+                {SCORE_OPTIONS.map(
+                  (score) => (
+                    <ScoreButton
+                      key={score}
+                      type="button"
+                      $selected={
+                        heating ===
+                        score
+                      }
+                      onClick={() =>
+                        setHeating(
+                          score
+                        )
+                      }
+                    >
+                      {score}
+                    </ScoreButton>
+                  )
+                )}
               </ScoreButtons>
             </FactorItem>
 
@@ -131,20 +226,25 @@ const PredictionPage = () => {
               </FactorLabel>
 
               <ScoreButtons>
-                {SCORE_OPTIONS.map((score) => (
-                  <ScoreButton
-                    key={score}
-                    type="button"
-                    $selected={
-                      screen === score
-                    }
-                    onClick={() =>
-                      setScreen(score)
-                    }
-                  >
-                    {score}
-                  </ScoreButton>
-                ))}
+                {SCORE_OPTIONS.map(
+                  (score) => (
+                    <ScoreButton
+                      key={score}
+                      type="button"
+                      $selected={
+                        screen ===
+                        score
+                      }
+                      onClick={() =>
+                        setScreen(
+                          score
+                        )
+                      }
+                    >
+                      {score}
+                    </ScoreButton>
+                  )
+                )}
               </ScoreButtons>
             </FactorItem>
 
@@ -166,10 +266,13 @@ const PredictionPage = () => {
                 max="10"
                 step="1"
                 value={sleep}
-                onChange={(event) =>
+                onChange={(
+                  event
+                ) =>
                   setSleep(
                     Number(
-                      event.target.value
+                      event.target
+                        .value
                     )
                   )
                 }
@@ -183,20 +286,25 @@ const PredictionPage = () => {
               </FactorLabel>
 
               <ScoreButtons>
-                {SCORE_OPTIONS.map((score) => (
-                  <ScoreButton
-                    key={score}
-                    type="button"
-                    $selected={
-                      stress === score
-                    }
-                    onClick={() =>
-                      setStress(score)
-                    }
-                  >
-                    {score}
-                  </ScoreButton>
-                ))}
+                {SCORE_OPTIONS.map(
+                  (score) => (
+                    <ScoreButton
+                      key={score}
+                      type="button"
+                      $selected={
+                        stress ===
+                        score
+                      }
+                      onClick={() =>
+                        setStress(
+                          score
+                        )
+                      }
+                    >
+                      {score}
+                    </ScoreButton>
+                  )
+                )}
               </ScoreButtons>
             </FactorItem>
 
@@ -207,20 +315,25 @@ const PredictionPage = () => {
               </FactorLabel>
 
               <ScoreButtons>
-                {SCORE_OPTIONS.map((score) => (
-                  <ScoreButton
-                    key={score}
-                    type="button"
-                    $selected={
-                      meal === score
-                    }
-                    onClick={() =>
-                      setMeal(score)
-                    }
-                  >
-                    {score}
-                  </ScoreButton>
-                ))}
+                {SCORE_OPTIONS.map(
+                  (score) => (
+                    <ScoreButton
+                      key={score}
+                      type="button"
+                      $selected={
+                        meal ===
+                        score
+                      }
+                      onClick={() =>
+                        setMeal(
+                          score
+                        )
+                      }
+                    >
+                      {score}
+                    </ScoreButton>
+                  )
+                )}
               </ScoreButtons>
             </FactorItem>
           </FactorList>

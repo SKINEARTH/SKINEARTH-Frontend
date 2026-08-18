@@ -84,10 +84,198 @@ export const SectionTitle = styled.h2`
 `;
 
 export const Gauge = styled.div`
-  width: 220px;
-  height: 220px;
+  position: relative;
+
+  width: 240px;
+  height: 240px;
+
+  margin-top: 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   flex-shrink: 0;
+`;
+
+export const GaugeSvg = styled.svg`
+  position: absolute;
+
+  width: 240px;
+  height: 240px;
+
+  inset: 0;
+
+  overflow: visible;
+
+  transform: rotate(132deg);
+`;
+
+export const GaugeTrack = styled.circle`
+  fill: none;
+
+  stroke: #192747;
+  stroke-width: 13;
+
+  stroke-linecap: round;
+
+  /*
+   * 전체 원의 약 76%만 보여서
+   * 참고 이미지처럼 아래쪽에 틈 생성
+   */
+  stroke-dasharray: 76 24;
+
+  opacity: 1;
+`;
+
+export const GaugeProgress = styled.circle`
+  fill: none;
+
+  stroke: url(#planetGaugeGradient);
+  stroke-width: 14;
+
+  stroke-linecap: round;
+
+  /*
+   * 전체 원 중 실제 디자인에서 사용하는
+   * 약 76% 구간을 100점으로 계산
+   */
+  stroke-dasharray: ${({ $score }) => {
+    const safeScore = Math.min(
+      Math.max($score ?? 0, 0),
+      100
+    );
+
+    const progress =
+      (safeScore / 100) * 76;
+
+    return `${progress} ${100 - progress}`;
+  }};
+
+  transition:
+    stroke-dasharray
+    0.7s
+    cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    );
+`;
+
+export const GaugeCenter = styled.div`
+  position: relative;
+
+  z-index: 2;
+
+  width: 168px;
+  height: 168px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      #182747 0%,
+      #152342 50%,
+      #111d37 100%
+    );
+
+  box-shadow:
+    inset 0 0 30px
+      rgba(143, 173, 234, 0.045),
+    0 10px 24px
+      rgba(0, 0, 0, 0.2);
+`;
+
+export const GaugeScore = styled.strong`
+  margin-top: -4px;
+
+  color: #edf1f8;
+
+  font-family:
+    "Pretendard",
+    sans-serif;
+
+  font-size: 56px;
+  font-weight: 800;
+
+  line-height: 1;
+
+  letter-spacing: -2px;
+`;
+
+export const GaugeLabel = styled.span`
+  margin-top: 18px;
+
+  color: #a9b4c6;
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 14px;
+  font-weight: 400;
+
+  line-height: 1.3;
+`;
+
+export const GaugeLevel = styled.strong`
+  margin-top: 6px;
+
+  color: ${({ $level }) => {
+    if ($level === "안정") {
+      return "#6bd2b0";
+    }
+
+    if ($level === "주의") {
+      return "#ffe259";
+    }
+
+    if ($level === "위험") {
+      return "#f2684b";
+    }
+
+    if ($level === "보통") {
+      return "#8fadea";
+    }
+
+    return "#a9b4c6";
+  }};
+
+  font-family:
+    "Pretendard Variable",
+    "Pretendard",
+    sans-serif;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  line-height: 1.3;
+
+  text-shadow:
+    0 0 10px
+    ${({ $level }) => {
+      if ($level === "안정") {
+        return "rgba(107, 210, 176, 0.28)";
+      }
+
+      if ($level === "주의") {
+        return "rgba(255, 226, 89, 0.25)";
+      }
+
+      if ($level === "위험") {
+        return "rgba(242, 104, 75, 0.25)";
+      }
+
+      return "transparent";
+    }};
 `;
 
 export const PlanetGaugeImage = styled.img`
@@ -102,7 +290,7 @@ export const RecordStatusCard = styled.section`
   width: 100%;
   height: 79px;
 
-  margin-top: 14px;
+  margin-top: 24px;
   padding: 19px;
 
   display: flex;

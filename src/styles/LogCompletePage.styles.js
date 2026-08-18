@@ -258,7 +258,7 @@ export const ProgressTrack = styled.div`
 `;
 
 export const ProgressBar = styled.div`
-  width: 40%;
+  width: ${({ $progress }) => `${$progress}%`};
   height: 100%;
 
   border-radius: inherit;
@@ -268,6 +268,8 @@ export const ProgressBar = styled.div`
     var(--mint),
     var(--light-blue)
   );
+
+  transition: width 0.4s ease;
 `;
 
 export const ProgressDescription = styled.p`

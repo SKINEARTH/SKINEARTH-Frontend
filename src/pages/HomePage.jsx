@@ -777,10 +777,6 @@ const HomePage = () => {
                   -
                 </ForecastScore>
 
-                <ForecastScoreLabel>
-                  아직 생성된 예보가 없어요
-                </ForecastScoreLabel>
-
               </ForecastScoreGroup>
 
 

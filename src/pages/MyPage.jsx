@@ -115,10 +115,6 @@ const SKIN_CONCERN_OPTIONS = [
     label: "건조함",
   },
   {
-    value: "REDNESS",
-    label: "홍조",
-  },
-  {
     value: "TROUBLE",
     label: "트러블",
   },
@@ -137,10 +133,6 @@ const SKIN_CONCERN_OPTIONS = [
   {
     value: "PORES",
     label: "모공",
-  },
-  {
-    value: "NONE",
-    label: "없음",
   },
 ];
 

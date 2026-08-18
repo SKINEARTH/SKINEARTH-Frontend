@@ -45,7 +45,7 @@ export const LogoGroup = styled.div`
   z-index: 1;
 
   top: ${({ $finished }) =>
-    $finished ? "6.5rem" : "50%"};
+    $finished ? "2rem" : "50%"};
 
   left: 50%;
 

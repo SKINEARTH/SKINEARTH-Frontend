@@ -299,17 +299,6 @@ export const ProgressBar = styled.div`
    CATEGORY
 ========================= */
 
-export const CategoryList = styled.div`
-  width: 100%;
-
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 0.5rem;
-
-  margin-bottom: 1.5rem;
-`;
-
 export const CategoryChip = styled.button`
   padding: 0.5rem 0.85rem;
 
@@ -518,15 +507,25 @@ export const AiBadge = styled.div`
 export const CompleteButton = styled.button`
   width: 100%;
   height: 3.5rem;
-
   margin-top: 1.5rem;
 
-  border: none;
+  border: 1px solid
+    ${({ disabled }) =>
+      disabled
+        ? "rgba(93, 217, 186, 0.25)"
+        : "transparent"};
+
   border-radius: 999px;
 
-  background: var(--mint);
+  background: ${({ disabled }) =>
+    disabled
+      ? "rgba(93, 217, 186, 0.1)"
+      : "var(--mint)"};
 
-  color: var(--dark-navy);
+  color: ${({ disabled }) =>
+    disabled
+      ? "rgba(237, 241, 248, 0.55)"
+      : "var(--dark-navy)"};
 
   font-family:
     "Pretendard Variable",
@@ -536,11 +535,24 @@ export const CompleteButton = styled.button`
   font-size: 1.15rem;
   font-weight: 800;
 
-  cursor: pointer;
+  cursor: ${({ disabled }) =>
+    disabled ? "default" : "pointer"};
 
-  box-shadow:
-    0 0.5rem 1.5rem
-    rgba(93, 217, 186, 0.2);
+  box-shadow: ${({ disabled }) =>
+    disabled
+      ? "none"
+      : "0 0.5rem 1.5rem "};
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  &:not(:disabled):active {
+    transform: scale(0.98);
+  }
 `;
 
 

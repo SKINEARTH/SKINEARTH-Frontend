@@ -138,10 +138,6 @@ const SKIN_CONCERN_OPTIONS = [
     value: "PORES",
     label: "모공",
   },
-  {
-    value: "NONE",
-    label: "없음",
-  },
 ];
 
 const formatJoinedDate = (date) => {

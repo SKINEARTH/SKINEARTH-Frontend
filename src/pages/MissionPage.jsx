@@ -851,8 +851,8 @@ const MissionPage = () => {
                   >
                     {currentMission
                       .isCompleted
-                      ? "✓ 완료한 미션"
-                      : "✓ 미션 완료!"}
+                      ? "미션 완료 ✓"
+                      : "미션 완료하기"}
                   </CompleteButton>
                 </MissionCard>
 

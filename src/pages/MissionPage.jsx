@@ -4,7 +4,10 @@ import {
 } from "react";
 
 import NavBar from "../components/NavBar";
-import ppRobot from "../assets/third_OnboardingPage.svg";
+
+import levelOneImage from "../assets/profile_level_1.svg";
+import levelTwoImage from "../assets/profile_level_2.svg";
+import levelThreeImage from "../assets/profile_level_3.svg";
 
 import {
   getTodayMission,
@@ -77,6 +80,18 @@ import {
   ToastDescription,
 } from "../styles/MissionPage.styles";
 
+/*
+ * =========================
+ * PP 단계별 이미지
+ * =========================
+ */
+
+const LEVEL_IMAGES = {
+  1: levelOneImage,
+  2: levelTwoImage,
+  3: levelThreeImage,
+};
+
 const MissionPage = () => {
   const [
     currentMission,
@@ -123,6 +138,7 @@ const MissionPage = () => {
    * 오늘 미션 + PP 단계 조회
    * =========================
    */
+
   useEffect(() => {
     const loadMissionPage =
       async () => {
@@ -174,7 +190,16 @@ const MissionPage = () => {
 
           /*
            * PP 여행 단계 조회
-           * 실제 기록 진행률 사용
+           *
+           * GET /api/users/stage
+           *
+           * {
+           *   stage,
+           *   name,
+           *   description,
+           *   conditionDescription,
+           *   progressList
+           * }
            */
           try {
             const stageResult =
@@ -204,50 +229,53 @@ const MissionPage = () => {
     loadMissionPage();
   }, []);
 
-/*
- * =========================
- * PP 실제 기록 진행률
- * OrbitHistory의 PpJourneyCard와
- * 동일하게 stageData.progressList 사용
- * =========================
- */
+  /*
+   * =========================
+   * PP 여행 단계 데이터
+   * =========================
+   */
 
-const recordProgress =
-  stageData?.progressList?.find(
-    (progress) =>
-      progress.label?.includes("궤도")
-  ) ??
-  stageData?.progressList?.[0] ??
-  null;
+  const ppLevel =
+    stageData?.stage >= 1 &&
+    stageData?.stage <= 3
+      ? stageData.stage
+      : null;
 
-const currentRecordCount =
-  Number(
-    recordProgress?.current ?? 0
-  );
+  const ppImage =
+    ppLevel
+      ? LEVEL_IMAGES[ppLevel]
+      : null;
 
-const targetRecordCount =
-  Number(
-    recordProgress?.target ?? 10
-  );
+  const ppName =
+    stageData?.name ?? "";
 
-const recordProgressPercent =
-  targetRecordCount > 0
-    ? Math.min(
-        Math.max(
-          (currentRecordCount /
-            targetRecordCount) *
-            100,
-          0
-        ),
-        100
-      )
-    : 0;
+  const ppDescription =
+    stageData?.description ?? "";
+
+  const ppConditionDescription =
+    stageData?.conditionDescription ??
+    "";
+
+  /*
+   * progressList가 여러 개가 될
+   * 가능성도 고려해서 그대로 사용
+   */
+  const progressList =
+    stageData?.progressList ?? [];
+
+  /*
+   * 미션 선택 화면에서 보여줄
+   * 작은 PP 이미지
+   */
+  const miniPpImage =
+    ppImage ?? levelOneImage;
 
   /*
    * =========================
    * 토스트 자동 종료
    * =========================
    */
+
   useEffect(() => {
     if (!toast) {
       return;
@@ -268,6 +296,7 @@ const recordProgressPercent =
    * 미션 완료
    * =========================
    */
+
   const handleCompleteMission =
     async () => {
       if (
@@ -298,12 +327,17 @@ const recordProgressPercent =
         );
 
         /*
-         * 혹시 단계/진행률도
-         * 바뀌었을 수 있으므로 재조회
+         * 미션 완료 후
+         * PP 단계/진행률 재조회
          */
         try {
           const stageResult =
             await getUserStage();
+
+          console.log(
+            "PP 단계 재조회 성공:",
+            stageResult
+          );
 
           setStageData(
             stageResult.data
@@ -340,6 +374,7 @@ const recordProgressPercent =
    * 다른 미션 보기
    * =========================
    */
+
   const handleShowOtherMissions =
     async () => {
       if (isProcessing) {
@@ -374,8 +409,7 @@ const recordProgressPercent =
         );
 
         if (
-          error.status ===
-            409 &&
+          error.status === 409 &&
           error.code ===
             "MISSION_CANDIDATE_NOT_FOUND"
         ) {
@@ -402,6 +436,7 @@ const recordProgressPercent =
    * 대체 미션 확정
    * =========================
    */
+
   const handleSelectMission =
     async () => {
       if (
@@ -457,8 +492,7 @@ const recordProgressPercent =
         );
 
         if (
-          error.status ===
-            409 &&
+          error.status === 409 &&
           error.code ===
             "MISSION_CANDIDATE_NOT_FOUND"
         ) {
@@ -485,6 +519,7 @@ const recordProgressPercent =
    * 더 쉬운 미션
    * =========================
    */
+
   const handleEasyMission =
     async () => {
       if (isProcessing) {
@@ -519,8 +554,7 @@ const recordProgressPercent =
         );
 
         if (
-          error.status ===
-            409 &&
+          error.status === 409 &&
           error.code ===
             "MISSION_ALREADY_LIGHT"
         ) {
@@ -533,8 +567,7 @@ const recordProgressPercent =
         }
 
         if (
-          error.status ===
-            409 &&
+          error.status === 409 &&
           error.code ===
             "MISSION_CANDIDATE_NOT_FOUND"
         ) {
@@ -561,6 +594,7 @@ const recordProgressPercent =
    * 카테고리 제외
    * =========================
    */
+
   const handleHideCategory =
     async () => {
       if (
@@ -610,8 +644,7 @@ const recordProgressPercent =
         );
 
         if (
-          error.status ===
-            409 &&
+          error.status === 409 &&
           error.code ===
             "MISSION_CANDIDATE_NOT_FOUND"
         ) {
@@ -638,6 +671,7 @@ const recordProgressPercent =
    * 카테고리 다시 보기
    * =========================
    */
+
   const handleRestoreCategory =
     () => {
       setExcludedCategory(
@@ -655,6 +689,7 @@ const recordProgressPercent =
    * 후보 화면 닫기
    * =========================
    */
+
   const handleReturnCurrentMission =
     () => {
       setShowMissionList(
@@ -676,6 +711,7 @@ const recordProgressPercent =
    * LOADING
    * =========================
    */
+
   if (isLoading) {
     return (
       <Page>
@@ -849,75 +885,109 @@ const recordProgressPercent =
           <>
             {/* =========================
                 PP 여행 단계
-                디자인 그대로 유지
+                API 데이터 연결
             ========================= */}
 
-            <JourneyCard>
-              <SectionTitle>
-                PP의 여행 단계
-              </SectionTitle>
+            {stageData && (
+              <JourneyCard>
+                <SectionTitle>
+                  PP의 여행 단계
+                </SectionTitle>
 
-              <JourneyContent>
-                <RobotArea>
-                  <RobotImage
-                    src={
-                      ppRobot
-                    }
-                    alt="PP"
-                  />
-                </RobotArea>
+                <JourneyContent>
+                  <RobotArea>
+                    {ppImage && (
+                      <RobotImage
+                        src={ppImage}
+                        alt={`Lv.${ppLevel} ${ppName} PP`}
+                      />
+                    )}
+                  </RobotArea>
 
-                <LevelInfo>
-                  <LevelTitle>
-                    Lv.1 관측자
-                  </LevelTitle>
+                  <LevelInfo>
+                    <LevelTitle>
+                      Lv.{ppLevel}{" "}
+                      {ppName}
+                    </LevelTitle>
 
-                  <LevelDescription>
-                    가장 기본적인
-                    형태의 신입사원
-                    PP입니다.
-                    <br />
-                    좋아하는 음료는
-                    아메리카노라고
-                    해요.
-                  </LevelDescription>
+                    <LevelDescription>
+                      {ppDescription}
+                    </LevelDescription>
 
-                  <NextLevelTitle>
-                    다음 레벨까지
-                    남은 조건
-                  </NextLevelTitle>
+                    <NextLevelTitle>
+                      {ppLevel === 3
+                        ? "현재 여행 단계"
+                        : "다음 레벨까지 남은 조건"}
+                    </NextLevelTitle>
 
-                  <NextLevelDescription>
-                    궤도를 10건 이상
-                    기록하세요.
-                  </NextLevelDescription>
-
-                  <ProgressHeader>
-                    <ProgressLabel>
-                      궤도 기록하기
-                    </ProgressLabel>
-
-                    <ProgressCount>
+                    <NextLevelDescription>
                       {
-                        currentRecordCount
+                        ppConditionDescription
                       }
-                      /
-                      {
-                        targetRecordCount
-                      }
-                    </ProgressCount>
-                  </ProgressHeader>
+                    </NextLevelDescription>
 
-                  <ProgressTrack>
-                    <ProgressBar
-                      $progress={
-                        recordProgressPercent
+                    {progressList.map(
+                      (
+                        progress,
+                        index
+                      ) => {
+                        const current =
+                          Number(
+                            progress.current ??
+                              0
+                          );
+
+                        const target =
+                          Number(
+                            progress.target ??
+                              0
+                          );
+
+                        const progressPercent =
+                          target > 0
+                            ? Math.min(
+                                Math.max(
+                                  (current /
+                                    target) *
+                                    100,
+                                  0
+                                ),
+                                100
+                              )
+                            : 0;
+
+                        return (
+                          <div
+                            key={`${progress.label}-${index}`}
+                          >
+                            <ProgressHeader>
+                              <ProgressLabel>
+                                {
+                                  progress.label
+                                }
+                              </ProgressLabel>
+
+                              <ProgressCount>
+                                {current}/
+                                {target}
+                              </ProgressCount>
+                            </ProgressHeader>
+
+                            <ProgressTrack>
+                              <ProgressBar
+                                $progress={
+                                  progressPercent
+                                }
+                              />
+                            </ProgressTrack>
+                          </div>
+                        );
                       }
-                    />
-                  </ProgressTrack>
-                </LevelInfo>
-              </JourneyContent>
-            </JourneyCard>
+                    )}
+                  </LevelInfo>
+                </JourneyContent>
+              </JourneyCard>
+            )}
 
             {/* =========================
                 EXCLUDED CATEGORY
@@ -1105,9 +1175,7 @@ const recordProgressPercent =
           <MissionSelectionArea>
             <PPMessageRow>
               <MiniRobot
-                src={
-                  ppRobot
-                }
+                src={miniPpImage}
                 alt="PP"
               />
 

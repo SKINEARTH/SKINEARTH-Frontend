@@ -1,0 +1,48 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+@font-face {
+  font-family: "EstablishRetrosans";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/establishRetrosansOTF.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Paperlogy";
+  src: url("https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-8ExtraBold.woff2")
+    format("woff2");
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --dark-navy: #0b162b;
+  --navy: #1c3768;
+
+  --white: #edf1f8;
+  --gray: #a9b4c6;
+  --dark-gray: #68758c;
+
+  --light-blue: #8fadea;
+  --mint: #5dd9ba;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: "EstablishRetrosans", sans-serif;
+  background: #0b162b;
+}

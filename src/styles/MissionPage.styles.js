@@ -281,7 +281,7 @@ export const ProgressTrack = styled.div`
 
 export const ProgressBar = styled.div`
   width: ${({ $progress }) =>
-    `${$progress ?? 30}%`};
+    `${$progress ?? 0}%`};
 
   height: 100%;
 
@@ -293,7 +293,6 @@ export const ProgressBar = styled.div`
     var(--light-blue)
   );
 `;
-
 
 /* =========================
    CATEGORY

@@ -3,6 +3,7 @@
 <img src="./main.png" alt="SKINEARTH" />
 
 <br>
+
 피부 컨디션 트래킹 & 예보 서비스 **SKINEARTH**의 프론트엔드입니다.
 
 사용자는 매일 냉난방 노출, 화면 사용, 수면, 스트레스, 식사 규칙성과 같은 생활 환경과 피부 상태를 기록합니다.
@@ -30,8 +31,8 @@
 
 | 이름 | 담당 |
 | --- | --- |
-| 박서현 | 로그인, 회원가입, 온보딩, 홈 페이지, 히스토리 페이지 |
-| 박영서 | 온보딩, 기록 페이지, 예보 페이지, 미션 페이지, 마이페이지 |
+| 박서현 | 로그인 페이지, 회원가입 페이지, 온보딩 페이지, 홈 페이지, 히스토리 페이지 |
+| 박영서 | 스플래시 페이지, 기록 페이지, 예보 페이지, 미션 페이지, 마이페이지 |
 
 <br>
 
@@ -158,7 +159,6 @@ SKINEARTH-Frontend
 ├── .gitignore
 ├── .oxlintrc.json
 ├── index.html
-├── main.png
 ├── package-lock.json
 ├── package.json
 ├── README.md
@@ -221,10 +221,6 @@ npm install
 
 프로젝트 루트에 `.env` 파일을 생성하고 백엔드 API 주소를 설정합니다.
 
-```env
-VITE_API_BASE_URL=
-```
-
 | 환경변수 | 설명 |
 | --- | --- |
 | `VITE_API_BASE_URL` | SKINEARTH Backend API Base URL |
@@ -234,13 +230,3 @@ VITE_API_BASE_URL=
 ```bash
 npm run dev
 ```
-
-개발 서버 실행 후 터미널에 출력되는 로컬 주소로 접속합니다.
-
-<br>
-
-## Workspace
-
-- 🎨 **Figma** — [SKINEARTH Design](https://www.figma.com/design/5b2ECQHwHiDOmTeSK2TIZR/SKINEARTH?node-id=16-2036&t=G9BvdVLDOGvjDSWy-1)
-- 📝 **Notion** — [SKINEARTH Workspace](https://daisy-licorice-73f.notion.site/likelion-skinearth?pvs=74)
-- 📑 **Swagger** — [SKINEARTH API Documentation](https://skinearth-api.up.railway.app/swagger-ui/index.html#/)

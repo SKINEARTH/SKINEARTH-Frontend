@@ -8,6 +8,7 @@ import { signup } from "../api/auth";
 import {
   AuthContainer,
   AuthContent,
+  BackToLoginButton,
   BrandHeader,
   BrandLogo,
   BrandName,
@@ -44,7 +45,8 @@ const SignupPage = () => {
       : "";
 
   const passwordConfirmError =
-    passwordConfirm.length > 0 && password !== passwordConfirm
+    passwordConfirm.length > 0 &&
+    password !== passwordConfirm
       ? "비밀번호가 일치하지 않습니다."
       : "";
 
@@ -77,52 +79,87 @@ const SignupPage = () => {
     });
   };
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
+  const handleBackToLogin = () => {
+    navigate("/login");
+  };
 
-  if (!canSignup) {
-    return;
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  try {
-    await signup({
-      email,
-      password,
-      passwordConfirm,
-      serviceTermsAgreed: agreements.service,
-      sensitiveDataAgreed: agreements.health,
-      researchDataAgreed: agreements.research,
-    });
+    if (!canSignup) {
+      return;
+    }
 
-    alert("회원가입이 완료되었습니다.");
+    try {
+      await signup({
+        email: email.trim(),
+        password,
+        passwordConfirm,
+        serviceTermsAgreed:
+          agreements.service,
+        sensitiveDataAgreed:
+          agreements.health,
+        researchDataAgreed:
+          agreements.research,
+      });
 
-    navigate("/login", {
-      replace: true,
-    });
-  } catch (error) {
-    alert(error.message);
-  }
-};
+      alert(
+        "회원가입이 완료되었습니다."
+      );
+
+      navigate("/login", {
+        replace: true,
+      });
+    } catch (error) {
+      console.error(
+        "회원가입 실패:",
+        error
+      );
+
+      alert(error.message);
+    }
+  };
 
   return (
     <AuthContainer>
       <AuthContent>
+        <BackToLoginButton
+          type="button"
+          onClick={handleBackToLogin}
+        >
+          ← 로그인으로 돌아가기
+        </BackToLoginButton>
+
         <BrandHeader>
-          <BrandLogo src={logo} alt="SKINEARTH" />
-          <BrandName>SKINEARTH</BrandName>
+          <BrandLogo
+            src={logo}
+            alt="SKINEARTH"
+          />
+
+          <BrandName>
+            SKINEARTH
+          </BrandName>
         </BrandHeader>
 
         <TitleArea>
-          <AuthTitle>회원가입</AuthTitle>
+          <AuthTitle>
+            회원가입
+          </AuthTitle>
         </TitleArea>
 
-        <AuthForm onSubmit={handleSubmit}>
+        <AuthForm
+          onSubmit={handleSubmit}
+        >
           <InputList>
             <AuthInput
               label="이메일"
               type="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) =>
+                setEmail(
+                  event.target.value
+                )
+              }
               placeholder="이메일을 입력하세요"
               autoComplete="email"
             />
@@ -131,7 +168,11 @@ const handleSubmit = async (event) => {
               label="비밀번호"
               type="password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                setPassword(
+                  event.target.value
+                )
+              }
               placeholder="비밀번호를 입력하세요"
               error={passwordError}
               autoComplete="new-password"
@@ -141,9 +182,15 @@ const handleSubmit = async (event) => {
               label="비밀번호 확인"
               type="password"
               value={passwordConfirm}
-              onChange={(event) => setPasswordConfirm(event.target.value)}
+              onChange={(event) =>
+                setPasswordConfirm(
+                  event.target.value
+                )
+              }
               placeholder="비밀번호를 다시 입력하세요"
-              error={passwordConfirmError}
+              error={
+                passwordConfirmError
+              }
               autoComplete="new-password"
             />
           </InputList>
@@ -153,45 +200,81 @@ const handleSubmit = async (event) => {
               <AgreementCheckbox
                 id="service-agreement"
                 type="checkbox"
-                checked={agreements.service}
-                onChange={() => handleAgreement("service")}
+                checked={
+                  agreements.service
+                }
+                onChange={() =>
+                  handleAgreement(
+                    "service"
+                  )
+                }
               />
 
-              <AgreementLabel htmlFor="service-agreement">
+              <AgreementLabel
+                htmlFor="service-agreement"
+              >
                 [필수] 서비스 이용약관 동의
               </AgreementLabel>
 
-              <TermsButton type="button">보기</TermsButton>
+              <TermsButton
+                type="button"
+              >
+                보기
+              </TermsButton>
             </AgreementRow>
 
             <AgreementRow>
               <AgreementCheckbox
                 id="health-agreement"
                 type="checkbox"
-                checked={agreements.health}
-                onChange={() => handleAgreement("health")}
+                checked={
+                  agreements.health
+                }
+                onChange={() =>
+                  handleAgreement(
+                    "health"
+                  )
+                }
               />
 
-              <AgreementLabel htmlFor="health-agreement">
+              <AgreementLabel
+                htmlFor="health-agreement"
+              >
                 [필수] 민감 건강정보 처리 동의
               </AgreementLabel>
 
-              <TermsButton type="button">보기</TermsButton>
+              <TermsButton
+                type="button"
+              >
+                보기
+              </TermsButton>
             </AgreementRow>
 
             <AgreementRow>
               <AgreementCheckbox
                 id="research-agreement"
                 type="checkbox"
-                checked={agreements.research}
-                onChange={() => handleAgreement("research")}
+                checked={
+                  agreements.research
+                }
+                onChange={() =>
+                  handleAgreement(
+                    "research"
+                  )
+                }
               />
 
-              <AgreementLabel htmlFor="research-agreement">
+              <AgreementLabel
+                htmlFor="research-agreement"
+              >
                 [선택] 연구목적 데이터 공유 동의
               </AgreementLabel>
 
-              <TermsButton type="button">보기</TermsButton>
+              <TermsButton
+                type="button"
+              >
+                보기
+              </TermsButton>
             </AgreementRow>
 
             <AgreementDivider />
@@ -201,17 +284,24 @@ const handleSubmit = async (event) => {
                 id="all-agreements"
                 type="checkbox"
                 checked={allAgreed}
-                onChange={handleAllAgreements}
+                onChange={
+                  handleAllAgreements
+                }
               />
 
-              <AgreementLabel htmlFor="all-agreements">
+              <AgreementLabel
+                htmlFor="all-agreements"
+              >
                 전체 동의
               </AgreementLabel>
             </AgreementRow>
           </AgreementCard>
 
           <SignupButtonArea>
-            <SubmitButton type="submit" disabled={!canSignup}>
+            <SubmitButton
+              type="submit"
+              disabled={!canSignup}
+            >
               완료
             </SubmitButton>
           </SignupButtonArea>

@@ -511,6 +511,9 @@ const MyPage = () => {
       user.joinedDate
     );
 
+  const currentStreak =
+    (user.currentStreak ?? 0) + 1;
+
   return (
     <Page>
       {showDevelopmentToast && (

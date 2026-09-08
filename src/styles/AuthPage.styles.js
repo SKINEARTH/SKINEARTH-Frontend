@@ -28,7 +28,7 @@ export const AuthContent = styled.div`
 `;
 
 export const BrandHeader = styled.header`
-  height: 82px;
+  height: 64px;
 
   display: flex;
   align-items: flex-start;
@@ -330,4 +330,28 @@ export const AgreementDivider = styled.hr`
 
 export const SignupButtonArea = styled.div`
   margin-top: 42px;
+`;
+
+export const BackToLoginButton = styled.button`
+  align-self: flex-start;
+
+  border: none;
+  padding: 0;
+
+  margin-bottom: 1rem;
+
+  background: transparent;
+
+  color: var(--gray);
+  font-family: "Pretendard", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--white);
+  }
 `;

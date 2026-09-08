@@ -57,7 +57,7 @@ const navItems = [
     offSize: "1.8rem",
   },
   {
-    path: "/my",
+    path: "/mypage",
     label: "마이",
     onIcon: myOn,
     offIcon: myOff,

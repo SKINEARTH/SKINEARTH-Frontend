@@ -6,6 +6,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
+import Toast from "../components/Toast";
 
 import {
   getMyPage,
@@ -189,13 +190,9 @@ const MyPage = () => {
   ] = useState(false);
 
   const [
-    notifications,
-    setNotifications,
-  ] = useState({
-    dailyLog: true,
-    mission: true,
-    prediction: false,
-  });
+    showDevelopmentToast,
+    setShowDevelopmentToast,
+  ] = useState(false);
 
   const [
     showResetModal,
@@ -239,6 +236,20 @@ const MyPage = () => {
   useEffect(() => {
     loadUser();
   }, []);
+
+  useEffect(() => {
+    if (!showDevelopmentToast) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowDevelopmentToast(false);
+    }, 2800);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [showDevelopmentToast]);
 
   const handleEditStart = (
     field
@@ -368,16 +379,12 @@ const MyPage = () => {
     }
   };
 
-  const handleNotificationToggle = (
-    key
-  ) => {
-    setNotifications(
-      (previous) => ({
-        ...previous,
-        [key]:
-          !previous[key],
-      })
-    );
+  const handleNotificationClick = () => {
+    setShowDevelopmentToast(false);
+
+    setTimeout(() => {
+      setShowDevelopmentToast(true);
+    }, 0);
   };
 
   const handleLogout = () => {
@@ -436,7 +443,10 @@ const MyPage = () => {
         error
       );
 
-      alert(error.message);
+      alert(
+        error.message ||
+          "데이터 초기화에 실패했습니다."
+      );
     } finally {
       setIsResetting(false);
     }
@@ -501,8 +511,18 @@ const MyPage = () => {
       user.joinedDate
     );
 
+  const currentStreak =
+    (user.currentStreak ?? 0) + 1;
+
   return (
     <Page>
+      {showDevelopmentToast && (
+        <Toast
+          title="아직 개발 중인 기능입니다"
+          description="나중에 다시 시도해 주세요"
+        />
+      )}
+
       <Content>
         <ProfileHeader>
           <ProfileImageWrapper>
@@ -525,7 +545,7 @@ const MyPage = () => {
             </UserCondition>
 
             <StreakText>
-              {user.currentStreak}일
+              {currentStreak}일
               연속 기록 중 🔥
             </StreakText>
           </ProfileInfo>
@@ -785,20 +805,11 @@ const MyPage = () => {
 
             <Toggle
               type="button"
-              $active={
-                notifications.dailyLog
-              }
-              onClick={() =>
-                handleNotificationToggle(
-                  "dailyLog"
-                )
+              onClick={
+                handleNotificationClick
               }
             >
-              <ToggleThumb
-                $active={
-                  notifications.dailyLog
-                }
-              />
+              <ToggleThumb />
             </Toggle>
           </NotificationRow>
 
@@ -811,20 +822,11 @@ const MyPage = () => {
 
             <Toggle
               type="button"
-              $active={
-                notifications.mission
-              }
-              onClick={() =>
-                handleNotificationToggle(
-                  "mission"
-                )
+              onClick={
+                handleNotificationClick
               }
             >
-              <ToggleThumb
-                $active={
-                  notifications.mission
-                }
-              />
+              <ToggleThumb />
             </Toggle>
           </NotificationRow>
 
@@ -837,20 +839,11 @@ const MyPage = () => {
 
             <Toggle
               type="button"
-              $active={
-                notifications.prediction
-              }
-              onClick={() =>
-                handleNotificationToggle(
-                  "prediction"
-                )
+              onClick={
+                handleNotificationClick
               }
             >
-              <ToggleThumb
-                $active={
-                  notifications.prediction
-                }
-              />
+              <ToggleThumb />
             </Toggle>
           </NotificationRow>
         </Card>

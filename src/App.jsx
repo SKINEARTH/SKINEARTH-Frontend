@@ -110,7 +110,7 @@ function App() {
 
       {/* 마이 */}
       <Route
-        path="/my"
+        path="/mypage"
         element={<MyPage />}
       />
     </Routes>

@@ -38,7 +38,7 @@ const LogCompletePage = () => {
   const record = location.state?.record;
 
   const currentStreak =
-    record?.currentStreak ?? 0;
+    (record?.currentStreak ?? 0) + 1;
 
   const validRecordCount =
     record?.validRecordCount ?? 0;

@@ -875,8 +875,7 @@ const MissionPage = () => {
 
           <StreakBadge>
             🔥{" "}
-            {currentMission
-              ?.streak ?? 0}
+            {(currentMission?.streak ?? 0) + 1}
             일 연속 수행 중
           </StreakBadge>
         </HeaderRow>

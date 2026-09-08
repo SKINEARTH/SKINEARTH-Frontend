@@ -99,7 +99,7 @@ const PredictionLoadingPage = () => {
         </Title>
 
         <Description>
-          사용자님의 기록을 바탕으로
+          여행자님의 기록을 바탕으로
           <br />
           내일의 궤도를 분석하는 중이에요.
           <br />

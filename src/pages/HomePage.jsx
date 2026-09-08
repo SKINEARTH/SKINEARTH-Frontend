@@ -14,6 +14,8 @@ import profileLevel2 from "../assets/profile_level_2.svg";
 import profileLevel3 from "../assets/profile_level_3.svg";
 import orbitHistoryIcon from "../assets/home-orbit-history.svg";
 
+import logo from "../assets/logo_Auth.svg";
+
 import {
   Page,
   Content,
@@ -80,7 +82,12 @@ import {
   MilestoneButtons,
   ForecastButton,
   PpButton,
+
+  HomeBrandHeader,
+  HomeBrandLogo,
+  HomeBrandName,
 } from "../styles/HomePage.styles";
+import { Home } from "lucide-react";
 
 
 /* =========================================
@@ -390,6 +397,17 @@ const HomePage = () => {
   return (
     <Page>
       <Content>
+
+        <HomeBrandHeader>
+          <HomeBrandLogo
+            src={logo}
+            alt="SKINEARTH"
+          />
+
+          <HomeBrandName>
+            SKINEARTH
+          </HomeBrandName>
+        </HomeBrandHeader>
 
         {/* =====================================
             GREETING

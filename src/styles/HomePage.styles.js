@@ -796,3 +796,36 @@ export const PpButton = styled(MilestoneButton)`
   width: 98px;
   background: #6bd2b0;
 `;
+
+export const HomeBrandHeader = styled.header`
+  height: 36px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+`;
+
+export const HomeBrandLogo = styled.img`
+  width: 19px;
+  height: 19px;
+
+  display: block;
+
+  filter: drop-shadow(
+    0 0 12px rgba(55, 92, 178, 0.5)
+  );
+`;
+
+export const HomeBrandName = styled.p`
+  color: var(--white);
+
+  font-family:
+    "EstablishRetrosans",
+    sans-serif;
+
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 2.4px;
+
+  white-space: nowrap;
+`;

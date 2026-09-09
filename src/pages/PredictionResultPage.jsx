@@ -11,10 +11,18 @@ import {
   TopRow,
   Title,
   DataBadge,
-  ScoreCard,
-  ScoreLabel,
-  Score,
-  StatusBadge,
+
+  PlanetSection,
+  PlanetTitle,
+  Gauge,
+  GaugeSvg,
+  GaugeTrack,
+  GaugeProgress,
+  GaugeCenter,
+  GaugeScore,
+  GaugeLabel,
+  GaugeLevel,
+
   FactorsCard,
   SectionTitle,
   FactorRow,
@@ -32,11 +40,15 @@ import {
 const FACTOR_NAME_MAP = {
   AC: "냉난방 노출",
   AIR_CONDITIONER: "냉난방 노출",
+
   SCREEN: "화면 노출",
   SCREEN_TIME: "화면 노출",
+
   SLEEP: "수면 시간",
   SLEEP_HOURS: "수면 시간",
+
   STRESS: "스트레스",
+
   MEAL: "식사 규칙성",
   MEAL_REGULARITY: "식사 규칙성",
 };
@@ -44,30 +56,48 @@ const FACTOR_NAME_MAP = {
 const FACTOR_EMOJI_MAP = {
   AC: "❄️",
   AIR_CONDITIONER: "❄️",
+
   SCREEN: "💻",
   SCREEN_TIME: "💻",
+
   SLEEP: "🌙",
   SLEEP_HOURS: "🌙",
+
   STRESS: "⚡",
+
   MEAL: "🍽️",
   MEAL_REGULARITY: "🍽️",
 };
 
+/* =========================================
+   RISK LEVEL
+========================================= */
+
 const getRiskText = (riskLevel) => {
   switch (riskLevel) {
     case "LOW":
-      return "🟢 안정";
+    case "낮음":
+    case "안정":
+      return "안정";
 
     case "MEDIUM":
-      return "⚠️ 주의";
+    case "보통":
+    case "주의":
+      return "주의";
 
     case "HIGH":
-      return "🔴 위험";
+    case "높음":
+    case "위험":
+      return "위험";
 
     default:
       return riskLevel || "분석 완료";
   }
 };
+
+/* =========================================
+   FACTOR LEVEL
+========================================= */
 
 const getLevelText = (level) => {
   switch (level) {
@@ -100,6 +130,10 @@ const getLevelStyle = (level) => {
       return "medium";
   }
 };
+
+/* =========================================
+   PREDICTION RESULT PAGE
+========================================= */
 
 const PredictionResultPage = () => {
   const navigate = useNavigate();
@@ -149,12 +183,41 @@ const PredictionResultPage = () => {
     );
   }
 
+  /* =========================================
+     FORECAST SCORE
+  ========================================= */
+
+  const rawScore =
+    forecast.riskScore;
+
+  /*
+   * 게이지가 깨지지 않도록
+   * 0 ~ 100 사이로 제한
+   */
+  const score =
+    typeof rawScore === "number"
+      ? Math.min(
+          Math.max(rawScore, 0),
+          100
+        )
+      : 0;
+
+  const riskText =
+    getRiskText(
+      forecast.riskLevel
+    );
+
   const primaryFactors =
     forecast.primaryFactors || [];
 
   return (
     <Page>
       <Content>
+
+        {/* =====================================
+            HEADER
+        ===================================== */}
+
         <TopRow>
           <Title>
             내일 예측 결과
@@ -165,21 +228,122 @@ const PredictionResultPage = () => {
           </DataBadge>
         </TopRow>
 
-        <ScoreCard>
-          <ScoreLabel>
-            내일 예측 피부 온도 지수
-          </ScoreLabel>
+        {/* =====================================
+            PREDICTION TEMPERATURE GAUGE
+        ===================================== */}
 
-          <Score>
-            {forecast.riskScore}
-          </Score>
+        <PlanetSection>
+          <PlanetTitle>
+            내일 나의 행성은?
+          </PlanetTitle>
+          <Gauge
+            aria-label={`내일 예측 피부 온도 지수 ${score}, ${riskText}`}
+          >
 
-          <StatusBadge>
-            {getRiskText(
-              forecast.riskLevel
-            )}
-          </StatusBadge>
-        </ScoreCard>
+            <GaugeSvg
+              viewBox="0 0 240 240"
+              aria-hidden="true"
+            >
+              <defs>
+
+                {/* 민트 → 보라 그라데이션 */}
+                <linearGradient
+                  id="predictionGaugeGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="#00E3C1"
+                  />
+
+                  <stop
+                    offset="45%"
+                    stopColor="#6ED9C5"
+                  />
+
+                  <stop
+                    offset="72%"
+                    stopColor="#B8C4E7"
+                  />
+
+                  <stop
+                    offset="100%"
+                    stopColor="#E4A8DB"
+                  />
+                </linearGradient>
+
+                {/* 게이지 Glow */}
+                <filter
+                  id="predictionGaugeGlow"
+                  x="-40%"
+                  y="-40%"
+                  width="180%"
+                  height="180%"
+                >
+                  <feGaussianBlur
+                    stdDeviation="3.5"
+                    result="blur"
+                  />
+
+                  <feMerge>
+                    <feMergeNode
+                      in="blur"
+                    />
+
+                    <feMergeNode
+                      in="SourceGraphic"
+                    />
+                  </feMerge>
+                </filter>
+
+              </defs>
+
+              {/* 배경 Track */}
+              <GaugeTrack
+                cx="120"
+                cy="120"
+                r="96"
+                pathLength="100"
+              />
+
+              {/* Score Progress */}
+              <GaugeProgress
+                cx="120"
+                cy="120"
+                r="96"
+                pathLength="100"
+                $score={score}
+                filter="url(#predictionGaugeGlow)"
+              />
+            </GaugeSvg>
+
+            {/* CENTER */}
+            <GaugeCenter>
+
+              <GaugeScore>
+                {score}
+              </GaugeScore>
+
+              <GaugeLabel>
+                내일 예측 피부 온도 지수
+              </GaugeLabel>
+
+              <GaugeLevel
+                $level={riskText}
+              >
+                {riskText}
+              </GaugeLevel>
+
+            </GaugeCenter>
+          </Gauge>
+        </PlanetSection>
+
+        {/* =====================================
+            PRIMARY FACTORS
+        ===================================== */}
 
         <FactorsCard>
           <SectionTitle>
@@ -188,12 +352,16 @@ const PredictionResultPage = () => {
 
           {primaryFactors.length > 0 ? (
             primaryFactors.map(
-              (factor, index) => (
+              (
+                factor,
+                index
+              ) => (
                 <div
                   key={`${factor.name}-${factor.rank}-${index}`}
                 >
                   <FactorRow>
                     <FactorLeft>
+
                       <FactorEmoji>
                         {FACTOR_EMOJI_MAP[
                           factor.name
@@ -206,6 +374,7 @@ const PredictionResultPage = () => {
                         ] ||
                           factor.name}
                       </FactorName>
+
                     </FactorLeft>
 
                     <LevelBadge
@@ -234,6 +403,10 @@ const PredictionResultPage = () => {
           )}
         </FactorsCard>
 
+        {/* =====================================
+            AI COMMENT
+        ===================================== */}
+
         <AiCard>
           <AiBadge>
             ✦ AI 분석
@@ -245,6 +418,10 @@ const PredictionResultPage = () => {
           </AiText>
         </AiCard>
 
+        {/* =====================================
+            MISSION
+        ===================================== */}
+
         <MissionButton
           type="button"
           onClick={() =>
@@ -253,6 +430,7 @@ const PredictionResultPage = () => {
         >
           🚀 오늘의 탐험 미션 보기
         </MissionButton>
+
       </Content>
 
       <NavBar />

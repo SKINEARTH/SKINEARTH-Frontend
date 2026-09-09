@@ -436,4 +436,27 @@ export const SaveButton = styled.button`
   &:active {
     transform: scale(0.98);
   }
+
+  &:disabled {
+  border: 1px solid
+    rgba(143, 173, 234, 0.12);
+
+  background:
+    rgba(143, 173, 234, 0.12);
+
+  color: var(--gray);
+
+  font-size: 1.15rem;
+  font-weight: 600;
+
+  box-shadow: none;
+
+  cursor: default;
+  opacity: 1;
+}
+
+&:disabled:active {
+  transform: none;
+}
 `;
+

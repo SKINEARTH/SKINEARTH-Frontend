@@ -146,6 +146,17 @@ const LogPage = () => {
     setHasTodayRecord,
   ] = useState(false);
 
+  /*
+   * GET으로 처음 불러온 기존 기록 저장
+   *
+   * 수정 화면에서 현재 입력값과 비교해서
+   * 변경 여부를 판단할 때 사용
+   */
+  const [
+    originalRecord,
+    setOriginalRecord,
+  ] = useState(null);
+
   const [isLoading, setIsLoading] =
     useState(true);
 
@@ -159,6 +170,16 @@ const LogPage = () => {
           await getTodayRecord();
 
         const record = result.data;
+
+        const loadedSymptoms =
+          (record.symptoms || [])
+            .map(
+              (symptom) =>
+                REVERSE_SYMPTOM_MAP[
+                  symptom
+                ]
+            )
+            .filter(Boolean);
 
         setHeating(
           record.acLevel ?? null
@@ -185,27 +206,50 @@ const LogPage = () => {
         );
 
         setSymptoms(
-          (record.symptoms || [])
-            .map(
-              (symptom) =>
-                REVERSE_SYMPTOM_MAP[
-                  symptom
-                ]
-            )
-            .filter(Boolean)
+          loadedSymptoms
         );
+
+        /*
+         * 최초 서버 데이터 저장
+         *
+         * 이후 사용자가 입력값을 바꿨는지
+         * 비교하는 기준
+         */
+        setOriginalRecord({
+          heating:
+            record.acLevel ?? null,
+
+          screen:
+            record.screenTime ?? null,
+
+          sleep:
+            record.sleepHours ?? 6,
+
+          stress:
+            record.stressLevel ?? null,
+
+          meal:
+            record.mealRegularity ??
+            null,
+
+          skinCondition:
+            record.skinCondition ??
+            null,
+
+          symptoms:
+            loadedSymptoms,
+        });
 
         setHasTodayRecord(true);
       } catch (error) {
         /*
-         * 오늘 기록이 아직 없다면
-         * 새 기록 작성 화면으로 사용합니다.
-         *
-         * 현재는 "기록 없음"을 404로
-         * 반환한다고 가정합니다.
+         * 오늘 기록이 없다면
+         * 새 기록 작성 모드
          */
         if (error.status === 404) {
           setHasTodayRecord(false);
+          setOriginalRecord(null);
+
           return;
         }
 
@@ -225,8 +269,8 @@ const LogPage = () => {
     symptom
   ) => {
     /*
-     * "없음"을 누르면
-     * 다른 증상을 모두 제거
+     * "없음" 선택 시
+     * 다른 증상 제거
      */
     if (symptom === "없음") {
       setSymptoms((previous) =>
@@ -239,8 +283,8 @@ const LogPage = () => {
     }
 
     /*
-     * 다른 증상을 선택하면
-     * "없음"은 자동으로 제거
+     * 다른 증상 선택 시
+     * "없음" 제거
      */
     setSymptoms((previous) => {
       const withoutNone =
@@ -265,15 +309,65 @@ const LogPage = () => {
     });
   };
 
+  /*
+   * 증상 배열 비교
+   *
+   * 선택 순서가 달라도
+   * 같은 증상을 선택했다면
+   * 동일한 상태로 판단
+   */
+  const normalizeSymptoms = (
+    symptomList
+  ) => {
+    return [...symptomList].sort();
+  };
+
+  /*
+   * 기존 기록과 현재 입력값 비교
+   *
+   * 하나라도 달라지면 true
+   */
+  const hasChanges =
+    hasTodayRecord &&
+    originalRecord
+      ? heating !==
+          originalRecord.heating ||
+        screen !==
+          originalRecord.screen ||
+        sleep !==
+          originalRecord.sleep ||
+        stress !==
+          originalRecord.stress ||
+        meal !== originalRecord.meal ||
+        skinCondition !==
+          originalRecord.skinCondition ||
+        JSON.stringify(
+          normalizeSymptoms(symptoms)
+        ) !==
+          JSON.stringify(
+            normalizeSymptoms(
+              originalRecord.symptoms
+            )
+          )
+      : false;
+
+  /*
+   * 오늘 기록이 없다면
+   * 저장 버튼은 기존처럼 활성화
+   *
+   * 오늘 기록이 있다면
+   * 변경된 경우에만 활성화
+   */
+  const isSaveDisabled =
+    isSaving ||
+    (hasTodayRecord &&
+      !hasChanges);
+
   const handleSave = async () => {
-    if (isSaving) {
+    if (isSaveDisabled) {
       return;
     }
 
-    /*
-     * 피부 상태는 현재 UI에서
-     * 필수 항목(*)이므로 체크
-     */
     if (skinCondition === null) {
       alert(
         "오늘의 피부 상태를 선택해 주세요."
@@ -307,8 +401,8 @@ const LogPage = () => {
       let result;
 
       /*
-       * 오늘 기록이 이미 있으면 PUT
-       * 아직 없으면 POST
+       * 기존 기록 존재 → PUT
+       * 기존 기록 없음 → POST
        */
       if (hasTodayRecord) {
         result =
@@ -327,10 +421,6 @@ const LogPage = () => {
         result
       );
 
-      /*
-       * POST/PUT 성공 후
-       * 저장 완료 페이지로 이동
-       */
       navigate(
         "/log/complete",
         {
@@ -352,11 +442,6 @@ const LogPage = () => {
     }
   };
 
-  /*
-   * GET 요청이 끝나기 전에
-   * 사용자가 입력해서 기존 기록을
-   * 덮어쓰는 상황을 방지
-   */
   if (isLoading) {
     return (
       <Page>
@@ -404,6 +489,7 @@ const LogPage = () => {
                 <Emoji>
                   ❄️
                 </Emoji>
+
                 냉난방 노출
               </FactorLabel>
 
@@ -436,6 +522,7 @@ const LogPage = () => {
                 <Emoji>
                   💻
                 </Emoji>
+
                 화면 노출
               </FactorLabel>
 
@@ -469,6 +556,7 @@ const LogPage = () => {
                   <Emoji>
                     🌙
                   </Emoji>
+
                   수면 시간
                 </FactorLabel>
 
@@ -502,6 +590,7 @@ const LogPage = () => {
                 <Emoji>
                   ⚡
                 </Emoji>
+
                 스트레스
               </FactorLabel>
 
@@ -534,6 +623,7 @@ const LogPage = () => {
                 <Emoji>
                   🍽️
                 </Emoji>
+
                 식사 규칙성
               </FactorLabel>
 
@@ -682,7 +772,9 @@ const LogPage = () => {
         <SaveButton
           type="button"
           onClick={handleSave}
-          disabled={isSaving}
+          disabled={
+            isSaveDisabled
+          }
         >
           {isSaving
             ? "저장 중..."

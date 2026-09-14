@@ -545,7 +545,7 @@ const MyPage = () => {
             </UserCondition>
 
             <StreakText>
-              {currentStreak}일
+              {user.currentStreak}일
               연속 기록 중 🔥
             </StreakText>
           </ProfileInfo>

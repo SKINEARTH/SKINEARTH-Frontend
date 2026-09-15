@@ -133,6 +133,9 @@ const MissionPage = () => {
     setToast,
   ] = useState(null);
 
+  const isAdjustmentDisabled =
+    Boolean(currentMission?.isCompleted) || isProcessing;
+
   /*
    * =========================
    * 오늘 미션 + PP 단계 조회
@@ -314,6 +317,12 @@ const MissionPage = () => {
           currentMission.id
         );
 
+        // Keep adjustments locked even if the subsequent refresh fails.
+        setCurrentMission((previous) => ({ ...previous, isCompleted: true }));
+        setAlternativeMission(null);
+        setShowMissionList(false);
+        setExcludedCategory(null);
+
         const refreshed =
           await getTodayMission();
 
@@ -377,7 +386,7 @@ const MissionPage = () => {
 
   const handleShowOtherMissions =
     async () => {
-      if (isProcessing) {
+      if (isAdjustmentDisabled || !currentMission?.id) {
         return;
       }
 
@@ -441,7 +450,8 @@ const MissionPage = () => {
     async () => {
       if (
         !alternativeMission ||
-        isProcessing
+        isAdjustmentDisabled ||
+        !currentMission?.id
       ) {
         return;
       }
@@ -522,7 +532,7 @@ const MissionPage = () => {
 
   const handleEasyMission =
     async () => {
-      if (isProcessing) {
+      if (isAdjustmentDisabled || !currentMission?.id) {
         return;
       }
 
@@ -599,7 +609,7 @@ const MissionPage = () => {
     async () => {
       if (
         !currentMission?.category ||
-        isProcessing
+        isAdjustmentDisabled
       ) {
         return;
       }
@@ -674,6 +684,7 @@ const MissionPage = () => {
 
   const handleRestoreCategory =
     () => {
+      if (isAdjustmentDisabled) return;
       setExcludedCategory(
         null
       );
@@ -1031,7 +1042,7 @@ const MissionPage = () => {
                   <ActionButton
                     type="button"
                     disabled={
-                      isProcessing
+                      isAdjustmentDisabled
                     }
                     onClick={
                       handleRestoreCategory
@@ -1111,7 +1122,7 @@ const MissionPage = () => {
                   <ActionButton
                     type="button"
                     disabled={
-                      isProcessing
+                      isAdjustmentDisabled
                     }
                     onClick={
                       handleShowOtherMissions
@@ -1123,7 +1134,7 @@ const MissionPage = () => {
                   <ActionButton
                     type="button"
                     disabled={
-                      isProcessing
+                      isAdjustmentDisabled
                     }
                     onClick={
                       handleEasyMission
@@ -1136,7 +1147,7 @@ const MissionPage = () => {
                   <ActionButton
                     type="button"
                     disabled={
-                      isProcessing
+                      isAdjustmentDisabled
                     }
                     onClick={
                       handleHideCategory
@@ -1229,7 +1240,7 @@ const MissionPage = () => {
                   <SelectMissionButton
                     type="button"
                     disabled={
-                      isProcessing
+                      isAdjustmentDisabled
                     }
                     onClick={
                       handleSelectMission
@@ -1262,7 +1273,7 @@ const MissionPage = () => {
               <ActionButton
                 type="button"
                 disabled={
-                  isProcessing
+                  isAdjustmentDisabled
                 }
                 onClick={
                   handleEasyMission
@@ -1275,7 +1286,7 @@ const MissionPage = () => {
               <ActionButton
                 type="button"
                 disabled={
-                  isProcessing
+                  isAdjustmentDisabled
                 }
                 onClick={
                   handleHideCategory

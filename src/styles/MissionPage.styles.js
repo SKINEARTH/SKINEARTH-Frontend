@@ -709,6 +709,11 @@ export const ActionButton = styled.button`
   font-size: 0.875rem;
 
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
 `;
 
 

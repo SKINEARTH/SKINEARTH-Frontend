@@ -10,7 +10,8 @@ let server;
 let LogCompletePage;
 before(async () => {
   server = await createServer({
-    server: { middlewareMode: true },
+    server: { middlewareMode: true, ws: false },
+    optimizeDeps: { noDiscovery: true, include: [] },
     appType: "custom",
     plugins: [{
       name: "test-styled-components-cjs-interop",

@@ -9,6 +9,7 @@ import NavBar from "../components/NavBar";
 
 import { getHome } from "../api/home";
 import { getRecordProgress } from "../utils/recordProgress";
+import { getPlanetTemperatureDisplay } from "../utils/planetTemperature";
 
 import profileLevel1 from "../assets/profile_level_1.svg";
 import profileLevel2 from "../assets/profile_level_2.svg";
@@ -301,25 +302,12 @@ const HomePage = () => {
      PLANET TEMPERATURE
   ========================================= */
 
-  const rawScore = planetTemperature?.score;
-
-  const hasPlanetScore =
-    typeof rawScore === "number";
-
-  /*
-   * 혹시 백엔드에서 범위를 벗어난 값이 와도
-   * 게이지가 깨지지 않도록 0~100으로 제한
-   */
-  const score = hasPlanetScore
-    ? Math.min(
-        Math.max(rawScore, 0),
-        100
-      )
-    : 0;
-
-  const planetLevel =
-    planetTemperature?.level ||
-    "데이터 없음";
+  const {
+    hasScore: hasPlanetScore,
+    score,
+    level: planetLevel,
+    label: planetLabel,
+  } = getPlanetTemperatureDisplay(planetTemperature);
 
   const planetLevelColor =
     PLANET_LEVEL_COLORS[planetLevel] ||
@@ -444,7 +432,7 @@ const HomePage = () => {
           <Gauge
             aria-label={
               hasPlanetScore
-                ? `피부 온도 지수 ${score}, ${planetLevel}`
+                ? `${planetLabel} ${score}, ${planetLevel}`
                 : "피부 온도 지수 데이터 없음"
             }
           >
@@ -554,7 +542,7 @@ const HomePage = () => {
               </GaugeScore>
 
               <GaugeLabel>
-                피부 온도 지수
+                {planetLabel}
               </GaugeLabel>
 
               <GaugeLevel

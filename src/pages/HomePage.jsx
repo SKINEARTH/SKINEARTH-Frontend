@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 import { getHome } from "../api/home";
+import { getRecordProgress } from "../utils/recordProgress";
 
 import profileLevel1 from "../assets/profile_level_1.svg";
 import profileLevel2 from "../assets/profile_level_2.svg";
@@ -340,8 +341,11 @@ const HomePage = () => {
   const validRecordCount =
     forecastProgress?.validRecordCount ?? 0;
 
-  const targetRecordCount =
-    forecastProgress?.targetRecordCount ?? 10;
+  const {
+    targetRecordCount,
+    displayedRecordCount,
+    progressPercent,
+  } = getRecordProgress(validRecordCount, forecastProgress?.targetRecordCount ?? 10);
 
   const remainingRecordCount =
     forecastProgress?.remainingRecordCount ??
@@ -349,9 +353,6 @@ const HomePage = () => {
       targetRecordCount - validRecordCount,
       0
     );
-
-  const progressPercent =
-    forecastProgress?.progressPercent ?? 0;
 
   const forecastReady =
     forecastProgress?.dataBasedForecastReady ??
@@ -662,7 +663,7 @@ const HomePage = () => {
               </span>
 
               <ForecastProgressCount>
-                {validRecordCount}/
+                {displayedRecordCount}/
                 {targetRecordCount}
               </ForecastProgressCount>
 

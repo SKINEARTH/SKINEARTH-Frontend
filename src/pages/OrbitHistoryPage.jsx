@@ -6,6 +6,7 @@ import {
 
 import NavBar from "../components/NavBar";
 import OrbitTrendChart from "../components/OrbitTrendChart";
+import { getAverageRiskScore } from "../utils/historyChart";
 import PpJourneyCard from "../components/PpJourneyCard";
 
 import {
@@ -244,10 +245,7 @@ const OrbitHistoryPage = () => {
       (point) => ({
         date: point.date,
 
-        score:
-          point.skinCondition === null
-            ? null
-            : point.skinCondition,
+        score: point.riskScore ?? null,
       })
     );
   }, [historyData]);
@@ -280,10 +278,10 @@ const OrbitHistoryPage = () => {
       missionPercentage
     );
 
-  const averageSkinCondition =
-    historyData
-      ?.averageSkinCondition ??
-    null;
+  const averageRiskScore = useMemo(
+    () => getAverageRiskScore(chartRecords),
+    [chartRecords]
+  );
 
   if (isLoading) {
     return (
@@ -337,7 +335,7 @@ const OrbitHistoryPage = () => {
           historyData?.recordCount ?? 0
         }
         data-average-score={
-          averageSkinCondition ?? ""
+          averageRiskScore ?? ""
         }
       >
         <PageTitle>
@@ -385,10 +383,10 @@ const OrbitHistoryPage = () => {
             </TrendTitle>
 
             <TrendDescription>
-              {averageSkinCondition ===
+              {averageRiskScore ===
               null
-                ? "아직 기록이 없어요."
-                : `평균 피부 상태 ${averageSkinCondition}`}
+                ? "아직 예측 데이터가 없어요."
+                : `평균 피부 온도 지수 ${averageRiskScore}`}
             </TrendDescription>
           </TrendHeader>
 

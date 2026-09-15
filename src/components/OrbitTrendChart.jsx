@@ -1,3 +1,5 @@
+import { useId } from "react";
+import { normalizeRiskScore, getScoreScale, splitChartSegments } from "../utils/historyChart";
 import {
   Chart,
   EmptyChart,
@@ -13,17 +15,6 @@ const PLOT = {
   bottom: 30,
 };
 
-const MIN_SCORE = 30;
-const MAX_SCORE = 90;
-
-const Y_TICKS = [
-  90,
-  75,
-  60,
-  45,
-  30,
-];
-
 const formatDateLabel = (date) => {
   if (!date) {
     return "";
@@ -38,7 +29,8 @@ const formatDateLabel = (date) => {
 const getPoint = (
   record,
   index,
-  recordCount
+  recordCount,
+  scale
 ) => {
   const plotWidth =
     WIDTH -
@@ -62,16 +54,16 @@ const getPoint = (
     Math.min(
       Math.max(
         record.score,
-        MIN_SCORE
+        scale.min
       ),
-      MAX_SCORE
+      scale.max
     );
 
   const normalizedScore =
     (safeScore -
-      MIN_SCORE) /
-    (MAX_SCORE -
-      MIN_SCORE);
+      scale.min) /
+    (scale.max -
+      scale.min);
 
   const y =
     PLOT.top +
@@ -81,7 +73,7 @@ const getPoint = (
   return {
     ...record,
     x,
-    y,
+    y: record.score === null ? null : y,
   };
 };
 
@@ -163,80 +155,52 @@ const getVisibleLabelIndexes = (
 };
 
 const OrbitTrendChart = ({
-  records,
+  records = [],
   period,
 }) => {
-  /*
-   * 핵심 수정
-   *
-   * score가 null / undefined인 날짜는
-   * 실제 피부 온도 지수 데이터가 없는 날짜이므로
-   * 그래프 점으로 그리지 않는다.
-   */
-  const validRecords =
-    records.filter(
-      (record) =>
-        record.score !==
-          null &&
-        record.score !==
-          undefined &&
-        Number.isFinite(
-          Number(
-            record.score
-          )
-        )
-    );
+  const id = useId();
+  const lineId = `orbit-line-${id}`;
+  const areaId = `orbit-area-${id}`;
+  const normalizedRecords = records.map((record) => ({
+    ...record, score: normalizeRiskScore(record.score),
+  }));
+  const validRecords = normalizedRecords.filter((record) => record.score !== null);
+  const scale = getScoreScale(validRecords.map((record) => record.score));
 
   if (
     validRecords.length === 0
   ) {
     return (
       <EmptyChart>
-        선택한 기간에 기록이
+        선택한 기간에 예측 데이터가
         없어요.
       </EmptyChart>
     );
   }
 
   const points =
-    validRecords.map(
+    normalizedRecords.map(
       (
         record,
         index
       ) =>
         getPoint(
-          {
-            ...record,
-            score: Number(
-              record.score
-            ),
-          },
+          record,
           index,
-          validRecords.length
+          normalizedRecords.length,
+          scale
         )
     );
 
-  const linePath =
-    createSmoothPath(
-      points
-    );
+  const segments = splitChartSegments(points);
 
   const baselineY =
     HEIGHT -
     PLOT.bottom;
 
-  const areaPath =
-    points.length > 1
-      ? `${linePath} L ${
-          points.at(-1).x
-        } ${baselineY} L ${
-          points[0].x
-        } ${baselineY} Z`
-      : "";
-
   const visibleLabelIndexes =
     getVisibleLabelIndexes(
-      validRecords.length,
+      normalizedRecords.length,
       period
     );
 
@@ -244,11 +208,12 @@ const OrbitTrendChart = ({
     <Chart
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       role="img"
-      aria-label={`피부 온도 지수 ${validRecords.length}건의 추이 그래프`}
+      aria-label={`피부 온도 지수 ${validRecords.length}건의 추이 그래프, Y축 ${scale.min}~${scale.max}`}
     >
+      <title>예측 대상일별 피부 온도 지수 (0~100, 높을수록 위험)</title>
       <defs>
         <linearGradient
-          id="orbit-line-gradient"
+          id={lineId}
           x1="0"
           y1="0"
           x2="1"
@@ -271,7 +236,7 @@ const OrbitTrendChart = ({
         </linearGradient>
 
         <linearGradient
-          id="orbit-area-gradient"
+          id={areaId}
           x1="0"
           y1="0"
           x2="0"
@@ -291,7 +256,7 @@ const OrbitTrendChart = ({
         </linearGradient>
       </defs>
 
-      {Y_TICKS.map(
+      {scale.ticks.map(
         (tick) => {
           const plotHeight =
             HEIGHT -
@@ -303,9 +268,9 @@ const OrbitTrendChart = ({
             plotHeight *
               (1 -
                 (tick -
-                  MIN_SCORE) /
-                  (MAX_SCORE -
-                    MIN_SCORE));
+                  scale.min) /
+                  (scale.max -
+                    scale.min));
 
           return (
             <text
@@ -325,22 +290,24 @@ const OrbitTrendChart = ({
         }
       )}
 
-      {points.length > 1 && (
-        <>
+      {segments.filter((segment) => segment.length > 1).map((segment) => {
+        const linePath = createSmoothPath(segment);
+        const areaPath = `${linePath} L ${segment.at(-1).x} ${baselineY} L ${segment[0].x} ${baselineY} Z`;
+        return <g key={segment[0].date}>
           <path
             d={areaPath}
-            fill="url(#orbit-area-gradient)"
+            fill={`url(#${areaId})`}
           />
 
           <path
             d={linePath}
             fill="none"
-            stroke="url(#orbit-line-gradient)"
+            stroke={`url(#${lineId})`}
             strokeWidth="3"
             strokeLinecap="round"
           />
-        </>
-      )}
+        </g>;
+      })}
 
       {points.map(
         (
@@ -352,12 +319,12 @@ const OrbitTrendChart = ({
               point.date
             }
           >
-            <circle
+            {point.score !== null && <circle
               cx={point.x}
               cy={point.y}
               r="4"
               fill="#8fadea"
-            />
+            ><title>{`${point.date}: ${point.score}`}</title></circle>}
 
             {visibleLabelIndexes.has(
               index

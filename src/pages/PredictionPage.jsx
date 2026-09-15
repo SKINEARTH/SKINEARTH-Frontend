@@ -1,13 +1,15 @@
 import {
   useEffect,
   useState,
+  useRef,
 } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 
 import { getForecast } from "../api/forecast";
+import { RetryButton } from "../styles/PredictionResultPage.styles";
 
 import {
   Page,
@@ -40,30 +42,37 @@ const SCORE_OPTIONS = [1, 2, 3, 4, 5];
 
 const PredictionPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isEditing = location.state?.mode === "edit";
+  const forecast = location.state?.forecast;
+  const initialInputs = location.state?.requestData ?? (isEditing ? forecast : null);
+  const submitted = useRef(false);
 
   const [heating, setHeating] =
-    useState(null);
+    useState(initialInputs?.inputAc ?? null);
 
   const [screen, setScreen] =
-    useState(null);
+    useState(initialInputs?.inputScreenTime ?? null);
 
   const [sleep, setSleep] =
-    useState(6);
+    useState(initialInputs?.inputSleepHours ?? 6);
 
   const [stress, setStress] =
-    useState(null);
+    useState(initialInputs?.inputStress ?? null);
 
   const [meal, setMeal] =
-    useState(null);
+    useState(initialInputs?.inputMeal ?? null);
 
   const [isChecking, setIsChecking] =
-    useState(true);
+    useState(!isEditing);
 
   /*
    * 예측 페이지 진입 시
    * 오늘 이미 생성한 내일 예측이 있는지 확인
    */
   useEffect(() => {
+    if (isEditing) return;
+    let active = true;
     const checkForecast = async () => {
       try {
         const result =
@@ -80,7 +89,7 @@ const PredictionPage = () => {
          * 기존 예측 데이터를 가지고
          * 결과 페이지로 바로 이동
          */
-        if (result?.data) {
+        if (active && result?.data) {
           navigate(
             "/prediction/result",
             {
@@ -107,12 +116,13 @@ const PredictionPage = () => {
           error
         );
       } finally {
-        setIsChecking(false);
+        if (active) setIsChecking(false);
       }
     };
 
     checkForecast();
-  }, [navigate]);
+    return () => { active = false; };
+  }, [navigate, isEditing]);
 
   const canPredict =
     heating !== null &&
@@ -122,7 +132,7 @@ const PredictionPage = () => {
     meal !== null;
 
   const handlePrediction = () => {
-    if (!canPredict) {
+    if (!canPredict || submitted.current) {
       return;
     }
 
@@ -134,6 +144,8 @@ const PredictionPage = () => {
       inputMeal: meal,
     };
 
+    submitted.current = true;
+
     console.log(
       "예측 API 요청 데이터:",
       requestData
@@ -142,6 +154,8 @@ const PredictionPage = () => {
     navigate("/prediction/loading", {
       state: {
         requestData,
+        mode: isEditing ? "edit" : "create",
+        forecast,
       },
     });
   };
@@ -172,7 +186,7 @@ const PredictionPage = () => {
           </Title>
 
           <Subtitle>
-            내일 예상되는 환경을 선택해 주세요
+            {isEditing ? "기존 입력값을 확인하고 수정해 주세요" : "내일 예상되는 환경을 선택해 주세요"}
           </Subtitle>
         </Header>
 
@@ -262,8 +276,8 @@ const PredictionPage = () => {
 
               <Slider
                 type="range"
-                min="1"
-                max="12"
+                min="0"
+                max="24"
                 step="1"
                 value={sleep}
                 onChange={(
@@ -344,8 +358,14 @@ const PredictionPage = () => {
           disabled={!canPredict}
           onClick={handlePrediction}
         >
-          예측 시작하기
+          {isEditing ? "수정 완료" : "예측 시작하기"}
         </PredictionButton>
+
+        {isEditing && (
+          <RetryButton type="button" onClick={() => navigate("/prediction/result", {
+            replace: true, state: { forecast },
+          })}>취소</RetryButton>
+        )}
 
         <GuideCard>
           <GuideBadge>

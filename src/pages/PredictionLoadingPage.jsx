@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   useLocation,
   useNavigate,
@@ -7,7 +7,7 @@ import {
 import NavBar from "../components/NavBar";
 import logo from "../assets/logo_SplashPage.svg";
 
-import { createForecast } from "../api/forecast";
+import { createForecast, updateForecast } from "../api/forecast";
 
 import {
   Page,
@@ -21,11 +21,15 @@ import {
 const PredictionLoadingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const pendingRequest = useRef(null);
+  const isEditing = location.state?.mode === "edit";
+  const forecast = location.state?.forecast;
 
   const requestData =
     location.state?.requestData;
 
   useEffect(() => {
+    let active = true;
     const runPrediction = async () => {
       /*
        * PredictionPage를 거치지 않고
@@ -45,10 +49,11 @@ const PredictionLoadingPage = () => {
           requestData
         );
 
-        const result =
-          await createForecast(
-            requestData
-          );
+        // Reuse the request when StrictMode replays the effect.
+        pendingRequest.current ??= (isEditing ? updateForecast : createForecast)(requestData);
+        const result = await pendingRequest.current;
+        if (!active) return;
+        if (!result?.data) throw new Error("예측 결과를 받지 못했어요. 다시 시도해 주세요.");
 
         console.log(
           "예측 성공:",
@@ -65,6 +70,7 @@ const PredictionLoadingPage = () => {
           }
         );
       } catch (error) {
+        if (!active) return;
         console.error(
           "예측 실패:",
           error
@@ -74,14 +80,18 @@ const PredictionLoadingPage = () => {
 
         navigate("/prediction", {
           replace: true,
+          state: { mode: isEditing ? "edit" : "create", forecast, requestData },
         });
       }
     };
 
     runPrediction();
+    return () => { active = false; };
   }, [
     navigate,
     requestData,
+    isEditing,
+    forecast,
   ]);
 
   return (

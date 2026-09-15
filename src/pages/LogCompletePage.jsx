@@ -5,6 +5,7 @@ import {
 
 import NavBar from "../components/NavBar";
 import logo from "../assets/logo_SplashPage.svg";
+import { getRecordProgress } from "../utils/recordProgress";
 
 import {
   Page,
@@ -43,27 +44,15 @@ const LogCompletePage = () => {
   const validRecordCount =
     record?.validRecordCount ?? 0;
 
-  const targetRecordCount =
-    record?.targetRecordCount ?? 10;
+  const {
+    targetRecordCount,
+    displayedRecordCount,
+    remainingRecordCount,
+    progressPercent,
+  } = getRecordProgress(validRecordCount, record?.targetRecordCount ?? 10);
 
   const forecastReady =
     record?.forecastReady ?? false;
-
-  const remainingRecordCount =
-    Math.max(
-      targetRecordCount - validRecordCount,
-      0
-    );
-
-  const progressPercent =
-    targetRecordCount > 0
-      ? Math.min(
-          (validRecordCount /
-            targetRecordCount) *
-            100,
-          100
-        )
-      : 0;
 
   return (
     <Page>
@@ -104,11 +93,11 @@ const LogCompletePage = () => {
 
           <ProgressHeader>
             <ProgressLabel>
-              맞춤 예측까지
+              {forecastReady ? "기록 진행 현황" : "맞춤 예측까지"}
             </ProgressLabel>
 
             <ProgressCount>
-              {validRecordCount}/
+              {displayedRecordCount}/
               {targetRecordCount}
             </ProgressCount>
           </ProgressHeader>

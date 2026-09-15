@@ -12,3 +12,10 @@ export const createForecast = async (data) => {
     body: JSON.stringify(data),
   });
 };
+
+export const updateForecast = async (data) => {
+  return apiRequest("/api/forecasts", {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};

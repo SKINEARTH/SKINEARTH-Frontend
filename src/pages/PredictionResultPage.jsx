@@ -35,6 +35,7 @@ import {
   AiBadge,
   AiText,
   MissionButton,
+  RetryButton,
 } from "../styles/PredictionResultPage.styles";
 
 const FACTOR_NAME_MAP = {
@@ -430,6 +431,12 @@ const PredictionResultPage = () => {
         >
           🚀 오늘의 탐험 미션 보기
         </MissionButton>
+
+        <RetryButton type="button" onClick={() => navigate("/prediction", {
+          state: { mode: "edit", forecast },
+        })}>
+          다시 예측하기
+        </RetryButton>
 
       </Content>
 

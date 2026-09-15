@@ -285,6 +285,21 @@ export const AiText = styled.p`
   line-height: 1.95;
 `;
 
+export const RetryButton = styled.button`
+  width: 100%;
+  min-height: 50px;
+  margin-top: 16px;
+  border: 1px solid #26314a;
+  border-radius: 999px;
+  background: #1a2748;
+  color: #a9b4c6;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 22.5px;
+  cursor: pointer;
+`;
+
 export const MissionButton = styled.button`
   width: 100%;
   height: 4rem;
